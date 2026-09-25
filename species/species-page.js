@@ -179,7 +179,7 @@
     body.replaceChildren();
     renderCatchGallery([]);
     empty.hidden = false;
-    empty.textContent = 'Loading clubhouse records...';
+    empty.textContent = 'Loading community records...';
     if (!supabaseClient) {
       empty.textContent = 'Live records are unavailable in this preview.';
       return;

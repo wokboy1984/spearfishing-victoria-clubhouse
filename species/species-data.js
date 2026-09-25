@@ -103,5 +103,117 @@ globalThis.SV_SPECIES = {
       ingredients: ['4 tuna steaks', 'Cracked black pepper', 'Cherry tomatoes', 'Capers', 'Lemon and olive oil'],
       method: ['Coat the tuna lightly with oil and cracked pepper.', 'Sear in a hot pan to your preferred doneness.', 'Warm tomatoes and capers in the same pan.', 'Rest the tuna, slice and serve with lemon and the tomato salad.']
     }
+  },
+  'rock-lobster': {
+    name: 'Southern rock lobster',
+    aliases: 'crayfish cray crays',
+    scientific: 'Jasus edwardsii',
+    group: 'Crustacean',
+    image: 'species-rock-lobster.png',
+    imageAlt: 'Southern rock lobster on a Victorian kelp reef',
+    summary: 'Known locally as crayfish, southern rock lobster live among rocky reefs and kelp along the Victorian coast.',
+    size: 'Male 11 cm · Female 10.5 cm carapace',
+    bag: '2 tagged and tail-clipped rock lobster',
+    note: 'Catch reporting, tagging and tail clipping are required. Closed seasons differ for males and females.',
+    rulesUrl: 'https://vfa.vic.gov.au/recreational-fishing/recreational-fishing-guide/catch-limits-and-closed-seasons/types-of-fish/rock-lobster-all-species',
+    season: { type: 'rock-lobster' },
+    recipe: {
+      title: 'Charred rock lobster with garlic butter',
+      time: '35 min',
+      serves: 'Serves 2',
+      image: 'species-rock-lobster.png',
+      description: 'A simple split-and-grill treatment with lemon, garlic and fresh herbs.',
+      ingredients: ['1 legally caught rock lobster', 'Unsalted butter', 'Garlic', 'Lemon', 'Parsley and sea salt'],
+      method: ['Prepare the lobster and split it lengthways.', 'Mix softened butter with garlic, lemon zest and parsley.', 'Brush the flesh generously and place shell-side down on a hot barbecue.', 'Cook until just opaque, finish briefly flesh-side down and serve with lemon.']
+    }
+  },
+  abalone: {
+    name: 'Abalone',
+    aliases: 'blacklip greenlip abs',
+    scientific: 'Haliotis species',
+    group: 'Mollusc',
+    image: 'species-abalone.png',
+    imageAlt: 'Blacklip abalone attached to a Victorian reef',
+    summary: 'Blacklip and greenlip abalone occur on Victorian reefs, with collection rules that vary by species and location.',
+    size: 'Varies by species and collection area',
+    bag: '5; outside Port Phillip Bay, no more than 2 greenlip',
+    note: 'Central Victorian waters have nominated open days. Greenlip abalone cannot be taken from Port Phillip Bay.',
+    rulesUrl: 'https://vfa.vic.gov.au/recreational-fishing/recreational-fishing-guide/catch-limits-and-closed-seasons/types-of-fish/shellfish/abalone-all-species',
+    season: { type: 'abalone-central' },
+    recipe: {
+      title: 'Tenderised abalone with lemon and herbs',
+      time: '30 min',
+      serves: 'Serves 2',
+      image: 'species-abalone.png',
+      description: 'Thinly sliced, gently tenderised abalone cooked quickly with butter, lemon and parsley.',
+      ingredients: ['Legally collected abalone', 'Plain flour', 'Butter and olive oil', 'Lemon', 'Parsley, salt and black pepper'],
+      method: ['Clean the abalone only at the place of consumption and slice it thinly.', 'Tenderise each slice gently and season with pepper.', 'Dust lightly with flour and cook quickly in butter and oil.', 'Finish with lemon and parsley, then serve immediately.']
+    }
+  },
+  boarfish: {
+    name: 'Boarfish',
+    aliases: 'boarfishes',
+    scientific: 'Pentacerotidae',
+    group: 'Fish',
+    image: 'species-boarfish.png',
+    imageAlt: 'Boarfish swimming beside a Victorian kelp reef',
+    summary: 'A distinctive deep-bodied reef fish with an elongated snout and tall dorsal spines.',
+    size: 'No minimum',
+    bag: 'Combined total of 1 boarfish',
+    note: 'The single-fish limit applies across all boarfish species combined.',
+    rulesUrl: 'https://vfa.vic.gov.au/recreational-fishing/recreational-fishing-guide/catch-limits-and-closed-seasons/types-of-fish/marine-and-estuarine-scale-fish/boarfish-all-species',
+    recipe: {
+      title: 'Pan-roasted boarfish with caper butter',
+      time: '30 min',
+      serves: 'Serves 2',
+      image: 'species-boarfish.png',
+      description: 'Crisp-skinned fillets finished with lemon, capers and browned butter.',
+      ingredients: ['2 boarfish fillets', 'Butter and olive oil', 'Capers', 'Lemon', 'Parsley, salt and black pepper'],
+      method: ['Pat the fillets dry and season lightly.', 'Cook skin-side down in a hot pan until crisp.', 'Turn briefly, then remove when just cooked.', 'Brown the butter with capers and finish with lemon and parsley.']
+    }
+  },
+  flathead: {
+    name: 'Flathead',
+    aliases: 'flatheads yank bluespotted southern bluespotted',
+    scientific: 'Platycephalidae',
+    group: 'Fish',
+    image: 'species-flathead.png',
+    imageAlt: 'Southern bluespotted flathead resting on sand',
+    summary: 'An ambush predator found over sand, mud and seagrass. This page covers Victorian flathead other than dusky flathead.',
+    size: '27 cm minimum',
+    bag: 'Combined total of 20, excluding dusky flathead',
+    note: 'Dusky flathead have separate rules: 30–55 cm and a bag limit of 5. Correct identification matters.',
+    rulesUrl: 'https://vfa.vic.gov.au/recreational-fishing/recreational-fishing-guide/catch-limits-and-closed-seasons/types-of-fish/marine-and-estuarine-scale-fish/flathead-all-species-except-dusky-flathead',
+    recipe: {
+      title: 'Flathead tails with lemon crumb',
+      time: '25 min',
+      serves: 'Serves 3',
+      image: 'species-flathead.png',
+      description: 'Lightly crumbed flathead cooked until crisp and served with lemon.',
+      ingredients: ['Flathead fillets', 'Fresh breadcrumbs', 'Lemon zest', 'Parsley', 'Flour, egg and olive oil'],
+      method: ['Check the fillets for bones and pat dry.', 'Coat in flour, egg and the lemon-parsley crumb.', 'Shallow-fry until golden and just cooked through.', 'Drain briefly and serve with fresh lemon.']
+    }
+  },
+  scallop: {
+    name: 'Scallop',
+    aliases: 'scallops',
+    scientific: 'Pecten fumatus',
+    group: 'Bivalve',
+    image: 'species-scallop.png',
+    imageAlt: 'Scallops resting on a Victorian sandy seabed',
+    summary: 'A fan-shaped bivalve found on sandy seabeds in Victorian bays and coastal waters.',
+    size: 'No minimum for recreational collection',
+    bag: '100 outside restricted areas',
+    note: 'Do not collect from Marine National Parks or Sanctuaries, or from Port Phillip Bay waters less than 2 m deep.',
+    rulesUrl: 'https://vfa.vic.gov.au/recreational-fishing/recreational-fishing-guide/catch-limits-and-closed-seasons/types-of-fish/shellfish/scallop',
+    recipe: {
+      title: 'Seared scallops with garlic and lemon',
+      time: '15 min',
+      serves: 'Serves 2',
+      image: 'species-scallop.png',
+      description: 'A fast sear with browned butter, garlic and a bright squeeze of lemon.',
+      ingredients: ['12 cleaned scallops', 'Butter and olive oil', 'Garlic', 'Lemon', 'Parsley, salt and black pepper'],
+      method: ['Pat the scallops very dry and season lightly.', 'Sear in a hot pan without moving until deeply golden.', 'Turn, add butter and garlic, and baste briefly.', 'Finish with lemon and parsley and serve immediately.']
+    }
   }
 };

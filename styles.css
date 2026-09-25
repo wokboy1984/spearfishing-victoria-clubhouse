@@ -1,6 +1,6 @@
 html { scroll-behavior: smooth; background: #f0f2f5; }
     html.dark-mode { background: #101215; }
-    body { margin: 0; padding: 16px; }
+    body { margin: 0; padding: 0; }
     @media (max-width: 640px) { body { padding: 0; } }
 
 #sv-facebook-clubhouse {
@@ -49,9 +49,10 @@ html { scroll-behavior: smooth; background: #f0f2f5; }
       --sv-shadow: 0 1px 2px rgba(0, 0, 0, .10);
       color-scheme: light;
       color: var(--sv-text);
+      min-height: 100vh;
       overflow: hidden;
-      border: 1px solid var(--sv-line);
-      border-radius: 8px;
+      border: 0;
+      border-radius: 0;
       background: var(--sv-bg);
       box-shadow: var(--sv-shadow);
     }

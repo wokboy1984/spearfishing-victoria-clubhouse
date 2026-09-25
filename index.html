@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Spearfishing Victoria community clubhouse with forecasts, challenges, recipes and community links.">
+  <meta name="description" content="Spearfishing Victoria community hub with forecasts, monthly catches, recipes and community links.">
   <title>Spearfishing Victoria</title>
   <link rel="icon" href="data:,">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
@@ -11,12 +11,12 @@
 </head>
 <body>
 <div id="sv-facebook-clubhouse">
-  <article class="site" id="home" aria-label="Spearfishing Victoria community clubhouse">
+  <article class="site" id="home" aria-label="Spearfishing Victoria community hub">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark" aria-hidden="true"><i data-lucide="waves"></i></span><span>Spearfishing Victoria</span></div>
-      <nav class="nav" aria-label="Primary navigation"><a href="#home">Home</a><a href="challenge/">Monthly Catch</a><a href="species/">Community Recipes</a><a href="safety/">Safety</a><a class="button-secondary staff-link" href="admin/" data-staff-link hidden><i data-lucide="shield-check" aria-hidden="true"></i> Moderate</a><button class="button-primary" type="button" data-open-submission><i data-lucide="camera" aria-hidden="true"></i> Submit catch</button><button class="button-secondary member-button" type="button" data-auth-trigger aria-label="Member sign in"><i data-lucide="user-round" aria-hidden="true"></i><span data-auth-label>Member sign in</span><span class="notification-badge" data-notification-badge hidden aria-label="Unread submission updates">0</span></button><button class="icon-button theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><i data-lucide="moon" aria-hidden="true"></i></button><button class="icon-button mobile-menu-toggle" type="button" data-mobile-menu-toggle aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-navigation"><i data-lucide="menu" aria-hidden="true"></i></button></nav>
+      <a class="brand" href="#home" aria-label="Spearfishing Victoria home"><span class="brand-mark" aria-hidden="true"><i data-lucide="waves"></i></span><span>Spearfishing Victoria</span></a>
+      <nav class="nav" aria-label="Primary navigation"><a href="challenge/">Monthly Catch</a><a href="species/">Community Recipes</a><a href="safety/">Safety</a><a class="button-secondary staff-link" href="admin/" data-staff-link hidden><i data-lucide="shield-check" aria-hidden="true"></i> Moderate</a><button class="button-primary" type="button" data-open-submission><i data-lucide="camera" aria-hidden="true"></i> Submit catch</button><button class="button-secondary member-button" type="button" data-auth-trigger aria-label="Member sign in"><i data-lucide="user-round" aria-hidden="true"></i><span data-auth-label>Member sign in</span><span class="notification-badge" data-notification-badge hidden aria-label="Unread submission updates">0</span></button><button class="icon-button theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><i data-lucide="moon" aria-hidden="true"></i></button><button class="icon-button mobile-menu-toggle" type="button" data-mobile-menu-toggle aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-navigation"><i data-lucide="menu" aria-hidden="true"></i></button></nav>
     </header>
-    <nav class="mobile-navigation" id="mobile-navigation" data-mobile-navigation aria-label="Mobile navigation" hidden><a href="#home"><i data-lucide="house"></i><span><strong>Home</strong><small>Community clubhouse</small></span></a><a href="challenge/"><i data-lucide="trophy"></i><span><strong>Monthly Catch</strong><small>Dashboard, catches and community standings</small></span></a><a href="species/"><i data-lucide="utensils"></i><span><strong>Community Recipes</strong><small>Tracked fish, catches, rules and recipes</small></span></a><a href="safety/"><i data-lucide="shield-check"></i><span><strong>Safety Hub</strong><small>Pre-dive checks and emergency guidance</small></span></a></nav>
+    <nav class="mobile-navigation" id="mobile-navigation" data-mobile-navigation aria-label="Mobile navigation" hidden><a href="#home"><i data-lucide="house"></i><span><strong>Home</strong><small>Community hub</small></span></a><a href="challenge/"><i data-lucide="trophy"></i><span><strong>Monthly Catch</strong><small>Dashboard, catches and community standings</small></span></a><a href="species/"><i data-lucide="utensils"></i><span><strong>Community Recipes</strong><small>Tracked fish, catches, rules and recipes</small></span></a><a href="safety/"><i data-lucide="shield-check"></i><span><strong>Safety Hub</strong><small>Pre-dive checks and emergency guidance</small></span></a></nav>
 
     <section class="masthead" id="challenge">
       <div class="mast-copy">
@@ -224,7 +224,7 @@
               <label for="display-name">Community display name</label>
               <input id="display-name" name="display_name" type="text" autocomplete="name" minlength="2" maxlength="50" placeholder="How members will know you" required>
               <label for="profile-address">Profile address</label>
-              <div class="profile-address-input"><span data-profile-origin>clubhouse/</span><input id="profile-address" name="username" type="text" autocomplete="off" minlength="3" maxlength="30" pattern="[a-z0-9][a-z0-9_-]{2,29}" placeholder="your-name" required></div>
+              <div class="profile-address-input"><span data-profile-origin>spearfishingvictoria/</span><input id="profile-address" name="username" type="text" autocomplete="off" minlength="3" maxlength="30" pattern="[a-z0-9][a-z0-9_-]{2,29}" placeholder="your-name" required></div>
               <small class="profile-field-note">Lowercase letters, numbers, dashes and underscores. This must be unique.</small>
               <label for="instagram-handle">Instagram handle</label>
               <div class="handle-input"><span>@</span><input id="instagram-handle" name="instagram_handle" type="text" autocomplete="off" maxlength="30" pattern="[A-Za-z0-9._]{1,30}" placeholder="yourhandle"></div>

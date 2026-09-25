@@ -13,12 +13,65 @@
     return icon;
   }
 
+  function formatShortDate(date) {
+    return new Intl.DateTimeFormat('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
+  }
+
+  function firstSaturdayOnOrAfter(date) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + ((6 - result.getDay() + 7) % 7));
+    return result;
+  }
+
+  function getSeasonSticker(item, today = new Date()) {
+    if (!item.season) return null;
+    const current = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const year = current.getFullYear();
+
+    if (item.season.type === 'rock-lobster') {
+      const femaleClosed = current >= new Date(year, 5, 1) && current <= new Date(year, 10, 15);
+      const maleClosed = current >= new Date(year, 8, 15) && current <= new Date(year, 10, 15);
+      const opens = new Date(year, 10, 16);
+      const lines = [
+        `Male: ${maleClosed ? 'out of season' : 'season open'}`,
+        `Female: ${femaleClosed ? 'out of season' : 'season open'}`
+      ];
+      if (femaleClosed || maleClosed) lines.push(`Season opens ${formatShortDate(opens)}`);
+      return { title: femaleClosed || maleClosed ? 'Closed season' : 'Season open', lines, open: !femaleClosed && !maleClosed };
+    }
+
+    if (item.season.type === 'abalone-central') {
+      const centralOpenWindow = current >= new Date(year, 10, 16) || current <= new Date(year, 3, 30);
+      const nextOpening = firstSaturdayOnOrAfter(new Date(year, 10, 16));
+      return centralOpenWindow
+        ? { title: 'Central waters', lines: ['Nominated open days only', 'Weekends and public holidays, 16 Nov–30 Apr'], open: true }
+        : { title: 'Central waters closed', lines: [`Weekend openings return ${formatShortDate(nextOpening)}`, 'Rules differ outside Central Victorian waters'], open: false };
+    }
+
+    return null;
+  }
+
+  function createSeasonSticker(item) {
+    const status = getSeasonSticker(item);
+    if (!status) return null;
+    const sticker = document.createElement('span');
+    sticker.className = `season-sticker${status.open ? ' is-open' : ''}`;
+    const title = document.createElement('strong');
+    title.textContent = status.title;
+    sticker.append(title, ...status.lines.map(line => {
+      const text = document.createElement('span');
+      text.textContent = line;
+      return text;
+    }));
+    return sticker;
+  }
+
   function render() {
     const query = search.value.trim().toLowerCase();
     const matches = Object.entries(species).filter(([, item]) => {
-      const haystack = [item.name, item.scientific, item.group, item.recipe.title].join(' ').toLowerCase();
+      const haystack = [item.name, item.aliases, item.scientific, item.group, item.recipe.title].filter(Boolean).join(' ').toLowerCase();
       return !query || haystack.includes(query);
-    });
+    }).sort(([, first], [, second]) => first.name.localeCompare(second.name, 'en-AU'));
     grid.replaceChildren(...matches.map(([slug, item]) => {
       const card = document.createElement('a');
       card.className = 'species-card';
@@ -26,6 +79,7 @@
       const image = document.createElement('img');
       image.src = `../assets/${item.image}`;
       image.alt = item.imageAlt;
+      const seasonSticker = createSeasonSticker(item);
       const copy = document.createElement('span');
       copy.className = 'species-card-copy';
       const scientific = document.createElement('em');
@@ -38,7 +92,9 @@
       link.className = 'card-link';
       link.append(createIcon('arrow-right'), document.createTextNode(' Recipes, catches and records'));
       copy.append(scientific, name, facts, link);
-      card.append(image, copy);
+      card.append(image);
+      if (seasonSticker) card.append(seasonSticker);
+      card.append(copy);
       return card;
     }));
     count.textContent = matches.length;

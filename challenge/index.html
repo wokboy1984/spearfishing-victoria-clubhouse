@@ -11,7 +11,7 @@
 </head>
 <body>
   <main class="shell">
-    <header class="topbar"><a class="brand" href="../"><span class="brand-mark"><i data-lucide="waves"></i></span><span>Spearfishing Victoria</span></a><nav><a href="../">Home</a><a href="../species/">Community Recipes</a><a href="../safety/">Safety</a><button class="icon-button" type="button" data-theme-toggle aria-label="Switch to dark mode"><i data-lucide="moon"></i></button></nav></header>
+    <header class="topbar"><a class="brand" href="../" aria-label="Spearfishing Victoria home"><span class="brand-mark"><i data-lucide="waves"></i></span><span>Spearfishing Victoria</span></a><nav aria-label="Primary navigation"><a aria-current="page" href="./">Monthly Catch</a><a href="../species/">Community Recipes</a><a href="../safety/">Safety</a><a class="button" href="../?submit=catch"><i data-lucide="camera"></i> Submit catch</a><button class="icon-button" type="button" data-theme-toggle aria-label="Switch to dark mode"><i data-lucide="moon"></i></button></nav></header>
 
     <div class="loading" data-loading><i data-lucide="loader-circle"></i><span>Loading this month’s catch...</span></div>
     <div data-page hidden>
@@ -32,7 +32,7 @@
       <section class="gallery"><div class="section-head"><div><div class="eyebrow">Approved entries</div><h2>From the community</h2><p>Catch photos shared by members and approved through community moderation.</p></div></div><div class="catch-grid" data-catches></div><div class="empty" data-catches-empty hidden>No approved catches yet. The first one could be yours.</div></section>
     </div>
     <section class="empty page-error" data-error hidden><i data-lucide="calendar-x"></i><h1>No Monthly Catch is open</h1><p>Check back soon for the next community species.</p><a class="button" href="../">Return home</a></section>
-    <footer><span>Spearfishing Victoria community clubhouse</span><a href="../species/">Browse community recipes</a></footer>
+      <footer><span>Spearfishing Victoria community</span><a href="../species/">Browse community recipes</a></footer>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js"></script>
