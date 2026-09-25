@@ -821,10 +821,24 @@
       async function loadSpeciesDirectory() {
         const { data, error } = await supabaseClient
           .from('species')
-          .select('id,slug')
-          .eq('is_active', true);
+          .select('id,slug,common_name')
+          .eq('is_active', true)
+          .order('common_name', { ascending: true });
         if (error) throw error;
         trackedSpeciesIds = Object.fromEntries((data || []).map(species => [species.slug, species.id]));
+        root.querySelectorAll('.submission-form select[name="species"]').forEach(select => {
+          const selected = select.value;
+          const placeholder = document.createElement('option');
+          placeholder.value = '';
+          placeholder.textContent = 'Choose a tracked species';
+          select.replaceChildren(placeholder, ...(data || []).map(species => {
+            const option = document.createElement('option');
+            option.value = species.slug;
+            option.textContent = species.common_name;
+            return option;
+          }));
+          if (selected && trackedSpeciesIds[selected]) select.value = selected;
+        });
       }
 
       async function loadVoteData() {
