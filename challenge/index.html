@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Spearfishing Victoria's friendly monthly catch, community standings and next species vote.">
+  <title>Monthly Catch | Spearfishing Victoria</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="challenge.css?v=2">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar"><a class="brand" href="../"><span class="brand-mark"><i data-lucide="waves"></i></span><span>Spearfishing Victoria</span></a><nav><a href="../">Home</a><a href="../species/">Community Recipes</a><a href="../safety/">Safety</a><button class="icon-button" type="button" data-theme-toggle aria-label="Switch to dark mode"><i data-lucide="moon"></i></button></nav></header>
+
+    <div class="loading" data-loading><i data-lucide="loader-circle"></i><span>Loading this month’s catch...</span></div>
+    <div data-page hidden>
+      <section class="challenge-hero">
+        <div class="challenge-copy"><div class="eyebrow">Friendly community challenge</div><h1 data-title>Monthly Catch</h1><p data-description>Your best approved catch counts once. Join in, share the story and celebrate responsible diving.</p><div class="challenge-meta"><span><i data-lucide="calendar-days"></i><strong data-dates></strong></span><span><i data-lucide="clock-3"></i><strong data-days></strong></span></div><div class="hero-actions"><a class="button primary" href="../?submit=catch"><i data-lucide="camera"></i> Submit a catch</a><a class="button" data-species-link href="../species/"><i data-lucide="utensils"></i> Recipes and fish guide</a></div><p class="unofficial"><i data-lucide="info"></i>This is a friendly website game for the Spearfishing Victoria community. Results are not official fishing records.</p></div>
+        <img data-species-image alt="">
+      </section>
+
+      <section class="score-band" aria-label="Monthly Catch scoring"><div><strong>15</strong><span>approved entry</span></div><div><strong>+10</strong><span>first-place bonus</span></div><div><strong>+1</strong><span>tenth-place bonus</span></div><p>Only each member’s largest approved fish counts. Placement bonuses move as new catches are approved.</p></section>
+
+      <section class="community-pulse" aria-label="Monthly Catch summary"><div><i data-lucide="users"></i><span><strong data-member-count>0</strong> members entered</span></div><div><i data-lucide="ruler"></i><span><strong data-leading-length>—</strong> leading catch</span></div><div><i data-lucide="images"></i><span><strong data-catch-count>0</strong> approved catches</span></div><div><i data-lucide="calendar-clock"></i><span><strong data-pulse-days>0</strong> days remaining</span></div></section>
+
+      <section class="content-grid">
+        <div class="standings"><div class="section-head"><div><div class="eyebrow">This month</div><h2>Community standings</h2><p>Length-verified catches, ordered by each member’s best fish.</p></div></div><div class="podium" data-podium></div><div class="leader-list" data-leaders></div></div>
+        <aside class="vote"><div class="eyebrow">Community vote</div><h2 data-vote-title>What should be next?</h2><p>See how the next Monthly Catch vote is shaping up.</p><div data-vote-options></div><a class="button" href="../#leaderboard"><i data-lucide="vote"></i> Sign in and vote</a></aside>
+      </section>
+
+      <section class="gallery"><div class="section-head"><div><div class="eyebrow">Approved entries</div><h2>From the community</h2><p>Catch photos shared by members and approved through community moderation.</p></div></div><div class="catch-grid" data-catches></div><div class="empty" data-catches-empty hidden>No approved catches yet. The first one could be yours.</div></section>
+    </div>
+    <section class="empty page-error" data-error hidden><i data-lucide="calendar-x"></i><h1>No Monthly Catch is open</h1><p>Check back soon for the next community species.</p><a class="button" href="../">Return home</a></section>
+    <footer><span>Spearfishing Victoria community clubhouse</span><a href="../species/">Browse community recipes</a></footer>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+  <script src="../species/species-data.js"></script>
+  <script src="challenge.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+[build]
+  command = "node scripts/generate-supabase-config.mjs"
+  publish = "."
+
+[[redirects]]
+  from = "/:username"
+  to = "/members/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/:username/"
+  to = "/members/index.html"
+  status = 200

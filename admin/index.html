@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Spearfishing Victoria catch moderation workspace.">
+  <title>Moderation | Spearfishing Victoria</title>
+  <link rel="icon" href="data:,">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-shell">
+    <header class="admin-topbar">
+      <a class="brand" href="../"><span class="brand-mark"><i data-lucide="waves" aria-hidden="true"></i></span><span>Spearfishing Victoria</span></a>
+      <nav aria-label="Moderation navigation">
+        <a href="../">Clubhouse</a>
+        <a href="../species/">Species</a>
+        <button class="icon-button" type="button" data-theme-toggle aria-label="Switch to dark mode"><i data-lucide="moon" aria-hidden="true"></i></button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="access-panel" data-signed-out hidden>
+        <span class="access-icon"><i data-lucide="shield-check" aria-hidden="true"></i></span>
+        <div>
+          <div class="eyebrow">Staff workspace</div>
+          <h1>Sign in to moderate</h1>
+          <p>Use the email attached to your Spearfishing Victoria administrator account.</p>
+          <div class="social-auth" aria-label="Social sign-in options">
+            <button class="social-auth-button google" type="button" data-oauth-provider="google"><span aria-hidden="true">G</span> Continue with Google</button>
+            <button class="social-auth-button facebook" type="button" data-oauth-provider="facebook"><span aria-hidden="true">f</span> Continue with Facebook</button>
+          </div>
+          <div class="auth-divider"><span>or use email</span></div>
+          <form data-auth-form>
+            <label for="admin-email">Email address</label>
+            <div class="auth-row"><input id="admin-email" name="email" type="email" autocomplete="email" required><button class="button primary" type="submit"><i data-lucide="mail" aria-hidden="true"></i> Send sign-in link</button></div>
+            <p class="form-status" data-auth-status aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="access-panel" data-no-access hidden>
+        <span class="access-icon"><i data-lucide="lock-keyhole" aria-hidden="true"></i></span>
+        <div><div class="eyebrow">Restricted area</div><h1>Staff access required</h1><p>This account is signed in, but it does not have a moderator or administrator role.</p><button class="button" type="button" data-sign-out>Sign out</button></div>
+      </section>
+
+      <section class="moderation-app" data-moderation-app hidden>
+        <div class="page-heading">
+          <div><div class="eyebrow">Staff workspace</div><h1 data-workspace-title>Community moderation</h1><p data-workspace-copy>Review catches and recipes, protect private evidence and publish only submissions that meet the community rules.</p></div>
+          <div class="staff-chip"><span data-staff-initials>SV</span><div><strong data-staff-name>Administrator</strong><small data-staff-role>Admin</small></div><button class="icon-button" type="button" data-sign-out aria-label="Sign out"><i data-lucide="log-out" aria-hidden="true"></i></button></div>
+        </div>
+
+        <nav class="workspace-switcher" aria-label="Staff workspace"><button type="button" data-workspace="moderation" aria-pressed="true"><i data-lucide="shield-check" aria-hidden="true"></i> Moderation</button><button type="button" data-workspace="program" aria-pressed="false"><i data-lucide="calendar-cog" aria-hidden="true"></i> Competition manager</button></nav>
+
+        <div data-moderation-workspace>
+        <section class="summary-strip" aria-label="Moderation totals">
+          <div><span>Awaiting review</span><strong data-count="pending">0</strong></div>
+          <div><span>Approved</span><strong data-count="approved">0</strong></div>
+          <div><span>Rejected</span><strong data-count="rejected">0</strong></div>
+          <div><span>Total reviewed</span><strong data-count="reviewed">0</strong></div>
+        </section>
+
+        <div class="workspace">
+          <aside class="queue" aria-label="Submission queue">
+            <div class="queue-tools">
+              <div class="status-tabs" role="group" aria-label="Submission status">
+                <button type="button" data-filter="pending" aria-pressed="true">Pending</button>
+                <button type="button" data-filter="approved" aria-pressed="false">Approved</button>
+                <button type="button" data-filter="rejected" aria-pressed="false">Rejected</button>
+              </div>
+              <label class="search-field"><i data-lucide="search" aria-hidden="true"></i><input type="search" data-search placeholder="Search member or species" aria-label="Search submissions"></label>
+            </div>
+            <div class="queue-list" data-queue-list aria-live="polite"></div>
+          </aside>
+
+          <section class="review-panel" data-review-panel aria-live="polite">
+            <div class="review-empty" data-review-empty><i data-lucide="inbox" aria-hidden="true"></i><h2>No submission selected</h2><p>Choose an entry from the queue to review its photos and declarations.</p></div>
+            <div data-review-content hidden>
+              <header class="review-head">
+                <div><div class="review-meta"><span class="status-pill" data-detail-status>Pending</span><span data-detail-date></span></div><h2 data-detail-title>Catch submission</h2><p><strong data-detail-member></strong> <span data-detail-handle></span></p></div>
+                <div class="length"><span>Claimed length</span><strong data-detail-length>0.0 cm</strong></div>
+              </header>
+
+              <div class="photo-review" data-photo-review></div>
+
+              <div class="review-body">
+                <section class="story-block"><div class="section-label">Catch story</div><p data-detail-story></p></section>
+                <section class="recipe-review-details" data-recipe-details hidden></section>
+                <section class="declarations" aria-label="Member declarations">
+                  <div data-declaration="victoria"><i data-lucide="map-pin" aria-hidden="true"></i><span>Caught in Victoria</span></div>
+                  <div data-declaration="recent"><i data-lucide="calendar-check" aria-hidden="true"></i><span>Caught within seven days</span></div>
+                  <div data-declaration="rules"><i data-lucide="badge-check" aria-hidden="true"></i><span>Rules accepted</span></div>
+                </section>
+
+                <form class="decision-form" data-decision-form>
+                  <fieldset data-verification-fields><legend>Moderator verification</legend>
+                    <label><input type="checkbox" name="measurement_visible"> The ruler and full fish are clearly visible</label>
+                    <label><input type="checkbox" name="length_matches"> The claimed length matches the measurement photo</label>
+                    <label><input type="checkbox" name="species_matches"> The species identification appears correct</label>
+                  </fieldset>
+                  <label class="note-field"><span>Moderator note <small>Required when rejecting</small></span><textarea name="moderation_note" maxlength="500" placeholder="Add a concise reason or an internal approval note..."></textarea></label>
+                  <p class="form-status" data-decision-status aria-live="polite"></p>
+                  <div class="decision-actions">
+                    <button class="button danger" type="button" data-decide="rejected"><i data-lucide="x" aria-hidden="true"></i> Reject</button>
+                    <button class="button primary" type="button" data-decide="approved"><i data-lucide="check" aria-hidden="true"></i> Approve and publish</button>
+                  </div>
+                </form>
+
+                <section class="reviewed-summary" data-reviewed-summary hidden><div class="section-label">Decision</div><p data-reviewed-copy></p></section>
+                <section class="feature-controls" data-feature-controls hidden>
+                  <div><div class="section-label">Homepage showcase</div><h3>Community masthead</h3><p>Featured catches are considered for the large homepage image. Lower positions appear first.</p></div>
+                  <label class="feature-toggle"><input type="checkbox" data-feature-toggle><span>Feature this catch</span></label>
+                  <label class="feature-order"><span>Position</span><input type="number" min="1" max="99" value="1" data-feature-order></label>
+                  <button class="button" type="button" data-save-feature><i data-lucide="star" aria-hidden="true"></i> Save homepage setting</button>
+                  <p class="form-status" data-feature-status aria-live="polite"></p>
+                </section>
+              </div>
+            </div>
+          </section>
+        </div>
+        </div>
+
+        <section class="program-manager" data-program-workspace hidden>
+          <aside class="program-list"><div class="program-list-head"><div><div class="section-label">Monthly programs</div><h2>Competition calendar</h2></div><button class="button" type="button" data-new-program><i data-lucide="plus" aria-hidden="true"></i> New month</button></div><div data-program-list></div></aside>
+          <form class="program-form" data-program-form>
+            <input type="hidden" name="challenge_id"><input type="hidden" name="ballot_id">
+            <div class="form-heading"><div><div class="section-label">Program settings</div><h2 data-program-form-title>Edit monthly competition</h2></div><span class="status-pill" data-program-state>Draft</span></div>
+            <div class="program-fields">
+              <label><span>Competition month</span><select name="program_month" required data-program-month></select></label>
+              <label><span>Species of the Month</span><select name="species_id" required data-program-species></select></label>
+              <label class="wide"><span>Challenge title</span><input name="challenge_title" required maxlength="100"></label>
+              <label class="wide"><span>Homepage description</span><textarea name="description" maxlength="300"></textarea></label>
+            </div>
+            <div class="schedule-summary"><i data-lucide="calendar-clock"></i><span><strong data-schedule-title>Automatic monthly schedule</strong><small data-schedule-copy>The challenge and vote will open and close automatically.</small></span></div>
+            <div class="ballot-heading"><div><div class="section-label">Community vote</div><h3>Next Species of the Month</h3></div></div>
+            <div class="program-fields">
+              <label class="wide"><span>Ballot title</span><input name="ballot_title" required maxlength="100"></label>
+            </div>
+            <fieldset class="candidate-fieldset"><legend>Voting candidates <small>Choose at least two</small></legend><div class="candidate-grid" data-candidate-grid></div></fieldset>
+            <div class="program-actions"><p class="form-status" data-program-status aria-live="polite"></p><button class="button primary" type="submit"><i data-lucide="save" aria-hidden="true"></i> Save monthly program</button></div>
+          </form>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="confirm-dialog" data-confirm-dialog>
+    <div class="confirm-icon" data-confirm-icon><i data-lucide="check" aria-hidden="true"></i></div>
+    <h2 data-confirm-title>Approve this catch?</h2>
+    <p data-confirm-copy>The hero photo will be published and the catch will enter the website records.</p>
+    <div class="confirm-actions"><button class="button" type="button" data-confirm-cancel>Cancel</button><button class="button primary" type="button" data-confirm-action>Approve</button></div>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+  <script src="admin.js?v=18"></script>
+</body>
+</html>

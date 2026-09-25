@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Spearfishing Victoria community member profile, catches and recipes.">
+  <title>Member Profile | Spearfishing Victoria</title>
+  <link rel="icon" href="data:,">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="/members/member.css?v=3">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar"><a class="brand" href="/"><span class="brand-mark"><i data-lucide="waves"></i></span><span>Spearfishing Victoria</span></a><nav><a href="/">Clubhouse</a><a href="/species/">Species</a><a href="/safety/">Safety</a><button class="icon-button" type="button" data-theme-toggle aria-label="Switch to dark mode"><i data-lucide="moon"></i></button></nav></header>
+
+    <div class="loading-state" data-loading><i data-lucide="loader-circle"></i><span>Loading member profile...</span></div>
+    <section class="private-state" data-private hidden><i data-lucide="lock"></i><div><div class="eyebrow">Private member page</div><h1>This profile is not public</h1><p>The member may have disabled their page, or the link may no longer be available.</p><a class="button" href="../"><i data-lucide="arrow-left"></i> Return to clubhouse</a></div></section>
+
+    <div data-profile hidden>
+      <section class="profile-head">
+        <div class="member-avatar"><img data-member-avatar-photo alt="" hidden><i data-member-avatar-icon data-lucide="user-round"></i></div>
+        <div class="profile-copy"><div class="eyebrow">Spearfishing Victoria member</div><h1 data-member-name></h1><p data-member-since></p><a data-member-instagram target="_blank" rel="noopener noreferrer" hidden><i data-lucide="instagram"></i><span></span></a></div>
+      </section>
+      <section class="stats" aria-label="Member contribution summary"><div><strong data-stat-points>0</strong><span>Year points</span></div><div><strong data-stat-species>0</strong><span>Species entered</span></div><div><strong data-stat-catches>0</strong><span>Approved catches</span></div><div><strong data-stat-recipes>0</strong><span>Published recipes</span></div></section>
+
+      <section class="collection" data-catches-section><div class="section-head"><div><div class="eyebrow">Approved catches</div><h2>From the water</h2><p>Photos and stories published through community moderation.</p></div></div><div class="card-grid" data-catches></div><div class="empty" data-catches-empty hidden>No public catches are shown on this profile.</div></section>
+      <section class="collection recipes" data-recipes-section><div class="section-head"><div><div class="eyebrow">Community cookbook</div><h2>From the kitchen</h2><p>Recipes this member has contributed to tracked species pages.</p></div></div><div class="card-grid" data-recipes></div><div class="empty" data-recipes-empty hidden>No public recipes are shown on this profile.</div></section>
+    </div>
+    <footer><span>Spearfishing Victoria community clubhouse</span><a href="../">Return to clubhouse</a></footer>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/supabase-config.js"></script>
+  <script src="/members/member.js?v=3"></script>
+</body>
+</html>

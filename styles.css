@@ -1,0 +1,690 @@
+html { scroll-behavior: smooth; background: #f0f2f5; }
+    html.dark-mode { background: #101215; }
+    body { margin: 0; padding: 16px; }
+    @media (max-width: 640px) { body { padding: 0; } }
+
+#sv-facebook-clubhouse {
+      --sv-bg: light-dark(#f7f7f7, #15191f);
+      --sv-surface: light-dark(#ffffff, #1d2631);
+      --sv-soft: light-dark(#e7edf5, #273443);
+      --sv-text: light-dark(#202124, #f4f5f7);
+      --sv-muted: light-dark(#6d7278, #b6bcc5);
+      --sv-line: light-dark(#dedede, #3a424c);
+      --sv-ink: light-dark(#2b2d31, #f1f2f4);
+      --sv-accent-soft: light-dark(#fff1eb, #4a2d24);
+      --sv-facebook: #1877f2;
+      --sv-orange: #f26c3a;
+      --sv-gold: light-dark(#a86e00, #f2bf4d);
+      --sv-on-color: #ffffff;
+      --sv-shadow: light-dark(0 1px 2px rgba(0, 0, 0, .10), 0 1px 2px rgba(0, 0, 0, .35));
+      color: var(--sv-text);
+      color-scheme: light dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    #sv-facebook-clubhouse * { box-sizing: border-box; }
+    #sv-facebook-clubhouse button,
+    #sv-facebook-clubhouse select,
+    #sv-facebook-clubhouse input,
+    #sv-facebook-clubhouse textarea { font: inherit; }
+    #sv-facebook-clubhouse a { color: inherit; text-decoration: none; }
+    #sv-facebook-clubhouse h1,
+    #sv-facebook-clubhouse h2,
+    #sv-facebook-clubhouse h3,
+    #sv-facebook-clubhouse p { margin-top: 0; }
+    #sv-facebook-clubhouse h1 { margin-bottom: 10px; font-size: 36px; line-height: 1.08; font-weight: 500; letter-spacing: 0; }
+    #sv-facebook-clubhouse h2 { margin-bottom: 8px; font-size: 20px; line-height: 1.2; font-weight: 500; letter-spacing: 0; }
+    #sv-facebook-clubhouse h3 { margin-bottom: 3px; font-size: 14px; line-height: 1.25; font-weight: 500; letter-spacing: 0; }
+    #sv-facebook-clubhouse .site {
+      --sv-bg: #f7f7f7;
+      --sv-surface: #ffffff;
+      --sv-soft: #e7edf5;
+      --sv-text: #202124;
+      --sv-muted: #6d7278;
+      --sv-line: #dedede;
+      --sv-ink: #2b2d31;
+      --sv-primary: #2b2d31;
+      --sv-accent-soft: #fff1eb;
+      --sv-gold: #a86e00;
+      --sv-danger: #b42318;
+      --sv-shadow: 0 1px 2px rgba(0, 0, 0, .10);
+      color-scheme: light;
+      color: var(--sv-text);
+      overflow: hidden;
+      border: 1px solid var(--sv-line);
+      border-radius: 8px;
+      background: var(--sv-bg);
+      box-shadow: var(--sv-shadow);
+    }
+    #sv-facebook-clubhouse .site.dark-preview {
+      --sv-bg: #15191f;
+      --sv-surface: #1d2631;
+      --sv-soft: #273443;
+      --sv-text: #f4f5f7;
+      --sv-muted: #b6bcc5;
+      --sv-line: #3a424c;
+      --sv-ink: #f1f2f4;
+      --sv-primary: #424850;
+      --sv-accent-soft: #4a2d24;
+      --sv-gold: #f2bf4d;
+      --sv-danger: #ff8a80;
+      --sv-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+      color-scheme: dark;
+    }
+    #sv-facebook-clubhouse .topbar {
+      min-height: 66px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--sv-surface);
+      border-bottom: 1px solid var(--sv-line);
+    }
+    #sv-facebook-clubhouse .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: max-content;
+      font-weight: 500;
+    }
+    #sv-facebook-clubhouse .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--sv-on-color);
+      background: var(--sv-orange);
+    }
+    #sv-facebook-clubhouse .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-left: auto;
+      color: var(--sv-muted);
+      font-size: 13px;
+    }
+    #sv-facebook-clubhouse .nav a:not(.button-primary) { color: var(--sv-muted); }
+    #sv-facebook-clubhouse .nav a:not(.button-primary):hover,
+    #sv-facebook-clubhouse .nav a:not(.button-primary):focus-visible { color: var(--sv-text); }
+    #sv-facebook-clubhouse .button-primary,
+    #sv-facebook-clubhouse .button-secondary,
+    #sv-facebook-clubhouse .icon-button {
+      min-height: 40px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 0;
+      text-decoration: none;
+    }
+    #sv-facebook-clubhouse .button-primary { padding: 9px 14px; color: var(--sv-on-color); background: var(--sv-primary); }
+    #sv-facebook-clubhouse .button-primary.orange { background: var(--sv-orange); }
+    #sv-facebook-clubhouse .button-primary.messenger { background: var(--sv-facebook); }
+    #sv-facebook-clubhouse .button-secondary { padding: 9px 14px; color: var(--sv-text); background: var(--sv-soft); }
+    #sv-facebook-clubhouse .icon-button { min-width: 40px; color: var(--sv-text); background: var(--sv-soft); }
+    #sv-facebook-clubhouse .member-button { position: relative; white-space: nowrap; }
+    #sv-facebook-clubhouse .notification-badge { position: absolute; top: -7px; right: -7px; min-width: 18px; height: 18px; display: grid; place-items: center; padding: 0 5px; color: var(--sv-on-color); background: var(--sv-orange); border: 2px solid var(--sv-surface); border-radius: 9px; font-size: 9px; font-weight: 800; line-height: 1; }
+    #sv-facebook-clubhouse .mobile-menu-toggle,
+    #sv-facebook-clubhouse .mobile-navigation { display: none; }
+    #sv-facebook-clubhouse .mobile-navigation { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; padding: 1px; background: var(--sv-line); border-bottom: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .mobile-navigation a { min-width: 0; display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 10px; padding: 14px; color: var(--sv-text); background: var(--sv-surface); }
+    #sv-facebook-clubhouse .mobile-navigation a:hover,
+    #sv-facebook-clubhouse .mobile-navigation a:focus-visible { background: var(--sv-accent-soft); outline: 0; }
+    #sv-facebook-clubhouse .mobile-navigation svg { margin-top: 1px; color: var(--sv-orange); }
+    #sv-facebook-clubhouse .mobile-navigation span,
+    #sv-facebook-clubhouse .mobile-navigation strong,
+    #sv-facebook-clubhouse .mobile-navigation small { min-width: 0; display: block; }
+    #sv-facebook-clubhouse .mobile-navigation strong { font-size: 12px; }
+    #sv-facebook-clubhouse .mobile-navigation small { margin-top: 2px; overflow: hidden; color: var(--sv-muted); font-size: 9px; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+    #sv-facebook-clubhouse .masthead {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 320px;
+      margin: 18px 20px 0;
+      overflow: hidden;
+      border: 1px solid var(--sv-line);
+      border-radius: 6px;
+      background: var(--sv-surface);
+      box-shadow: var(--sv-shadow);
+    }
+    #sv-facebook-clubhouse .mast-copy {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    #sv-facebook-clubhouse .mast-copy h1 span { color: var(--sv-orange); }
+    #sv-facebook-clubhouse .mast-copy p { max-width: 480px; margin-bottom: 18px; color: var(--sv-muted); font-size: 14px; line-height: 1.5; }
+    #sv-facebook-clubhouse .eyebrow {
+      color: var(--sv-muted);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    #sv-facebook-clubhouse .mast-copy .eyebrow,
+    #sv-facebook-clubhouse .lower-band .eyebrow { color: var(--sv-orange); }
+    #sv-facebook-clubhouse .points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 11px;
+      margin-bottom: 19px;
+      color: var(--sv-muted);
+      font-size: 12px;
+    }
+    #sv-facebook-clubhouse .points span { display: inline-flex; align-items: center; gap: 4px; }
+    #sv-facebook-clubhouse .mast-image { position: relative; min-width: 0; height: 320px; overflow: hidden; }
+    #sv-facebook-clubhouse .mast-image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; transition: opacity .25s ease; }
+    #sv-facebook-clubhouse .mast-credit { position: absolute; left: 14px; bottom: 14px; max-width: calc(100% - 28px); padding: 7px 9px; overflow: hidden; color: #fff; background: rgba(20, 24, 30, .82); border-radius: 4px; font-size: 10px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    #sv-facebook-clubhouse .mast-image.has-slides .mast-credit { bottom: 58px; }
+    #sv-facebook-clubhouse .mast-controls { position: absolute; right: 14px; bottom: 14px; left: 14px; min-height: 36px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    #sv-facebook-clubhouse .mast-controls > button { width: 34px; height: 34px; display: grid; place-items: center; padding: 0; color: #fff; background: rgba(20, 24, 30, .82); border: 1px solid rgba(255, 255, 255, .24); border-radius: 50%; }
+    #sv-facebook-clubhouse .mast-controls > button:hover,
+    #sv-facebook-clubhouse .mast-controls > button:focus-visible { background: var(--sv-orange); }
+    #sv-facebook-clubhouse .mast-dots { display: flex; align-items: center; gap: 7px; padding: 8px 10px; background: rgba(20, 24, 30, .82); border-radius: 18px; }
+    #sv-facebook-clubhouse .mast-dot { width: 8px; height: 8px; min-height: 0; padding: 0; background: rgba(255, 255, 255, .5); border: 0; border-radius: 50%; }
+    #sv-facebook-clubhouse .mast-dot[aria-current="true"] { background: var(--sv-orange); box-shadow: 0 0 0 2px #fff; }
+    #sv-facebook-clubhouse .entry-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #sv-facebook-clubhouse .species-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: #fff;
+      background: var(--sv-orange);
+      font-size: 11px;
+      font-weight: 500;
+    }
+    #sv-facebook-clubhouse .utility-band { padding: 16px 20px 22px; }
+    #sv-facebook-clubhouse .utility-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(270px, 1fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+    #sv-facebook-clubhouse .panel {
+      background: var(--sv-surface);
+      border: 1px solid var(--sv-line);
+      border-radius: 6px;
+      box-shadow: var(--sv-shadow);
+      padding: 17px;
+    }
+    #sv-facebook-clubhouse .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 13px;
+    }
+    #sv-facebook-clubhouse .panel-head p { margin-bottom: 0; color: var(--sv-muted); font-size: 12px; line-height: 1.4; }
+    #sv-facebook-clubhouse .region-select {
+      min-height: 40px;
+      max-width: 210px;
+      border: 1px solid var(--sv-line);
+      border-radius: 6px;
+      padding: 7px 30px 7px 10px;
+      color: var(--sv-text);
+      background: var(--sv-bg);
+    }
+    #sv-facebook-clubhouse .forecast-days {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      border-top: 1px solid var(--sv-line);
+      border-bottom: 1px solid var(--sv-line);
+    }
+    #sv-facebook-clubhouse .forecast-day {
+      min-height: 142px;
+      padding: 12px 8px;
+      border-right: 1px solid var(--sv-line);
+    }
+    #sv-facebook-clubhouse .forecast-day:last-child { border-right: 0; }
+    #sv-facebook-clubhouse .forecast-day span { display: block; color: var(--sv-muted); font-size: 11px; }
+    #sv-facebook-clubhouse .forecast-day span + span { margin-top: 4px; }
+    #sv-facebook-clubhouse .forecast-day strong { display: block; margin: 5px 0; color: var(--sv-text); font-weight: 500; }
+    #sv-facebook-clubhouse .forecast-day.best strong { color: var(--sv-orange); }
+    #sv-facebook-clubhouse .forecast-day.watch strong { color: var(--sv-gold); }
+    #sv-facebook-clubhouse .forecast-day.rough strong { color: var(--sv-danger); }
+    #sv-facebook-clubhouse .forecast-message {
+      grid-column: 1 / -1;
+      min-height: 142px;
+      display: grid;
+      place-items: center;
+      gap: 10px;
+      padding: 20px;
+      text-align: center;
+      color: var(--sv-muted);
+      font-size: 13px;
+    }
+    #sv-facebook-clubhouse .forecast-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 13px;
+    }
+    #sv-facebook-clubhouse .metric span { display: block; color: var(--sv-muted); font-size: 11px; }
+    #sv-facebook-clubhouse .metric strong { display: block; margin-top: 3px; font-size: 13px; font-weight: 500; }
+    #sv-facebook-clubhouse .forecast-foot {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+      color: var(--sv-muted);
+      font-size: 11px;
+      line-height: 1.4;
+    }
+    #sv-facebook-clubhouse .forecast-foot a { color: var(--sv-text); white-space: nowrap; }
+    #sv-facebook-clubhouse .chat-list { border-top: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .chat-row {
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--sv-line);
+    }
+    #sv-facebook-clubhouse .chat-row i { color: var(--sv-muted); }
+    #sv-facebook-clubhouse .chat-row span { display: block; color: var(--sv-muted); font-size: 11px; }
+    #sv-facebook-clubhouse .chat-actions { display: grid; gap: 8px; margin-top: 12px; }
+    #sv-facebook-clubhouse .lower-band {
+      padding: 22px 20px;
+      border-top: 1px solid var(--sv-line);
+    }
+    #sv-facebook-clubhouse .lower-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+    }
+    #sv-facebook-clubhouse .leader-row {
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 0;
+      border-top: 1px solid var(--sv-line);
+      font-size: 13px;
+    }
+    #sv-facebook-clubhouse .rank {
+      width: 27px;
+      height: 27px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--sv-muted);
+      background: var(--sv-accent-soft);
+      font-size: 12px;
+    }
+    #sv-facebook-clubhouse .leader-row:first-of-type .rank { color: #fff; background: var(--sv-orange); }
+    #sv-facebook-clubhouse .member-profile-link:hover,
+    #sv-facebook-clubhouse .member-profile-link:focus-visible { color: var(--sv-orange); outline: 0; }
+    #sv-facebook-clubhouse .leader-meta { display: block; margin-top: 2px; color: var(--sv-muted); font-size: 11px; }
+    #sv-facebook-clubhouse .leader-empty { display: flex; align-items: center; gap: 9px; margin: 12px 0; padding: 14px; color: var(--sv-muted); background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; font-size: 12px; }
+    #sv-facebook-clubhouse .score-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 12px 0 2px; }
+    #sv-facebook-clubhouse .score-strip span { min-width: 0; padding: 8px; color: var(--sv-muted); background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 5px; font-size: 10px; line-height: 1.3; }
+    #sv-facebook-clubhouse .score-strip strong { display: block; margin-bottom: 1px; color: var(--sv-orange); font-size: 14px; }
+    #sv-facebook-clubhouse .leaderboard-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; margin: 12px 0 8px; padding: 3px; background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; }
+    #sv-facebook-clubhouse .leaderboard-tabs button { min-width: 0; min-height: 34px; padding: 6px 8px; overflow: hidden; color: var(--sv-muted); text-overflow: ellipsis; white-space: nowrap; background: transparent; border: 0; border-radius: 4px; font: inherit; font-size: 10px; cursor: pointer; }
+    #sv-facebook-clubhouse .leaderboard-tabs button[aria-selected="true"] { color: var(--sv-text); background: var(--sv-card); box-shadow: var(--sv-shadow); font-weight: 700; }
+    #sv-facebook-clubhouse .vote-list { display: grid; gap: 8px; }
+    #sv-facebook-clubhouse .vote-option {
+      width: 100%;
+      padding: 10px;
+      text-align: left;
+      color: var(--sv-text);
+      background: var(--sv-bg);
+      border: 1px solid var(--sv-line);
+      border-radius: 6px;
+    }
+    #sv-facebook-clubhouse .vote-option[aria-pressed="true"] { background: var(--sv-accent-soft); border-color: var(--sv-orange); }
+    #sv-facebook-clubhouse .vote-top { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; }
+    #sv-facebook-clubhouse .vote-track { display: block; height: 6px; margin-top: 7px; overflow: hidden; border-radius: 3px; background: var(--sv-line); }
+    #sv-facebook-clubhouse .vote-fill { display: block; height: 100%; background: var(--sv-orange); transition: width .25s ease; }
+    #sv-facebook-clubhouse .entries-band { padding: 20px; background: var(--sv-surface); border-top: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .entries-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin-bottom: 12px; }
+    #sv-facebook-clubhouse .entries-head h2 { margin-bottom: 0; }
+    #sv-facebook-clubhouse .entries-head span { color: var(--sv-muted); font-size: 12px; }
+    #sv-facebook-clubhouse .entry-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+    #sv-facebook-clubhouse .entry-photo { position: relative; height: 145px; overflow: hidden; border-radius: 6px; background: var(--sv-soft); }
+    #sv-facebook-clubhouse a.entry-photo { display: block; }
+    #sv-facebook-clubhouse .entry-photo img { transition: transform .25s ease; }
+    #sv-facebook-clubhouse .entry-photo:hover img { transform: scale(1.035); }
+    #sv-facebook-clubhouse .entry-photo.featured::after { content: 'Featured'; position: absolute; top: 8px; right: 8px; padding: 4px 6px; color: #fff; background: var(--sv-orange); border-radius: 4px; font-size: 8px; font-weight: 800; text-transform: uppercase; }
+    #sv-facebook-clubhouse .entry-label { position: absolute; left: 8px; right: 8px; bottom: 8px; padding: 6px 7px; border-radius: 4px; color: #fff; background: rgba(20, 35, 55, .82); font-size: 11px; }
+    #sv-facebook-clubhouse .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    #sv-facebook-clubhouse .tracked-species { padding: 24px 20px 26px; background: var(--sv-bg); border-top: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .tracked-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 16px; }
+    #sv-facebook-clubhouse .tracked-head h2 { margin-bottom: 5px; }
+    #sv-facebook-clubhouse .tracked-head p { margin-bottom: 0; color: var(--sv-muted); font-size: 13px; }
+    #sv-facebook-clubhouse .species-tools { display: flex; align-items: center; gap: 9px; }
+    #sv-facebook-clubhouse .species-search { min-width: 235px; min-height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 10px; color: var(--sv-muted); background: var(--sv-surface); border: 1px solid var(--sv-line); border-radius: 6px; }
+    #sv-facebook-clubhouse .species-search input { width: 100%; min-width: 0; color: var(--sv-text); background: transparent; border: 0; outline: 0; font: inherit; font-size: 12px; }
+    #sv-facebook-clubhouse .species-filters { display: flex; padding: 3px; background: var(--sv-soft); border-radius: 6px; }
+    #sv-facebook-clubhouse .species-filters button { min-height: 32px; padding: 6px 9px; color: var(--sv-muted); background: transparent; border: 0; border-radius: 4px; font-size: 11px; }
+    #sv-facebook-clubhouse .species-filters button[aria-pressed="true"] { color: var(--sv-text); background: var(--sv-surface); box-shadow: var(--sv-shadow); }
+    #sv-facebook-clubhouse .tracked-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+    #sv-facebook-clubhouse .tracked-card { min-width: 0; padding: 0; overflow: hidden; text-align: left; color: var(--sv-text); background: var(--sv-surface); border: 1px solid var(--sv-line); border-radius: 6px; box-shadow: var(--sv-shadow); }
+    #sv-facebook-clubhouse .tracked-card:hover,
+    #sv-facebook-clubhouse .tracked-card:focus-visible { border-color: var(--sv-orange); transform: translateY(-1px); }
+    #sv-facebook-clubhouse .tracked-card[hidden] { display: none; }
+    #sv-facebook-clubhouse .tracked-image { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--sv-soft); }
+    #sv-facebook-clubhouse .tracked-image img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    #sv-facebook-clubhouse .tracked-badge { position: absolute; top: 8px; left: 8px; padding: 5px 7px; color: #fff; background: var(--sv-orange); border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+    #sv-facebook-clubhouse .tracked-copy { display: grid; gap: 5px; padding: 14px; }
+    #sv-facebook-clubhouse .tracked-copy > strong { font-size: 15px; font-weight: 600; }
+    #sv-facebook-clubhouse .tracked-copy > span:not(.scientific-name) { color: var(--sv-muted); font-size: 11px; }
+    #sv-facebook-clubhouse .tracked-copy .recipe-link { display: inline-flex; align-items: center; gap: 5px; margin-top: 5px; color: var(--sv-orange) !important; }
+    #sv-facebook-clubhouse .species-empty { min-height: 120px; display: grid; place-items: center; align-content: center; gap: 8px; color: var(--sv-muted); border: 1px dashed var(--sv-line); border-radius: 6px; font-size: 12px; }
+    #sv-facebook-clubhouse .species-hub { padding: 24px 20px; background: var(--sv-bg); border-top: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .species-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 16px; }
+    #sv-facebook-clubhouse .species-head h2 { margin-bottom: 5px; }
+    #sv-facebook-clubhouse .species-head p { max-width: 620px; margin-bottom: 0; color: var(--sv-muted); font-size: 13px; }
+    #sv-facebook-clubhouse .species-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    #sv-facebook-clubhouse .species-profile,
+    #sv-facebook-clubhouse .recipe-feature { display: grid; grid-template-columns: minmax(160px, .8fr) 1.2fr; overflow: hidden; border: 1px solid var(--sv-line); border-radius: 6px; background: var(--sv-surface); box-shadow: var(--sv-shadow); }
+    #sv-facebook-clubhouse .species-profile > img,
+    #sv-facebook-clubhouse .recipe-feature > img { width: 100%; height: 100%; min-height: 270px; object-fit: cover; }
+    #sv-facebook-clubhouse .species-copy,
+    #sv-facebook-clubhouse .recipe-copy { padding: 20px; }
+    #sv-facebook-clubhouse .scientific-name { color: var(--sv-muted); font-size: 12px; font-style: italic; }
+    #sv-facebook-clubhouse .species-copy h3,
+    #sv-facebook-clubhouse .recipe-copy h3 { margin: 5px 0 8px; font-size: 18px; }
+    #sv-facebook-clubhouse .species-copy > p,
+    #sv-facebook-clubhouse .recipe-copy > p { color: var(--sv-muted); font-size: 13px; line-height: 1.5; }
+    #sv-facebook-clubhouse .species-facts { display: grid; gap: 0; margin: 14px 0; }
+    #sv-facebook-clubhouse .species-facts div { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .species-facts dt { color: var(--sv-muted); font-size: 12px; }
+    #sv-facebook-clubhouse .species-facts dd { margin: 0; font-size: 12px; font-weight: 500; text-align: right; }
+    #sv-facebook-clubhouse .rules-note { margin-bottom: 0; font-size: 11px !important; }
+    #sv-facebook-clubhouse .recipe-meta { display: flex; flex-wrap: wrap; gap: 12px; margin: 14px 0 18px; color: var(--sv-muted); font-size: 12px; }
+    #sv-facebook-clubhouse .recipe-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    #sv-facebook-clubhouse .recipe-photo-grid { grid-template-columns: minmax(220px, 1fr); }
+    #sv-facebook-clubhouse .recipe-meta span,
+    #sv-facebook-clubhouse .dialog-summary span { display: inline-flex; align-items: center; gap: 5px; }
+    #sv-facebook-clubhouse .authority-note { display: flex; align-items: flex-start; gap: 8px; margin-top: 13px; color: var(--sv-muted); font-size: 11px; line-height: 1.45; }
+    #sv-facebook-clubhouse .authority-note svg { flex: 0 0 auto; }
+    #sv-facebook-clubhouse .recipe-dialog { width: min(780px, calc(100% - 28px)); max-height: calc(100vh - 28px); padding: 0; overflow: auto; color: var(--sv-text); background: var(--sv-surface); border: 1px solid var(--sv-line); border-radius: 8px; box-shadow: 0 24px 70px rgba(0, 0, 0, .28); }
+    #sv-facebook-clubhouse .recipe-dialog::backdrop { background: rgba(10, 14, 20, .68); }
+    #sv-facebook-clubhouse .member-dialog { width: min(620px, calc(100% - 28px)); max-height: calc(100vh - 28px); padding: 0; overflow: auto; color: var(--sv-text); background: var(--sv-surface); border: 1px solid var(--sv-line); border-radius: 8px; box-shadow: 0 24px 70px rgba(0, 0, 0, .28); }
+    #sv-facebook-clubhouse .member-dialog::backdrop { background: rgba(10, 14, 20, .68); }
+    #sv-facebook-clubhouse .acknowledgement-dialog { width: min(460px, calc(100% - 28px)); padding: 28px; color: var(--sv-text); text-align: center; background: var(--sv-surface); border: 1px solid var(--sv-line); border-radius: 8px; box-shadow: 0 24px 70px rgba(0, 0, 0, .28); }
+    #sv-facebook-clubhouse .acknowledgement-dialog::backdrop { background: rgba(10, 14, 20, .68); }
+    #sv-facebook-clubhouse .acknowledgement-icon { width: 48px; height: 48px; display: grid; place-items: center; margin: 0 auto 14px; color: #fff; background: #247653; border-radius: 50%; }
+    #sv-facebook-clubhouse .acknowledgement-dialog h2 { margin: 6px 0 8px; }
+    #sv-facebook-clubhouse .acknowledgement-dialog > p { margin: 0; color: var(--sv-muted); font-size: 13px; line-height: 1.5; }
+    #sv-facebook-clubhouse .acknowledgement-next { display: flex; align-items: flex-start; gap: 8px; margin-top: 18px; padding: 12px; color: var(--sv-muted); text-align: left; background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; font-size: 11px; line-height: 1.45; }
+    #sv-facebook-clubhouse .acknowledgement-next svg { flex: 0 0 auto; color: var(--sv-orange); }
+    #sv-facebook-clubhouse .acknowledgement-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 18px; }
+    #sv-facebook-clubhouse .action-toast { position: fixed; z-index: 1000; right: 20px; bottom: 20px; max-width: min(360px, calc(100vw - 24px)); display: flex; align-items: center; gap: 8px; padding: 11px 13px; color: #fff; background: #247653; border-radius: 6px; box-shadow: 0 8px 28px rgba(0, 0, 0, .22); font-size: 12px; font-weight: 700; }
+    #sv-facebook-clubhouse .action-toast svg { flex: 0 0 auto; }
+    #sv-facebook-clubhouse .action-toast.toast-leaving { opacity: 0; transform: translateY(8px); transition: opacity .2s ease, transform .2s ease; }
+    #sv-facebook-clubhouse .scoring-dialog { width: min(660px, calc(100% - 28px)); max-height: calc(100vh - 28px); padding: 0; overflow: auto; color: var(--sv-text); background: var(--sv-surface); border: 1px solid var(--sv-line); border-radius: 8px; box-shadow: 0 24px 70px rgba(0, 0, 0, .28); }
+    #sv-facebook-clubhouse .scoring-dialog::backdrop { background: rgba(10, 14, 20, .68); }
+    #sv-facebook-clubhouse .scoring-body { padding: 20px; }
+    #sv-facebook-clubhouse .scoring-intro { margin: 0 0 16px; color: var(--sv-muted); font-size: 13px; line-height: 1.55; }
+    #sv-facebook-clubhouse .scoring-callouts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 18px; }
+    #sv-facebook-clubhouse .scoring-callouts > div { display: flex; align-items: flex-start; gap: 8px; padding: 12px; background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; }
+    #sv-facebook-clubhouse .scoring-callouts svg { flex: 0 0 auto; color: var(--sv-orange); }
+    #sv-facebook-clubhouse .scoring-callouts span { color: var(--sv-muted); font-size: 10px; line-height: 1.35; }
+    #sv-facebook-clubhouse .scoring-callouts strong { display: block; margin-bottom: 2px; color: var(--sv-text); font-size: 12px; }
+    #sv-facebook-clubhouse .scoring-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    #sv-facebook-clubhouse .scoring-table th,
+    #sv-facebook-clubhouse .scoring-table td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .scoring-table th { color: var(--sv-muted); background: var(--sv-bg); font-size: 10px; text-transform: uppercase; }
+    #sv-facebook-clubhouse .scoring-table th:not(:first-child),
+    #sv-facebook-clubhouse .scoring-table td:not(:first-child) { text-align: right; }
+    #sv-facebook-clubhouse .vote-bonuses { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; font-size: 11px; }
+    #sv-facebook-clubhouse .vote-bonuses span { margin-right: auto; color: var(--sv-muted); }
+    #sv-facebook-clubhouse .vote-bonuses strong { padding: 5px 8px; color: var(--sv-orange); background: var(--sv-accent-soft); border-radius: 4px; }
+    #sv-facebook-clubhouse .scoring-note { display: flex; align-items: flex-start; gap: 8px; margin: 16px 0 0; padding-top: 14px; color: var(--sv-muted); border-top: 1px solid var(--sv-line); font-size: 11px; line-height: 1.45; }
+    #sv-facebook-clubhouse .scoring-note svg { flex: 0 0 auto; }
+    #sv-facebook-clubhouse .submission-dialog { width: min(820px, calc(100% - 28px)); max-height: calc(100vh - 28px); padding: 0; overflow: auto; color: var(--sv-text); background: var(--sv-surface); border: 1px solid var(--sv-line); border-radius: 8px; box-shadow: 0 24px 70px rgba(0, 0, 0, .28); }
+    #sv-facebook-clubhouse .submission-dialog::backdrop { background: rgba(10, 14, 20, .68); }
+    #sv-facebook-clubhouse .submission-form { padding: 20px; }
+    #sv-facebook-clubhouse .submission-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    #sv-facebook-clubhouse .submission-fields label,
+    #sv-facebook-clubhouse .submission-fields label > span:first-child { min-width: 0; }
+    #sv-facebook-clubhouse .submission-fields label > span:first-child,
+    #sv-facebook-clubhouse .photo-fields legend,
+    #sv-facebook-clubhouse .submission-confirmations legend { display: block; margin-bottom: 6px; color: var(--sv-text); font-size: 11px; font-weight: 600; }
+    #sv-facebook-clubhouse .submission-fields select,
+    #sv-facebook-clubhouse .submission-fields input,
+    #sv-facebook-clubhouse .submission-fields textarea { width: 100%; min-height: 42px; padding: 9px 11px; color: var(--sv-text); background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; }
+    #sv-facebook-clubhouse .submission-fields textarea { min-height: 92px; resize: vertical; line-height: 1.45; }
+    #sv-facebook-clubhouse .submission-fields :is(select, input, textarea):focus,
+    #sv-facebook-clubhouse .handle-input:focus-within { outline: 2px solid var(--sv-orange); outline-offset: 1px; }
+    #sv-facebook-clubhouse .field-wide { grid-column: 1 / -1; }
+    #sv-facebook-clubhouse .input-suffix { display: flex; align-items: center; overflow: hidden; background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; }
+    #sv-facebook-clubhouse .input-suffix input { border: 0; outline: 0 !important; }
+    #sv-facebook-clubhouse .input-suffix > span { padding: 0 11px; color: var(--sv-muted); font-size: 12px; }
+    #sv-facebook-clubhouse .photo-fields,
+    #sv-facebook-clubhouse .submission-confirmations { min-width: 0; margin: 18px 0 0; padding: 0; border: 0; }
+    #sv-facebook-clubhouse .photo-input-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+    #sv-facebook-clubhouse .photo-input { position: relative; min-height: 118px; display: grid; grid-template-columns: 22px 1fr; align-content: start; gap: 8px; padding: 13px; color: var(--sv-text); background: var(--sv-bg); border: 1px dashed var(--sv-line); border-radius: 6px; cursor: pointer; }
+    #sv-facebook-clubhouse .photo-input:hover,
+    #sv-facebook-clubhouse .photo-input:focus-within { border-color: var(--sv-orange); background: var(--sv-accent-soft); }
+    #sv-facebook-clubhouse .photo-input > svg { color: var(--sv-orange); }
+    #sv-facebook-clubhouse .photo-input strong,
+    #sv-facebook-clubhouse .photo-input small { display: block; }
+    #sv-facebook-clubhouse .photo-input strong { font-size: 12px; }
+    #sv-facebook-clubhouse .photo-input small { margin-top: 3px; color: var(--sv-muted); font-size: 10px; line-height: 1.35; }
+    #sv-facebook-clubhouse .photo-input em { grid-column: 1 / -1; align-self: end; margin-top: 8px; overflow: hidden; color: var(--sv-orange); font-size: 10px; font-style: normal; text-overflow: ellipsis; white-space: nowrap; }
+    #sv-facebook-clubhouse .photo-input input { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
+    #sv-facebook-clubhouse .photo-input.optional { border-style: solid; }
+    #sv-facebook-clubhouse .submission-confirmations { display: grid; gap: 8px; }
+    #sv-facebook-clubhouse .submission-confirmations label,
+    #sv-facebook-clubhouse .profile-choice { display: flex; align-items: flex-start; gap: 9px; color: var(--sv-muted); font-size: 11px; line-height: 1.45; }
+    #sv-facebook-clubhouse .submission-confirmations input,
+    #sv-facebook-clubhouse .profile-choice input { flex: 0 0 auto; margin-top: 2px; accent-color: var(--sv-orange); }
+    #sv-facebook-clubhouse .submission-foot { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .submission-foot p { display: flex; align-items: flex-start; gap: 7px; max-width: 440px; margin: 0; color: var(--sv-muted); font-size: 10px; line-height: 1.45; }
+    #sv-facebook-clubhouse .submission-foot p svg { flex: 0 0 auto; }
+    #sv-facebook-clubhouse .submission-status { min-height: 18px; margin: 12px 0 0; color: var(--sv-orange); font-size: 11px; }
+    #sv-facebook-clubhouse .profile-form { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .handle-input { display: flex; align-items: center; overflow: hidden; color: var(--sv-muted); background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; }
+    #sv-facebook-clubhouse .handle-input > span { padding-left: 12px; }
+    #sv-facebook-clubhouse .handle-input input { border: 0; outline: 0 !important; }
+    #sv-facebook-clubhouse .profile-choice { align-items: center; min-width: 0; padding: 11px 12px; color: var(--sv-text); background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; font-weight: 400 !important; cursor: pointer; }
+    #sv-facebook-clubhouse .auth-form .profile-choice input { width: 18px; height: 18px; min-height: 18px; padding: 0; }
+    #sv-facebook-clubhouse .profile-choice > span { min-width: 0; }
+    #sv-facebook-clubhouse .profile-choice strong,
+    #sv-facebook-clubhouse .profile-choice small { display: block; }
+    #sv-facebook-clubhouse .profile-choice strong { font-size: 12px; }
+    #sv-facebook-clubhouse .profile-choice small { margin-top: 2px; color: var(--sv-muted); font-size: 10px; line-height: 1.4; }
+    #sv-facebook-clubhouse .member-dialog-body { padding: 20px; }
+    #sv-facebook-clubhouse .member-dialog-body p { margin: 0 0 16px; color: var(--sv-muted); font-size: 13px; line-height: 1.5; }
+    #sv-facebook-clubhouse .auth-form { display: grid; gap: 10px; }
+    #sv-facebook-clubhouse .auth-form label { color: var(--sv-text); font-size: 12px; font-weight: 600; }
+    #sv-facebook-clubhouse .auth-form input { min-height: 44px; width: 100%; padding: 10px 12px; color: var(--sv-text); background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; font: inherit; }
+    #sv-facebook-clubhouse .auth-form input:focus { outline: 2px solid var(--sv-orange); outline-offset: 1px; }
+    #sv-facebook-clubhouse .auth-form button { margin-top: 4px; }
+    #sv-facebook-clubhouse .social-auth { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+    #sv-facebook-clubhouse .social-auth-button { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 10px 12px; color: var(--sv-text); background: var(--sv-surface); border: 1px solid var(--sv-line); border-radius: 6px; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+    #sv-facebook-clubhouse .social-auth-button:hover { border-color: var(--sv-muted); }
+    #sv-facebook-clubhouse .social-auth-button:disabled { opacity: .6; cursor: wait; }
+    #sv-facebook-clubhouse .social-auth-button span { width: 20px; height: 20px; display: inline-grid; place-items: center; flex: 0 0 auto; border-radius: 50%; font-weight: 800; }
+    #sv-facebook-clubhouse .social-auth-button.google span { color: #174ea6; background: #fff; border: 1px solid #dadce0; }
+    #sv-facebook-clubhouse .social-auth-button.facebook span { color: #fff; background: #1877f2; font-family: Arial, sans-serif; }
+    #sv-facebook-clubhouse .auth-divider { display: flex; align-items: center; gap: 10px; margin: 16px 0 12px; color: var(--sv-muted); font-size: 10px; text-transform: uppercase; }
+    #sv-facebook-clubhouse .auth-divider::before, #sv-facebook-clubhouse .auth-divider::after { height: 1px; flex: 1; content: ''; background: var(--sv-line); }
+    #sv-facebook-clubhouse .auth-status { min-height: 18px; margin: 14px 0 0 !important; color: var(--sv-orange) !important; }
+    #sv-facebook-clubhouse .member-summary { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    #sv-facebook-clubhouse .member-summary strong,
+    #sv-facebook-clubhouse .member-summary span { display: block; }
+    #sv-facebook-clubhouse .member-summary [data-member-email] { margin-top: 2px; color: var(--sv-muted); font-size: 12px; }
+    #sv-facebook-clubhouse .member-avatar { width: 42px; height: 42px; display: grid; place-items: center; flex: 0 0 auto; overflow: hidden; color: var(--sv-on-color); background: var(--sv-orange); border-radius: 50%; }
+    #sv-facebook-clubhouse .member-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    #sv-facebook-clubhouse .profile-photo-field { display: flex; align-items: center; gap: 14px; padding: 12px; border: 1px solid var(--sv-line); border-radius: 6px; }
+    #sv-facebook-clubhouse .profile-photo-preview { width: 64px; height: 64px; display: grid; place-items: center; flex: 0 0 auto; overflow: hidden; color: var(--sv-on-color); background: var(--sv-orange); border-radius: 50%; }
+    #sv-facebook-clubhouse .profile-photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+    #sv-facebook-clubhouse .profile-photo-copy { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+    #sv-facebook-clubhouse .profile-photo-copy small { flex-basis: 100%; color: var(--sv-muted); }
+    #sv-facebook-clubhouse .profile-photo-action { position: relative; display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 12px; color: var(--sv-ink); background: var(--sv-soft); border: 1px solid var(--sv-line); border-radius: 5px; cursor: pointer; }
+    #sv-facebook-clubhouse .profile-photo-action input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    #sv-facebook-clubhouse .profile-photo-remove { justify-self: start; }
+    #sv-facebook-clubhouse .profile-address-input { display: flex; align-items: stretch; overflow: hidden; border: 1px solid var(--sv-line); border-radius: 5px; }
+    #sv-facebook-clubhouse .profile-address-input span { display: flex; align-items: center; max-width: 48%; padding: 0 10px; overflow: hidden; color: var(--sv-muted); background: var(--sv-soft); border-right: 1px solid var(--sv-line); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+    #sv-facebook-clubhouse .profile-address-input input { min-width: 0; border: 0; border-radius: 0; }
+    #sv-facebook-clubhouse .profile-field-note { margin-top: -4px; color: var(--sv-muted); }
+    #sv-facebook-clubhouse .member-tabs { display: grid; grid-template-columns: 1fr 1fr; margin: 2px 0 16px; padding: 3px; background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; }
+    #sv-facebook-clubhouse .member-tabs button { min-height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 10px; color: var(--sv-muted); background: transparent; border: 0; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; }
+    #sv-facebook-clubhouse .member-tabs button[aria-selected="true"] { color: var(--sv-text); background: var(--sv-surface); box-shadow: 0 1px 3px rgba(20, 25, 32, .1); }
+    #sv-facebook-clubhouse .member-tabs button span { min-width: 17px; height: 17px; display: inline-grid; place-items: center; padding: 0 4px; color: var(--sv-on-color); background: var(--sv-orange); border-radius: 9px; font-size: 9px; }
+    #sv-facebook-clubhouse .member-panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 10px; }
+    #sv-facebook-clubhouse .member-panel-head strong,
+    #sv-facebook-clubhouse .member-panel-head span { display: block; }
+    #sv-facebook-clubhouse .member-panel-head strong { font-size: 13px; }
+    #sv-facebook-clubhouse .member-panel-head span { margin-top: 2px; color: var(--sv-muted); font-size: 10px; }
+    #sv-facebook-clubhouse .member-panel-head svg { flex: 0 0 auto; color: var(--sv-orange); }
+    #sv-facebook-clubhouse .profile-privacy { display: grid; gap: 8px; margin: 6px 0; padding: 12px; background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; }
+    #sv-facebook-clubhouse .profile-privacy-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    #sv-facebook-clubhouse .profile-privacy-head span,
+    #sv-facebook-clubhouse .profile-privacy-head strong,
+    #sv-facebook-clubhouse .profile-privacy-head small { display: block; }
+    #sv-facebook-clubhouse .profile-privacy-head strong { font-size: 12px; }
+    #sv-facebook-clubhouse .profile-privacy-head small { margin-top: 2px; color: var(--sv-muted); font-size: 9px; line-height: 1.4; }
+    #sv-facebook-clubhouse .profile-preview-link { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 5px; color: var(--sv-orange); font-size: 10px; font-weight: 700; }
+    #sv-facebook-clubhouse .profile-dependent:has(input:disabled) { opacity: .48; }
+    #sv-facebook-clubhouse .connected-accounts { display: grid; gap: 8px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .connected-accounts-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 2px; }
+    #sv-facebook-clubhouse .connected-accounts-head span,
+    #sv-facebook-clubhouse .connected-accounts-head strong,
+    #sv-facebook-clubhouse .connected-accounts-head small { display: block; }
+    #sv-facebook-clubhouse .connected-accounts-head strong { font-size: 13px; }
+    #sv-facebook-clubhouse .connected-accounts-head small { margin-top: 2px; color: var(--sv-muted); font-size: 10px; line-height: 1.4; }
+    #sv-facebook-clubhouse .connected-accounts-head svg { flex: 0 0 auto; color: var(--sv-orange); }
+    #sv-facebook-clubhouse .connected-account-row { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 54px; padding: 8px 10px; background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; }
+    #sv-facebook-clubhouse .connected-account-row > span:nth-child(2),
+    #sv-facebook-clubhouse .connected-account-row strong,
+    #sv-facebook-clubhouse .connected-account-row small { display: block; }
+    #sv-facebook-clubhouse .connected-account-row strong { font-size: 12px; }
+    #sv-facebook-clubhouse .connected-account-row small { margin-top: 2px; color: var(--sv-muted); font-size: 9px; }
+    #sv-facebook-clubhouse .connected-account-row button { min-height: 34px; margin: 0; padding: 7px 10px; font-size: 10px; }
+    #sv-facebook-clubhouse .connected-account-row button:disabled { color: #247653; background: #e8f5ed; border-color: #cfe8d9; opacity: 1; cursor: default; }
+    #sv-facebook-clubhouse .provider-mark { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; font-size: 13px; font-weight: 800; }
+    #sv-facebook-clubhouse .provider-mark.google { color: #174ea6; background: #fff; border: 1px solid #dadce0; }
+    #sv-facebook-clubhouse .provider-mark.facebook { color: #fff; background: #1877f2; font-family: Arial, sans-serif; }
+    #sv-facebook-clubhouse .connected-accounts-note { margin: 2px 0 0 !important; color: var(--sv-muted); font-size: 10px !important; line-height: 1.45 !important; }
+    #sv-facebook-clubhouse .my-submissions { display: grid; gap: 8px; }
+    #sv-facebook-clubhouse .submission-list-message { padding: 28px 18px; color: var(--sv-muted); text-align: center; background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; font-size: 11px; line-height: 1.5; }
+    #sv-facebook-clubhouse .member-submission { display: grid; grid-template-columns: 66px minmax(0, 1fr); min-height: 74px; overflow: hidden; background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; }
+    #sv-facebook-clubhouse .member-submission.unread { border-color: var(--sv-orange); box-shadow: inset 3px 0 var(--sv-orange); }
+    #sv-facebook-clubhouse .member-submission-media { min-height: 74px; display: grid; place-items: center; color: var(--sv-orange); background: var(--sv-accent-soft); }
+    #sv-facebook-clubhouse .member-submission-media img { width: 100%; height: 100%; min-height: 74px; object-fit: cover; }
+    #sv-facebook-clubhouse .member-submission-body { min-width: 0; padding: 10px 11px; }
+    #sv-facebook-clubhouse .member-submission-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    #sv-facebook-clubhouse .member-submission-top strong { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+    #sv-facebook-clubhouse .submission-state { flex: 0 0 auto; padding: 3px 6px; color: var(--sv-orange); background: var(--sv-accent-soft); border-radius: 4px; font-size: 8px; font-weight: 800; text-transform: uppercase; }
+    #sv-facebook-clubhouse .submission-state.approved { color: #247653; background: #e8f5ed; }
+    #sv-facebook-clubhouse .submission-state.rejected { color: #a53b3b; background: #fbecec; }
+    #sv-facebook-clubhouse .member-submission-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; color: var(--sv-muted); font-size: 9px; }
+    #sv-facebook-clubhouse .member-submission-note { margin: 7px 0 0 !important; color: var(--sv-muted); font-size: 10px !important; line-height: 1.4 !important; }
+    #sv-facebook-clubhouse .member-submission-note.rejected { color: #a53b3b; }
+    #sv-facebook-clubhouse .member-submission-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 7px; color: var(--sv-orange); font-size: 10px; font-weight: 700; }
+    #sv-facebook-clubhouse .member-submission-link svg { width: 12px; height: 12px; }
+    #sv-facebook-clubhouse .member-submission-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 9px; }
+    #sv-facebook-clubhouse .member-submission-actions button { min-height: 32px; padding: 6px 9px; font-size: 9px; }
+    #sv-facebook-clubhouse .submission-delete { display: inline-flex; align-items: center; gap: 5px; color: #a53b3b; background: #fbecec; border: 1px solid transparent; border-radius: 5px; font-weight: 700; cursor: pointer; }
+    #sv-facebook-clubhouse .submission-delete svg { width: 12px; height: 12px; }
+    #sv-facebook-clubhouse .member-foot { display: flex; justify-content: flex-end; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .species-dialog { width: min(920px, calc(100% - 28px)); max-height: calc(100vh - 28px); padding: 0; overflow: auto; color: var(--sv-text); background: var(--sv-surface); border: 1px solid var(--sv-line); border-radius: 8px; box-shadow: 0 24px 70px rgba(0, 0, 0, .28); }
+    #sv-facebook-clubhouse .species-dialog::backdrop { background: rgba(10, 14, 20, .68); }
+    #sv-facebook-clubhouse .species-dialog-hero { display: grid; grid-template-columns: minmax(260px, 1.15fr) 1fr; align-items: stretch; border-bottom: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .species-dialog-hero img { width: 100%; height: 250px; object-fit: cover; }
+    #sv-facebook-clubhouse .species-dialog-hero > div { display: flex; flex-direction: column; justify-content: center; padding: 24px; }
+    #sv-facebook-clubhouse .species-dialog-hero p { margin: 9px 0 0; color: var(--sv-muted); font-size: 13px; line-height: 1.55; }
+    #sv-facebook-clubhouse .species-dialog-content { display: grid; grid-template-columns: .8fr 1.2fr; }
+    #sv-facebook-clubhouse .species-dialog-content > section { min-width: 0; padding: 22px; }
+    #sv-facebook-clubhouse .species-dialog-content > section + section { border-left: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .section-kicker { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; color: var(--sv-orange); font-size: 10px; font-weight: 700; text-transform: uppercase; }
+    #sv-facebook-clubhouse .species-dialog-content h3 { margin-bottom: 13px; font-size: 18px; }
+    #sv-facebook-clubhouse .species-rules dl { margin: 0 0 16px; }
+    #sv-facebook-clubhouse .species-rules dl div { display: grid; grid-template-columns: 95px 1fr; gap: 12px; padding: 9px 0; border-top: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .species-rules dt { color: var(--sv-muted); font-size: 11px; }
+    #sv-facebook-clubhouse .species-rules dd { margin: 0; font-size: 12px; line-height: 1.45; }
+    #sv-facebook-clubhouse .species-recipe-columns { display: grid; grid-template-columns: .8fr 1.2fr; gap: 20px; }
+    #sv-facebook-clubhouse .species-recipe-columns h4 { margin: 4px 0 8px; font-size: 12px; }
+    #sv-facebook-clubhouse .species-recipe-columns ul,
+    #sv-facebook-clubhouse .species-recipe-columns ol { margin: 0; padding-left: 18px; }
+    #sv-facebook-clubhouse .species-recipe-columns li { padding: 0 0 7px 3px; color: var(--sv-muted); font-size: 11px; line-height: 1.4; }
+    #sv-facebook-clubhouse .species-disclaimer { margin: 0; padding: 11px 22px; color: var(--sv-muted); background: var(--sv-bg); border-top: 1px solid var(--sv-line); font-size: 10px; }
+    #sv-facebook-clubhouse [hidden] { display: none !important; }
+    #sv-facebook-clubhouse .dialog-head { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 18px; background: var(--sv-surface); border-bottom: 1px solid var(--sv-line); }
+    #sv-facebook-clubhouse .dialog-head h2 { margin-bottom: 0; }
+    #sv-facebook-clubhouse .dialog-image { width: 100%; height: 280px; object-fit: cover; }
+    #sv-facebook-clubhouse .dialog-summary { display: flex; flex-wrap: wrap; gap: 18px; padding: 14px 18px; color: var(--sv-muted); border-bottom: 1px solid var(--sv-line); font-size: 12px; }
+    #sv-facebook-clubhouse .recipe-detail { display: grid; grid-template-columns: .8fr 1.2fr; gap: 28px; padding: 22px 18px 26px; }
+    #sv-facebook-clubhouse .recipe-detail h3 { margin-bottom: 12px; font-size: 16px; }
+    #sv-facebook-clubhouse .recipe-detail label { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; font-size: 13px; line-height: 1.4; }
+    #sv-facebook-clubhouse .recipe-detail input { margin-top: 2px; accent-color: var(--sv-orange); }
+    #sv-facebook-clubhouse .recipe-detail ol { margin: 0; padding-left: 20px; }
+    #sv-facebook-clubhouse .recipe-detail li { padding: 0 0 10px 4px; font-size: 13px; line-height: 1.5; }
+    #sv-facebook-clubhouse .image-led .masthead { grid-template-columns: .8fr 1.2fr; }
+    @media (prefers-reduced-motion: reduce) { #sv-facebook-clubhouse .vote-fill { transition: none; } }
+    @media (max-width: 850px) {
+      #sv-facebook-clubhouse .nav a:not(.button-primary) { display: none; }
+      #sv-facebook-clubhouse .mobile-menu-toggle { display: inline-flex; }
+      #sv-facebook-clubhouse .mobile-navigation:not([hidden]) { display: grid; }
+      #sv-facebook-clubhouse .member-button [data-auth-label] { display: none; }
+      #sv-facebook-clubhouse .member-button { min-width: 40px; padding: 9px; }
+      #sv-facebook-clubhouse .utility-grid,
+      #sv-facebook-clubhouse .lower-grid { grid-template-columns: 1fr; }
+      #sv-facebook-clubhouse .forecast-days { grid-template-columns: repeat(4, 1fr); }
+      #sv-facebook-clubhouse .forecast-day:nth-child(4) { border-right: 0; }
+      #sv-facebook-clubhouse .forecast-day:nth-child(-n+4) { border-bottom: 1px solid var(--sv-line); }
+      #sv-facebook-clubhouse .species-layout { grid-template-columns: 1fr; }
+      #sv-facebook-clubhouse .tracked-head { display: grid; align-items: start; }
+      #sv-facebook-clubhouse .species-tools { flex-wrap: wrap; }
+      #sv-facebook-clubhouse .species-dialog-content { grid-template-columns: 1fr; }
+      #sv-facebook-clubhouse .species-dialog-content > section + section { border-top: 1px solid var(--sv-line); border-left: 0; }
+    }
+    @media (max-width: 580px) {
+      #sv-facebook-clubhouse .topbar { padding: 0 12px; }
+      #sv-facebook-clubhouse .nav { gap: 7px; }
+      #sv-facebook-clubhouse .brand > span:last-child { display: none; }
+      #sv-facebook-clubhouse .mobile-navigation { grid-template-columns: 1fr; }
+      #sv-facebook-clubhouse .nav .button-primary { min-width: 40px; padding: 9px; font-size: 0; }
+      #sv-facebook-clubhouse .masthead,
+      #sv-facebook-clubhouse .image-led .masthead { grid-template-columns: 1fr; margin: 12px 12px 0; }
+      #sv-facebook-clubhouse .mast-copy { padding: 22px; }
+      #sv-facebook-clubhouse .mast-image { height: 250px; }
+      #sv-facebook-clubhouse h1 { font-size: 30px; }
+      #sv-facebook-clubhouse .utility-band,
+      #sv-facebook-clubhouse .lower-band,
+      #sv-facebook-clubhouse .entries-band { padding-left: 12px; padding-right: 12px; }
+      #sv-facebook-clubhouse .panel-head { display: grid; }
+      #sv-facebook-clubhouse .region-select { width: 100%; max-width: none; }
+      #sv-facebook-clubhouse .forecast-days { grid-template-columns: repeat(2, 1fr); }
+      #sv-facebook-clubhouse .forecast-day { border-bottom: 1px solid var(--sv-line); }
+      #sv-facebook-clubhouse .forecast-day:nth-child(even) { border-right: 0; }
+      #sv-facebook-clubhouse .forecast-day:last-child { grid-column: 1 / -1; }
+      #sv-facebook-clubhouse .forecast-metrics { grid-template-columns: 1fr 1fr; }
+      #sv-facebook-clubhouse .forecast-foot { display: grid; }
+      #sv-facebook-clubhouse .entry-grid { grid-template-columns: 1fr 1fr; }
+      #sv-facebook-clubhouse .species-hub { padding-left: 12px; padding-right: 12px; }
+      #sv-facebook-clubhouse .tracked-species { padding-left: 12px; padding-right: 12px; }
+      #sv-facebook-clubhouse .species-tools { display: grid; }
+      #sv-facebook-clubhouse .species-search { min-width: 0; width: 100%; }
+      #sv-facebook-clubhouse .species-filters { overflow-x: auto; }
+      #sv-facebook-clubhouse .tracked-grid { grid-template-columns: 1fr; }
+      #sv-facebook-clubhouse .species-dialog-hero { grid-template-columns: 1fr; }
+      #sv-facebook-clubhouse .species-dialog-hero img { height: 220px; }
+      #sv-facebook-clubhouse .species-recipe-columns { grid-template-columns: 1fr; }
+      #sv-facebook-clubhouse .species-head { display: grid; align-items: start; }
+      #sv-facebook-clubhouse .species-profile,
+      #sv-facebook-clubhouse .recipe-feature { grid-template-columns: 1fr; }
+      #sv-facebook-clubhouse .species-profile > img,
+      #sv-facebook-clubhouse .recipe-feature > img { min-height: 220px; max-height: 260px; }
+      #sv-facebook-clubhouse .dialog-image { height: 210px; }
+      #sv-facebook-clubhouse .recipe-detail { grid-template-columns: 1fr; gap: 20px; }
+      #sv-facebook-clubhouse .score-strip,
+      #sv-facebook-clubhouse .scoring-callouts { grid-template-columns: 1fr; }
+      #sv-facebook-clubhouse .submission-fields,
+      #sv-facebook-clubhouse .photo-input-grid { grid-template-columns: 1fr; }
+      #sv-facebook-clubhouse .submission-foot { display: grid; }
+      #sv-facebook-clubhouse .submission-foot .button-primary { width: 100%; }
+    }

@@ -1,0 +1,13 @@
+# Local Supabase project values. The browser key is publishable, but keeping
+# environment-specific configuration out of Git avoids accidental mix-ups.
+supabase-config.js
+.env
+.env.*
+!.env.example
+
+# Local tooling
+node_modules/
+.netlify/
+.DS_Store
+Thumbs.db
+.~lock.*#

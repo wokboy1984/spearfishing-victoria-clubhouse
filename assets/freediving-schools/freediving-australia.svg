@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" role="img" aria-labelledby="title desc">
+  <title id="title">Freediving Australia fallback wordmark</title>
+  <desc id="desc">Neutral fallback logo created for website listing use where an official logo file was not verified.</desc>
+  <rect width="800" height="400" fill="#073B4C"/>
+  <path d="M138 215c66-72 155-106 267-102 85 4 166 31 244 82-78-20-157-26-237-18-111 12-202 46-274 102z" fill="#22D3EE" opacity=".9"/>
+  <path d="M168 235c58-39 125-57 202-54 61 2 121 18 180 48-59-9-119-8-180 5-75 15-142 40-202 75z" fill="#F8FAFC" opacity=".95"/>
+  <text x="400" y="151" text-anchor="middle" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="50" font-weight="700">FREEDIVING</text>
+  <text x="400" y="318" text-anchor="middle" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="700">AUSTRALIA</text>
+</svg>
