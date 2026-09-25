@@ -7,7 +7,7 @@
   <title>Moderation | Spearfishing Victoria</title>
   <link rel="icon" href="data:,">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin.css?v=2">
 </head>
 <body>
   <div class="admin-shell">
@@ -81,7 +81,7 @@
             <div data-review-content hidden>
               <header class="review-head">
                 <div><div class="review-meta"><span class="status-pill" data-detail-status>Pending</span><span data-detail-date></span></div><h2 data-detail-title>Catch submission</h2><p><strong data-detail-member></strong> <span data-detail-handle></span></p></div>
-                <div class="length"><span>Claimed length</span><strong data-detail-length>0.0 cm</strong></div>
+                <div class="length"><span>Claimed length</span><strong data-detail-length>0.0 cm</strong><em class="legal-size-badge" data-legal-size-badge hidden>Below legal size</em></div>
               </header>
 
               <div class="photo-review" data-photo-review></div>
@@ -144,7 +144,8 @@
           </form>
         </section>
       </section>
-    </main>
+      </main>
+      <dialog class="photo-lightbox" data-photo-lightbox aria-label="Submission photo viewer"><button class="lightbox-close" type="button" data-lightbox-close aria-label="Close photo viewer"><i data-lucide="x"></i></button><button class="lightbox-nav previous" type="button" data-lightbox-previous aria-label="Previous photo"><i data-lucide="chevron-left"></i></button><div class="lightbox-stage" data-lightbox-stage><img data-lightbox-image alt=""></div><button class="lightbox-nav next" type="button" data-lightbox-next aria-label="Next photo"><i data-lucide="chevron-right"></i></button><span class="lightbox-count" data-lightbox-count></span></dialog>
   </div>
 
   <dialog class="confirm-dialog" data-confirm-dialog>
@@ -156,6 +157,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js"></script>
-  <script src="admin.js?v=18"></script>
+  <script src="admin.js?v=19"></script>
 </body>
 </html>

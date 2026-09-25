@@ -11,11 +11,19 @@
     search: '',
     selectedId: null,
     signedUrls: new Map(),
+    speciesMinimums: new Map(),
     featureSettings: new Map(),
     programs: { species: [], challenges: [], ballots: [] },
     selectedProgramId: null,
     pendingDecision: null,
-    dark: localStorage.getItem('spearfishing-victoria-theme') === 'dark'
+    dark: localStorage.getItem('spearfishing-victoria-theme') === 'dark',
+    lightboxPhotos: [],
+    lightboxIndex: 0,
+    lightboxScale: 1,
+    lightboxX: 0,
+    lightboxY: 0,
+    lightboxPointers: new Map(),
+    lightboxPinchDistance: 0
   };
 
   const $ = selector => document.querySelector(selector);
@@ -120,14 +128,16 @@
   }
 
   async function loadSubmissions() {
-    const [{ data, error }, { data: recipeRows, error: recipeError }, { data: featureRows, error: featureError }] = await Promise.all([
+    const [{ data, error }, { data: recipeRows, error: recipeError }, { data: featureRows, error: featureError }, { data: speciesRows, error: speciesError }] = await Promise.all([
       client.rpc('get_moderation_submissions'),
       client.rpc('get_recipe_moderation_submissions'),
-      client.rpc('get_catch_feature_settings')
+      client.rpc('get_catch_feature_settings'),
+      client.from('species').select('slug,minimum_legal_length_cm')
     ]);
     if (error) throw error;
     if (recipeError) throw recipeError;
     if (featureError) throw featureError;
+    if (speciesError) throw speciesError;
     const normalisePhotos = row => {
       if (Array.isArray(row.photos)) return row.photos;
       try { return JSON.parse(row.photos || '[]'); } catch { return []; }
@@ -141,6 +151,7 @@
       ...(recipeRows || []).map(row => ({ ...row, photos: normalisePhotos(row), recipe: normaliseRecipe(row), submission_kind: 'recipe', length_cm: null, caught_in_victoria: null, caught_within_last_week: null, rules_accepted_at: true, length_verified: false }))
     ];
     state.featureSettings = new Map((featureRows || []).map(row => [row.submission_id, row]));
+    state.speciesMinimums = new Map((speciesRows || []).map(row => [row.slug, row.minimum_legal_length_cm == null ? null : Number(row.minimum_legal_length_cm)]));
     renderStats();
     renderQueue();
   }
@@ -337,6 +348,50 @@
     return data.signedUrl;
   }
 
+  function belowLegalMinimum(submission) {
+    const minimum = state.speciesMinimums.get(submission.species_slug);
+    return Number.isFinite(minimum) && Number(submission.length_cm) < minimum;
+  }
+
+  function applyLightboxTransform() {
+    const image = $('[data-lightbox-image]');
+    image.style.transform = `translate(${state.lightboxX}px, ${state.lightboxY}px) scale(${state.lightboxScale})`;
+  }
+
+  function resetLightboxTransform() {
+    state.lightboxScale = 1;
+    state.lightboxX = 0;
+    state.lightboxY = 0;
+    state.lightboxPointers.clear();
+    state.lightboxPinchDistance = 0;
+    applyLightboxTransform();
+  }
+
+  function renderLightboxPhoto() {
+    const photo = state.lightboxPhotos[state.lightboxIndex];
+    if (!photo) return;
+    const image = $('[data-lightbox-image]');
+    image.src = photo.url;
+    image.alt = photo.alt;
+    $('[data-lightbox-count]').textContent = `${state.lightboxIndex + 1} / ${state.lightboxPhotos.length}`;
+    $('[data-lightbox-previous]').hidden = state.lightboxPhotos.length < 2;
+    $('[data-lightbox-next]').hidden = state.lightboxPhotos.length < 2;
+    resetLightboxTransform();
+  }
+
+  function moveLightbox(step) {
+    if (!state.lightboxPhotos.length) return;
+    state.lightboxIndex = (state.lightboxIndex + step + state.lightboxPhotos.length) % state.lightboxPhotos.length;
+    renderLightboxPhoto();
+  }
+
+  function openLightbox(photos, index) {
+    state.lightboxPhotos = photos;
+    state.lightboxIndex = index;
+    renderLightboxPhoto();
+    $('[data-photo-lightbox]').showModal();
+  }
+
   async function selectSubmission(id) {
     const submission = state.submissions.find(item => item.submission_id === id);
     if (!submission) return;
@@ -354,6 +409,7 @@
     $('[data-detail-handle]').textContent = submission.instagram_handle ? `@${submission.instagram_handle}` : '';
     $('[data-detail-length]').parentElement.hidden = isRecipe;
     $('[data-detail-length]').textContent = isRecipe ? '' : `${Number(submission.length_cm).toFixed(1)} cm`;
+    $('[data-legal-size-badge]').hidden = isRecipe || !belowLegalMinimum(submission);
     $('[data-detail-story]').textContent = submission.story;
     $('[data-detail-story]').previousElementSibling.textContent = isRecipe ? 'Recipe introduction' : 'Catch story';
     $('[data-declaration="victoria"]').classList.toggle('confirmed', Boolean(submission.caught_in_victoria));
@@ -371,14 +427,15 @@
     const photoReview = $('[data-photo-review]');
     photoReview.classList.toggle('recipe-photo-review', isRecipe);
     photoReview.classList.toggle('single-photo-review', (submission.photos || []).length === 1);
-    photoReview.innerHTML = (submission.photos || []).sort((a, b) => a.display_order - b.display_order).map(photo => `
+    const orderedPhotos = [...(submission.photos || [])].sort((a, b) => a.display_order - b.display_order);
+    photoReview.innerHTML = orderedPhotos.map(photo => `
       <figure class="photo-frame ${photo.kind === 'extra' ? 'extra' : ''}" data-photo-path="${escapeHtml(photo.storage_path)}">
         <div class="photo-error"><i data-lucide="loader-circle" aria-hidden="true"></i><span>Loading private photo...</span></div>
         <span>${escapeHtml(photo.kind)} photo</span>
       </figure>`).join('');
     icons();
 
-    await Promise.all((submission.photos || []).map(async (photo, index) => {
+    const lightboxPhotos = (await Promise.all(orderedPhotos.map(async (photo, index) => {
       const url = await signedUrl(photo.storage_path);
       const frame = photoReview.querySelectorAll('.photo-frame')[index];
       if (!frame) return;
@@ -387,11 +444,21 @@
         const image = document.createElement('img');
         image.src = url;
         image.alt = `${photo.kind} evidence for ${submission.species_name}`;
+        image.tabIndex = 0;
+        image.setAttribute('role', 'button');
+        image.setAttribute('aria-label', `Open full-size ${photo.kind} photo`);
         frame.prepend(image);
+        return { url, alt: image.alt, image, index };
       } else {
         frame.insertAdjacentHTML('afterbegin', '<div class="photo-error"><i data-lucide="image-off" aria-hidden="true"></i><span>Photo unavailable</span></div>');
       }
-    }));
+      return null;
+    }))).filter(Boolean);
+    lightboxPhotos.forEach((photo, index) => {
+      const open = () => openLightbox(lightboxPhotos, index);
+      photo.image.addEventListener('click', open);
+      photo.image.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(); } });
+    });
 
     const pending = submission.submission_status === 'pending';
     $('[data-decision-form]').hidden = !pending;
@@ -586,5 +653,54 @@
   $('[data-feature-toggle]').addEventListener('change', event => { $('[data-feature-order]').disabled = !event.target.checked; });
   $('[data-save-feature]').addEventListener('click', saveFeatureSetting);
   decisionDialog.addEventListener('click', event => { if (event.target === decisionDialog) { state.pendingDecision = null; decisionDialog.close(); } });
+  const photoLightbox = $('[data-photo-lightbox]');
+  const lightboxStage = $('[data-lightbox-stage]');
+  $('[data-lightbox-close]').addEventListener('click', () => photoLightbox.close());
+  $('[data-lightbox-previous]').addEventListener('click', () => moveLightbox(-1));
+  $('[data-lightbox-next]').addEventListener('click', () => moveLightbox(1));
+  photoLightbox.addEventListener('click', event => { if (event.target === photoLightbox) photoLightbox.close(); });
+  lightboxStage.addEventListener('click', event => { if (event.target === lightboxStage) photoLightbox.close(); });
+  photoLightbox.addEventListener('close', () => { state.lightboxPhotos = []; resetLightboxTransform(); });
+  photoLightbox.addEventListener('keydown', event => {
+    if (event.key === 'ArrowLeft') { event.preventDefault(); moveLightbox(-1); }
+    if (event.key === 'ArrowRight') { event.preventDefault(); moveLightbox(1); }
+  });
+  lightboxStage.addEventListener('wheel', event => {
+    event.preventDefault();
+    state.lightboxScale = Math.min(6, Math.max(1, state.lightboxScale * (event.deltaY < 0 ? 1.15 : .87)));
+    if (state.lightboxScale === 1) { state.lightboxX = 0; state.lightboxY = 0; }
+    applyLightboxTransform();
+  }, { passive: false });
+  lightboxStage.addEventListener('pointerdown', event => {
+    lightboxStage.setPointerCapture(event.pointerId);
+    state.lightboxPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    lightboxStage.classList.add('dragging');
+    if (state.lightboxPointers.size === 2) {
+      const [a, b] = [...state.lightboxPointers.values()];
+      state.lightboxPinchDistance = Math.hypot(a.x - b.x, a.y - b.y);
+    }
+  });
+  lightboxStage.addEventListener('pointermove', event => {
+    const previous = state.lightboxPointers.get(event.pointerId);
+    if (!previous) return;
+    state.lightboxPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (state.lightboxPointers.size === 1 && state.lightboxScale > 1) {
+      state.lightboxX += event.clientX - previous.x;
+      state.lightboxY += event.clientY - previous.y;
+    } else if (state.lightboxPointers.size === 2) {
+      const [a, b] = [...state.lightboxPointers.values()];
+      const distance = Math.hypot(a.x - b.x, a.y - b.y);
+      if (state.lightboxPinchDistance) state.lightboxScale = Math.min(6, Math.max(1, state.lightboxScale * distance / state.lightboxPinchDistance));
+      state.lightboxPinchDistance = distance;
+    }
+    applyLightboxTransform();
+  });
+  const finishPointer = event => {
+    state.lightboxPointers.delete(event.pointerId);
+    if (state.lightboxPointers.size < 2) state.lightboxPinchDistance = 0;
+    if (!state.lightboxPointers.size) lightboxStage.classList.remove('dragging');
+  };
+  lightboxStage.addEventListener('pointerup', finishPointer);
+  lightboxStage.addEventListener('pointercancel', finishPointer);
   initialise();
 })();

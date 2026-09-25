@@ -23,6 +23,8 @@
       let liveVotes = null;
       let voteLabels = {};
       let speciesIdsBySlug = {};
+      let speciesMinimums = {};
+      let speciesNames = {};
       let trackedSpeciesIds = {};
       let memberProfile = null;
       let memberIdentities = [];
@@ -45,7 +47,7 @@
         'Surf Coast': { latitude: -38.48, longitude: 144.05, point: 'Off Anglesea' },
         'Wilsons Promontory': { latitude: -39.13, longitude: 146.34, point: 'Off Tidal River' }
       };
-      const baseVotes = { 'king-george-whiting': 82, 'southern-calamari': 65, 'yellowtail-kingfish': 39 };
+      const photoPreviewUrls = new Map();
       const trackedSpecies = {
         snapper: {
           name: 'Snapper',
@@ -145,6 +147,15 @@
         } catch {
           // Direct file previews can restrict storage; the local server does not.
         }
+      }
+
+      function daysLeftInMelbourneMonth(date = new Date()) {
+        const parts = Object.fromEntries(new Intl.DateTimeFormat('en-AU', {
+          timeZone: 'Australia/Melbourne', year: 'numeric', month: 'numeric', day: 'numeric'
+        }).formatToParts(date).filter(part => part.type !== 'literal').map(part => [part.type, Number(part.value)]));
+        const today = Date.UTC(parts.year, parts.month - 1, parts.day);
+        const nextMonth = Date.UTC(parts.year, parts.month, 1);
+        return Math.max(0, Math.ceil((nextMonth - today) / 86400000));
       }
       function showToast(message) {
         const toast = root.querySelector('[data-action-toast]');
@@ -267,7 +278,7 @@
         }
       }
       function renderVote() {
-        const votes = liveVotes ? { ...liveVotes } : { ...baseVotes };
+        const votes = liveVotes ? { ...liveVotes } : {};
         const total = Object.values(votes).reduce((sum, value) => sum + value, 0);
         const labels = Object.keys(votes).reduce((result, slug) => {
           result[slug] = voteLabels[slug] || trackedSpecies[slug]?.name || slug;
@@ -277,7 +288,7 @@
         voteList.innerHTML = Object.entries(votes).map(([key, value]) => {
           const percent = total ? Math.round((value / total) * 100) : 0;
           return `<button class="vote-option" type="button" data-vote="${escapeHtml(key)}" aria-pressed="${state.vote === key}"><span class="vote-top"><span>${escapeHtml(labels[key])}</span><strong data-percent="${escapeHtml(key)}">${percent}%</strong></span><span class="vote-track"><span class="vote-fill" data-fill="${escapeHtml(key)}" style="width:${percent}%"></span></span></button>`;
-        }).join('');
+        }).join('') || '<div class="vote-empty">No votes yet.</div>';
         voteList.querySelectorAll('[data-vote]').forEach(button => button.addEventListener('click', () => handleVote(button.dataset.vote)));
         Object.entries(votes).forEach(([key, value]) => {
           const percent = total ? Math.round((value / total) * 100) : 0;
@@ -288,9 +299,9 @@
           if (fill) fill.style.width = `${percent}%`;
           if (option) option.setAttribute('aria-pressed', String(state.vote === key));
         });
-        let message = `Preview vote total: ${total}. Sign in to cast a live vote.`;
+        let message = total ? `Sign in to vote. Current vote total: ${total}.` : 'No votes yet.';
         if (communityDataStatus === 'loading') message = 'Connecting to the community vote...';
-        if (communityDataStatus === 'unavailable') message = 'The live vote is temporarily unavailable. Preview results are shown.';
+        if (communityDataStatus === 'unavailable') message = 'The live vote is temporarily unavailable.';
         if (communityDataStatus === 'live' && !activeBallot) message = 'There is no community ballot open right now.';
         if (communityDataStatus === 'live' && activeBallot) {
           message = currentSession ? `Choose one species. Current vote total: ${total}.` : `Sign in to vote. Current vote total: ${total}.`;
@@ -303,9 +314,8 @@
         if (!activeChallenge) return;
         const species = activeChallenge.species;
         const start = new Date(`${activeChallenge.starts_on}T12:00:00`);
-        const end = new Date(`${activeChallenge.ends_on}T23:59:59`);
         const month = start.toLocaleString('en-AU', { month: 'long' });
-        const days = Math.max(0, Math.ceil((end - new Date()) / 86400000));
+        const days = daysLeftInMelbourneMonth();
         root.querySelector('[data-challenge-eyebrow]').textContent = `Species of the month · ${days} day${days === 1 ? '' : 's'} left`;
         root.querySelector('[data-challenge-title]').innerHTML = `${escapeHtml(month)} <span>${escapeHtml(species.common_name)} Challenge</span>`;
         root.querySelector('[data-challenge-description]').textContent = activeChallenge.description || 'Enter your best verified catch. Only your largest approved fish counts.';
@@ -419,6 +429,7 @@
         const mastImage = root.querySelector('[data-mast-image]');
         const controls = root.querySelector('[data-mast-controls]');
         const dots = root.querySelector('[data-mast-dots]');
+        const credit = root.querySelector('[data-mast-credit]');
         mastImage.classList.toggle('has-slides', mastheadSlides.length > 1);
         controls.hidden = mastheadSlides.length < 2;
         dots.innerHTML = mastheadSlides.map((slide, index) => `<button class="mast-dot" type="button" data-mast-dot="${index}" aria-label="Show ${escapeHtml(slide.display_name)}’s ${escapeHtml(slide.species_name)}" aria-current="${index === 0}"></button>`).join('');
@@ -427,13 +438,18 @@
           startMastheadRotation();
         }));
         if (mastheadSlides.length) showMastheadSlide(0);
+        else credit.hidden = true;
         startMastheadRotation();
         if (globalThis.lucide) globalThis.lucide.createIcons({ attrs: { width: 16, height: 16 } });
       }
 
       function renderHomepageShowcase(rows) {
-        if (!rows?.length) return;
         const grid = root.querySelector('#community-entries');
+        if (!rows?.length) {
+          grid.innerHTML = '<div class="entries-empty">No approved catches yet - be the first.</div>';
+          configureMastheadSlideshow([]);
+          return;
+        }
         grid.innerHTML = rows.slice(0, 8).map(row => {
           const member = row.instagram_handle ? `@${row.instagram_handle}` : row.display_name;
           return `<a class="entry-photo ${row.homepage_featured ? 'featured' : ''}" href="species/${encodeURIComponent(row.species_slug)}/#records" aria-label="View ${escapeHtml(row.display_name)}’s ${escapeHtml(row.species_name)} catch">
@@ -821,11 +837,13 @@
       async function loadSpeciesDirectory() {
         const { data, error } = await supabaseClient
           .from('species')
-          .select('id,slug,common_name')
+          .select('id,slug,common_name,minimum_legal_length_cm')
           .eq('is_active', true)
           .order('common_name', { ascending: true });
         if (error) throw error;
         trackedSpeciesIds = Object.fromEntries((data || []).map(species => [species.slug, species.id]));
+        speciesMinimums = Object.fromEntries((data || []).map(species => [species.slug, species.minimum_legal_length_cm == null ? null : Number(species.minimum_legal_length_cm)]));
+        speciesNames = Object.fromEntries((data || []).map(species => [species.slug, species.common_name]));
         root.querySelectorAll('.submission-form select[name="species"]').forEach(select => {
           const selected = select.value;
           const placeholder = document.createElement('option');
@@ -839,6 +857,7 @@
           }));
           if (selected && trackedSpeciesIds[selected]) select.value = selected;
         });
+        validateCatchMinimum();
       }
 
       async function loadVoteData() {
@@ -856,7 +875,7 @@
         root.querySelector('[data-ballot-title]').textContent = activeBallot?.title || 'Choose the next Species of the Month';
         state.vote = null;
         speciesIdsBySlug = {};
-        liveVotes = activeBallot ? {} : Object.fromEntries(Object.keys(baseVotes).map(key => [key, 0]));
+        liveVotes = {};
         voteLabels = {};
 
         if (activeBallot) {
@@ -1003,6 +1022,66 @@
         root.querySelector('[data-submission-status]').textContent = message || '';
       }
 
+      function validateCatchMinimum() {
+        const form = root.querySelector('[data-submission-form]');
+        const input = form.elements.length_cm;
+        const slug = form.elements.species.value;
+        const minimum = speciesMinimums[slug];
+        const length = Number(input.value);
+        const invalid = Number.isFinite(minimum) && input.value !== '' && length < minimum;
+        const error = form.querySelector('[data-length-legal-error]');
+        const minimumLabel = invalid ? (Number.isInteger(minimum) ? String(minimum) : minimum.toFixed(1)) : '';
+        error.textContent = invalid ? `Below the ${minimumLabel} cm legal minimum for ${speciesNames[slug] || slug}` : '';
+        input.setAttribute('aria-invalid', String(invalid));
+        const button = form.querySelector('button[type="submit"]');
+        button.disabled = invalid || button.dataset.busy === 'true';
+        return !invalid;
+      }
+
+      function clearPhotoPreviews(input) {
+        (photoPreviewUrls.get(input) || []).forEach(url => URL.revokeObjectURL(url));
+        photoPreviewUrls.delete(input);
+        input.closest('.photo-input')?.querySelector('.photo-previews')?.remove();
+      }
+
+      function removeSelectedPhoto(input, index) {
+        const transfer = new DataTransfer();
+        [...input.files].forEach((file, fileIndex) => { if (fileIndex !== index) transfer.items.add(file); });
+        input.files = transfer.files;
+        renderPhotoPreviews(input);
+      }
+
+      function renderPhotoPreviews(input) {
+        clearPhotoPreviews(input);
+        const files = [...input.files];
+        const label = root.querySelector(`[data-file-name="${input.name}"]`);
+        if (label) label.textContent = input.multiple && files.length > 1
+          ? `${files.length} photos selected`
+          : files[0]?.name || (input.multiple ? 'Choose photos' : 'Choose photo');
+        if (!files.length) return;
+        const urls = files.map(file => URL.createObjectURL(file));
+        photoPreviewUrls.set(input, urls);
+        const previews = document.createElement('div');
+        previews.className = 'photo-previews';
+        files.forEach((file, index) => {
+          const preview = document.createElement('div');
+          preview.className = 'photo-preview';
+          preview.innerHTML = `<img src="${urls[index]}" alt="Preview of ${escapeHtml(file.name)}"><span class="photo-preview-actions"><button type="button" data-remove-preview="${index}">Remove</button><button type="button" data-replace-preview>Replace</button></span>`;
+          preview.querySelector('[data-remove-preview]').addEventListener('click', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            removeSelectedPhoto(input, index);
+          });
+          preview.querySelector('[data-replace-preview]').addEventListener('click', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            input.click();
+          });
+          previews.append(preview);
+        });
+        input.closest('.photo-input').append(previews);
+      }
+
       function photoExtension(file) {
         const extension = file.name.split('.').pop()?.toLowerCase();
         if (['jpg', 'jpeg', 'png', 'webp'].includes(extension)) return extension === 'jpeg' ? 'jpg' : extension;
@@ -1025,6 +1104,7 @@
 
       async function submitCatch(event) {
         event.preventDefault();
+        if (!validateCatchMinimum()) return;
         if (!supabaseClient || !currentSession) {
           root.querySelector('#catch-submission').close();
           openAuthDialog('Sign in first, then you can submit your competition catch.');
@@ -1047,6 +1127,7 @@
           return;
         }
 
+        button.dataset.busy = 'true';
         button.disabled = true;
         setSubmissionStatus('Uploading your photos...');
         const submissionId = crypto.randomUUID();
@@ -1088,7 +1169,6 @@
 
           await finishReplacement();
           form.reset();
-          root.querySelectorAll('[data-file-name]').forEach(label => { label.textContent = 'Choose photo'; });
           setSubmissionStatus('Catch received.');
           await loadMemberSubmissions();
           root.querySelector('#catch-submission').close();
@@ -1098,7 +1178,8 @@
           console.warn('Catch submission failed', error);
           setSubmissionStatus('Your catch could not be submitted. Please check the details and try again.');
         } finally {
-          button.disabled = false;
+          button.dataset.busy = 'false';
+          validateCatchMinimum();
         }
       }
 
@@ -1314,11 +1395,16 @@
       root.querySelector('[data-close-submission]').addEventListener('click', () => submissionDialog.close());
       submissionDialog.addEventListener('click', event => { if (event.target === submissionDialog) submissionDialog.close(); });
       root.querySelector('[data-submission-form]').addEventListener('submit', submitCatch);
-      root.querySelectorAll('.photo-input input[type="file"]').forEach(input => input.addEventListener('change', () => {
-        const label = root.querySelector(`[data-file-name="${input.name}"]`);
-        if (label) label.textContent = input.multiple && input.files.length > 1
-          ? `${input.files.length} photos selected`
-          : input.files[0]?.name || (input.multiple ? 'Choose photos' : 'Choose photo');
+      const catchForm = root.querySelector('[data-submission-form]');
+      catchForm.elements.species.addEventListener('change', validateCatchMinimum);
+      catchForm.elements.length_cm.addEventListener('input', validateCatchMinimum);
+      root.querySelectorAll('.photo-input input[type="file"]').forEach(input => input.addEventListener('change', () => renderPhotoPreviews(input)));
+      root.querySelectorAll('[data-submission-form], [data-recipe-submission-form]').forEach(form => form.addEventListener('reset', () => {
+        window.setTimeout(() => form.querySelectorAll('.photo-input input[type="file"]').forEach(input => {
+          clearPhotoPreviews(input);
+          const label = root.querySelector(`[data-file-name="${input.name}"]`);
+          if (label) label.textContent = input.multiple ? 'Choose photos' : 'Choose photo';
+        }), 0);
       }));
       renderRegion();
       renderVote();

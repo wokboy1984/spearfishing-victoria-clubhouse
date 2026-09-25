@@ -112,10 +112,12 @@ h1 { margin-bottom: 8px; font-size: clamp(28px, 4vw, 40px); letter-spacing: 0; }
 .length span, .length strong { display: block; }
 .length span { color: var(--muted); font-size: 10px; }
 .length strong { margin-top: 4px; font-size: 22px; }
+.legal-size-badge { display: inline-block; margin-top: 7px; padding: 4px 6px; color: #fff; background: var(--red); border-radius: 4px; font-size: 9px; font-style: normal; font-weight: 800; text-transform: uppercase; }
+.legal-size-badge[hidden] { display: none; }
 .photo-review { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); background: var(--bg); border-bottom: 1px solid var(--line); }
 .photo-frame { position: relative; min-height: 320px; overflow: hidden; margin: 0; }
 .photo-frame + .photo-frame { border-left: 1px solid var(--line); }
-.photo-frame img { width: 100%; height: 100%; min-height: 320px; max-height: 440px; display: block; object-fit: contain; background: #101216; }
+.photo-frame img { width: 100%; height: 100%; min-height: 320px; max-height: 440px; display: block; object-fit: contain; background: #101216; cursor: zoom-in; }
 .photo-frame > span { position: absolute; left: 12px; bottom: 12px; padding: 5px 8px; color: #fff; background: rgba(18, 22, 28, .82); border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
 .photo-frame.extra { grid-column: 1 / -1; border-top: 1px solid var(--line); border-left: 0; }
 .photo-frame.extra img { max-height: 360px; }
@@ -125,6 +127,16 @@ h1 { margin-bottom: 8px; font-size: clamp(28px, 4vw, 40px); letter-spacing: 0; }
 .photo-review.recipe-photo-review .photo-error { min-height: 0; height: 100%; }
 .photo-review.single-photo-review:not(.recipe-photo-review) { grid-template-columns: minmax(0, 1fr); }
 .photo-error { min-height: 320px; display: grid; place-content: center; justify-items: center; gap: 8px; color: var(--muted); font-size: 11px; }
+.photo-lightbox { width: 100vw; max-width: none; height: 100vh; max-height: none; margin: 0; padding: 0; overflow: hidden; color: #fff; background: rgba(7, 10, 14, .98); border: 0; }
+.photo-lightbox::backdrop { background: rgba(7, 10, 14, .92); }
+.lightbox-stage { width: 100%; height: 100%; display: grid; place-items: center; overflow: hidden; touch-action: none; cursor: grab; }
+.lightbox-stage.dragging { cursor: grabbing; }
+.lightbox-stage img { max-width: 100%; max-height: 100%; object-fit: contain; transform-origin: center; user-select: none; -webkit-user-drag: none; will-change: transform; }
+.lightbox-close, .lightbox-nav { position: fixed; z-index: 2; width: 44px; height: 44px; display: grid; place-items: center; color: #fff; background: rgba(24, 29, 36, .82); border: 1px solid rgba(255,255,255,.25); border-radius: 50%; cursor: pointer; }
+.lightbox-close { top: 18px; right: 18px; }
+.lightbox-nav.previous { top: 50%; left: 18px; transform: translateY(-50%); }
+.lightbox-nav.next { top: 50%; right: 18px; transform: translateY(-50%); }
+.lightbox-count { position: fixed; z-index: 2; left: 50%; bottom: 18px; transform: translateX(-50%); padding: 6px 10px; background: rgba(24, 29, 36, .82); border-radius: 4px; font-size: 11px; }
 .review-body { padding: 22px; }
 .story-block { padding-bottom: 18px; border-bottom: 1px solid var(--line); }
 .story-block p { margin: 8px 0 0; white-space: pre-wrap; line-height: 1.6; font-size: 13px; }

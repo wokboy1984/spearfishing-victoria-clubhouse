@@ -8,6 +8,15 @@
   const publicImage = path => client.storage.from('community-images').getPublicUrl(path).data.publicUrl;
   const profileUrl = username => `../${encodeURIComponent(username.toLowerCase())}/`;
 
+  function daysLeftInMelbourneMonth(date = new Date()) {
+    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-AU', {
+      timeZone: 'Australia/Melbourne', year: 'numeric', month: 'numeric', day: 'numeric'
+    }).formatToParts(date).filter(part => part.type !== 'literal').map(part => [part.type, Number(part.value)]));
+    const today = Date.UTC(parts.year, parts.month - 1, parts.day);
+    const nextMonth = Date.UTC(parts.year, parts.month, 1);
+    return Math.max(0, Math.ceil((nextMonth - today) / 86400000));
+  }
+
   function appearance() { try { return JSON.parse(localStorage.getItem(appearanceKey) || '{}'); } catch { return {}; } }
   function setAppearance(dark) { document.documentElement.classList.toggle('dark-mode', dark); $('[data-theme-toggle]').innerHTML = `<i data-lucide="${dark ? 'sun' : 'moon'}"></i>`; icons(); }
   function showError() { $('[data-loading]').hidden = true; $('[data-page]').hidden = true; $('[data-error]').hidden = false; icons(); }
@@ -21,7 +30,7 @@
     const details = speciesData[species.slug];
     const start = new Date(`${challenge.starts_on}T12:00:00`);
     const end = new Date(`${challenge.ends_on}T23:59:59`);
-    const days = Math.max(0, Math.ceil((end - new Date()) / 86400000));
+    const days = daysLeftInMelbourneMonth();
     $('[data-title]').textContent = `${start.toLocaleString('en-AU', { month: 'long' })} ${species.common_name}`;
     $('[data-description]').textContent = challenge.description || 'Enter your best verified catch. Only your largest approved fish counts.';
     $('[data-dates]').textContent = `${start.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })} – ${end.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}`;
@@ -50,7 +59,7 @@
       $('[data-vote-title]').textContent = ballot.title;
       const { data: totals } = await client.rpc('get_species_vote_totals', { target_ballot_id: ballot.id });
       const total = (totals || []).reduce((sum, item) => sum + item.votes, 0);
-      $('[data-vote-options]').innerHTML = (totals || []).map(item => { const percent = total ? Math.round(item.votes / total * 100) : 0; return `<div class="vote-option"><span class="vote-top"><span>${item.common_name}</span><strong>${percent}%</strong></span><span class="vote-track"><span class="vote-fill" style="width:${percent}%"></span></span></div>`; }).join('');
+      $('[data-vote-options]').innerHTML = (totals || []).map(item => { const percent = total ? Math.round(item.votes / total * 100) : 0; return `<div class="vote-option"><span class="vote-top"><span>${item.common_name}</span><strong>${percent}%</strong></span><span class="vote-track"><span class="vote-fill" style="width:${percent}%"></span></span></div>`; }).join('') || '<div class="empty">No votes yet.</div>';
     } else {
       $('[data-vote-options]').innerHTML = '<div class="empty">The next vote has not opened yet.</div>';
     }

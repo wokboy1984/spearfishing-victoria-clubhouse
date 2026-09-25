@@ -7,7 +7,7 @@
   <title>Spearfishing Victoria</title>
   <link rel="icon" href="data:,">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
-  <link rel="stylesheet" href="styles.css?v=21">
+  <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
 <div id="sv-facebook-clubhouse">
@@ -20,7 +20,7 @@
 
     <section class="masthead" id="challenge">
       <div class="mast-copy">
-        <div class="eyebrow" data-challenge-eyebrow>Species of the month · 7 days left</div>
+        <div class="eyebrow" data-challenge-eyebrow></div>
         <h1 data-challenge-title>September <span>Snapper Challenge</span></h1>
         <p data-challenge-description>Enter your best verified catch, add a recipe and climb the monthly standings. Only your largest approved fish counts.</p>
         <div class="points"><span><i data-lucide="fish" aria-hidden="true"></i> Best catch 15 pts</span><span><i data-lucide="trophy" aria-hidden="true"></i> Top ten +10 to +1</span><span><i data-lucide="utensils" aria-hidden="true"></i> Published recipe 10 pts</span></div>
@@ -74,23 +74,15 @@
 
         <section class="panel" aria-label="Vote for next month's species">
           <div class="panel-head"><div><div class="eyebrow">Community vote</div><h2 data-ballot-title>What should October’s species be?</h2><p id="vote-status" aria-live="polite">Choose one species. Current vote total: 186.</p></div><i data-lucide="vote" aria-hidden="true"></i></div>
-          <div class="vote-list" data-vote-list>
-            <button class="vote-option" type="button" data-vote="king-george-whiting" aria-pressed="false"><span class="vote-top"><span>King George whiting</span><strong data-percent="king-george-whiting">44%</strong></span><span class="vote-track"><span class="vote-fill" data-fill="king-george-whiting" style="width:44%"></span></span></button>
-            <button class="vote-option" type="button" data-vote="southern-calamari" aria-pressed="false"><span class="vote-top"><span>Southern calamari</span><strong data-percent="southern-calamari">35%</strong></span><span class="vote-track"><span class="vote-fill" data-fill="southern-calamari" style="width:35%"></span></span></button>
-            <button class="vote-option" type="button" data-vote="yellowtail-kingfish" aria-pressed="false"><span class="vote-top"><span>Yellowtail kingfish</span><strong data-percent="yellowtail-kingfish">21%</strong></span><span class="vote-track"><span class="vote-fill" data-fill="yellowtail-kingfish" style="width:21%"></span></span></button>
-          </div>
+          <div class="vote-list" data-vote-list><div class="vote-empty">No votes yet.</div></div>
+          <p class="vote-bonus-explanation">Members vote for their favourite approved catches; the members behind the top three receive the bonus.</p>
         </section>
       </div>
     </section>
 
     <section class="entries-band" id="community">
       <div class="entries-head"><div><div class="eyebrow">From the community</div><h2>Recent approved catches</h2></div><span>Community photos selected by Spearfishing Victoria moderators.</span></div>
-      <div class="entry-grid" id="community-entries" aria-live="polite">
-        <figure class="entry-photo"><img src="assets/sv-hero.webp" alt="Community freediving submission"><figcaption class="entry-label">Dive entry · @southerncurrent</figcaption></figure>
-        <figure class="entry-photo"><img src="assets/sv-snapper.webp" alt="Community snapper catch submission"><figcaption class="entry-label">Catch entry · @baydepth</figcaption></figure>
-        <figure class="entry-photo"><img src="assets/sv-roasted-snapper.webp" alt="Community snapper recipe submission"><figcaption class="entry-label">Recipe · @catchtocook</figcaption></figure>
-        <figure class="entry-photo"><img src="assets/sv-community.webp" alt="Featured Victorian spearfishing community members"><figcaption class="entry-label">Featured spearos · Surf Coast</figcaption></figure>
-      </div>
+      <div class="entry-grid" id="community-entries" aria-live="polite"><div class="entries-empty">No approved catches yet - be the first.</div></div>
     </section>
 
     <section class="species-hub" id="cookbook">
@@ -164,6 +156,7 @@
         <div class="scoring-callouts"><div><i data-lucide="fish" aria-hidden="true"></i><span><strong>15 points</strong>Approved best catch</span></div><div><i data-lucide="trophy" aria-hidden="true"></i><span><strong>+10 to +1</strong>Top-ten placement bonus</span></div><div><i data-lucide="utensils" aria-hidden="true"></i><span><strong>10 points</strong>Published recipe</span></div></div>
         <table class="scoring-table"><thead><tr><th>Place</th><th>Bonus</th><th>Catch total</th></tr></thead><tbody><tr><td>1st</td><td>+10</td><td>25</td></tr><tr><td>2nd</td><td>+9</td><td>24</td></tr><tr><td>3rd</td><td>+8</td><td>23</td></tr><tr><td>4th–10th</td><td>+7 to +1</td><td>22 to 16</td></tr><tr><td>Outside top ten</td><td>—</td><td>15</td></tr></tbody></table>
         <div class="vote-bonuses"><span>Community vote bonuses</span><strong>1st +5</strong><strong>2nd +3</strong><strong>3rd +2</strong></div>
+        <p class="vote-bonus-explanation">Members vote for their favourite approved catches; the members behind the top three receive the bonus.</p>
         <p class="scoring-note"><i data-lucide="refresh-cw" aria-hidden="true"></i><span>Placement points update as verified catches arrive, then lock when the competition closes.</span></p>
       </div>
     </dialog>
@@ -173,7 +166,7 @@
       <form class="submission-form" data-submission-form>
         <div class="submission-fields">
           <label><span>Species</span><select name="species" required><option value="">Choose a tracked species</option><option value="snapper">Snapper</option><option value="king-george-whiting">King George whiting</option><option value="southern-calamari">Southern calamari</option><option value="yellowtail-kingfish">Yellowtail kingfish</option><option value="southern-bluefin-tuna">Southern bluefin tuna</option></select></label>
-          <label><span>Measured length</span><span class="input-suffix"><input name="length_cm" type="number" min="1" max="999.9" step="0.1" inputmode="decimal" required><span>cm</span></span></label>
+          <label><span>Measured length</span><span class="input-suffix"><input name="length_cm" type="number" min="1" max="999.9" step="0.1" inputmode="decimal" required aria-describedby="length-legal-error"><span>cm</span></span><small class="field-error" id="length-legal-error" data-length-legal-error aria-live="polite"></small></label>
           <label class="field-wide"><span>Catch story or caption</span><textarea name="story" minlength="10" maxlength="1000" placeholder="Tell the community about the catch..." required></textarea></label>
         </div>
         <fieldset class="photo-fields"><legend>Catch photos</legend><div class="photo-input-grid">
@@ -264,7 +257,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
-  <script src="app.js?v=26"></script>
+  <script src="app.js?v=27"></script>
 </div>
 </body>
 </html>
