@@ -1,6 +1,6 @@
 # Supabase foundation
 
-The first migration defines a provider-neutral community data model. Members can begin with email magic links and later use Google, Facebook or another supported OAuth provider without changing their submissions, votes, recipes or leaderboard history.
+The first migration defines a provider-neutral community data model. Members can begin with email magic links and later use Google or another supported OAuth provider without changing their submissions, votes, recipes or leaderboard history.
 
 ## Included
 

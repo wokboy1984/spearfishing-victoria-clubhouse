@@ -217,13 +217,12 @@ h1 { margin-bottom: 8px; font-size: clamp(28px, 4vw, 40px); letter-spacing: 0; }
 .access-panel label { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 800; }
 .auth-row { display: flex; gap: 8px; }
 .auth-row input { min-width: 0; flex: 1; padding: 10px 11px; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
-.social-auth { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
+.social-auth { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 20px; }
 .social-auth-button { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 9px 12px; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; }
 .social-auth-button:hover { border-color: var(--muted); }
 .social-auth-button:disabled { opacity: .6; cursor: wait; }
 .social-auth-button span { width: 20px; height: 20px; display: inline-grid; place-items: center; flex: 0 0 auto; border-radius: 50%; font-weight: 800; }
 .social-auth-button.google span { color: #174ea6; background: #fff; border: 1px solid #dadce0; }
-.social-auth-button.facebook span { color: #fff; background: #1877f2; font-family: Arial, sans-serif; }
 .auth-divider { display: flex; align-items: center; gap: 10px; margin: 16px 0 0; color: var(--muted); font-size: 9px; font-weight: 800; text-transform: uppercase; }
 .auth-divider::before, .auth-divider::after { height: 1px; flex: 1; content: ''; background: var(--line); }
 

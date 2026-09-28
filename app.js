@@ -782,20 +782,17 @@
         const status = root.querySelector('[data-link-status]');
         if (!supabaseClient || !currentSession) return;
         button.disabled = true;
-        status.textContent = `Opening ${provider === 'google' ? 'Google' : 'Facebook'} to connect it...`;
+        status.textContent = 'Opening Google to connect it...';
         const redirectTo = `${location.origin}${location.pathname}?account-linked=${provider}#home`;
         const { error } = await supabaseClient.auth.linkIdentity({
           provider,
-          options: {
-            redirectTo,
-            ...(provider === 'facebook' ? { scopes: 'email,public_profile' } : {})
-          }
+          options: { redirectTo }
         });
         if (error) {
           button.disabled = false;
           status.textContent = /manual|linking.*disabled/i.test(error.message)
             ? 'Account linking still needs to be enabled in the site settings.'
-            : `Could not connect ${provider === 'google' ? 'Google' : 'Facebook'}: ${error.message}`;
+            : `Could not connect Google: ${error.message}`;
         }
       }
 
@@ -1077,18 +1074,15 @@
           return;
         }
         button.disabled = true;
-        setAuthStatus(`Opening ${provider === 'google' ? 'Google' : 'Facebook'} sign-in...`);
+        setAuthStatus('Opening Google sign-in...');
         const redirectTo = location.origin.startsWith('http') ? `${location.origin}${location.pathname}` : 'http://127.0.0.1:4173/';
         const { error } = await supabaseClient.auth.signInWithOAuth({
           provider,
-          options: {
-            redirectTo,
-            ...(provider === 'facebook' ? { scopes: 'email,public_profile' } : {})
-          }
+          options: { redirectTo }
         });
         if (error) {
           button.disabled = false;
-          setAuthStatus(`${provider === 'google' ? 'Google' : 'Facebook'} sign-in is not available yet. Enable this provider in Supabase, then try again.`);
+          setAuthStatus('Google sign-in is not available yet. Enable this provider in Supabase, then try again.');
         }
       }
 
@@ -1350,14 +1344,11 @@
           history.replaceState({}, '', `${location.pathname}#home`);
           activeMemberTab = 'profile';
           setMemberTab('profile', false);
-          root.querySelector('[data-link-status]').textContent = `${linkedProvider === 'google' ? 'Google' : 'Facebook'} is now connected to this member profile.`;
+          root.querySelector('[data-link-status]').textContent = 'Google is now connected to this member profile.';
           if (!memberDialog.open) memberDialog.showModal();
         }
         if (!currentSession && oauthError) {
-          const message = /email/i.test(oauthError)
-            ? 'Facebook did not share an email address. Remove Spearfishing Victoria from Facebook Apps and Websites, then sign in again and allow email access.'
-            : `Sign-in could not be completed: ${oauthError}`;
-          openAuthDialog(message);
+          openAuthDialog(`Sign-in could not be completed: ${oauthError}`);
         }
         if (profileNeedsSetup()) {
           activeMemberTab = 'profile';

@@ -96,17 +96,14 @@
       return;
     }
     button.disabled = true;
-    status.textContent = `Opening ${provider === 'google' ? 'Google' : 'Facebook'} sign-in...`;
+    status.textContent = 'Opening Google sign-in...';
     const { error } = await client.auth.signInWithOAuth({
       provider,
-      options: {
-        redirectTo: `${location.origin}/admin/`,
-        ...(provider === 'facebook' ? { scopes: 'email,public_profile' } : {})
-      }
+      options: { redirectTo: `${location.origin}/admin/` }
     });
     if (error) {
       button.disabled = false;
-      status.textContent = `${provider === 'google' ? 'Google' : 'Facebook'} sign-in is not available yet. Enable this provider in Supabase, then try again.`;
+      status.textContent = 'Google sign-in is not available yet. Enable this provider in Supabase, then try again.';
     }
   }
 
@@ -610,9 +607,7 @@
     state.session = data.session;
     if (!state.session) {
       showGate('signed-out');
-      if (oauthError) $('[data-auth-status]').textContent = /email/i.test(oauthError)
-        ? 'Facebook did not share an email address. Remove Spearfishing Victoria from Facebook Apps and Websites, then try again and allow email access.'
-        : `Sign-in could not be completed: ${oauthError}`;
+      if (oauthError) $('[data-auth-status]').textContent = `Sign-in could not be completed: ${oauthError}`;
       return;
     }
     try {

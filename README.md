@@ -67,7 +67,7 @@ The voting and leaderboard panels read from Supabase when configured. Representa
 
 - Final recipe lifecycle test: submit and approve a new multi-photo recipe, confirm every image publishes to its species gallery, then verify the member acknowledgement and points award.
 - Authentication delivery: configure custom SMTP and/or Google sign-in before launch so staff and members are not dependent on Supabase's limited built-in email service.
-- Social authentication setup: enable and configure the Google and Facebook providers in Supabase, including production redirect URLs and provider credentials; the member and staff interfaces are already wired for both.
+- Social authentication setup: verify Google sign-in in production and configure custom SMTP so staff and members have reliable fallback access.
 
 ## Experience principles
 

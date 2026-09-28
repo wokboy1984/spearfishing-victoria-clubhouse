@@ -513,13 +513,12 @@ html { scroll-behavior: smooth; background: #f0f2f5; }
     #sv-facebook-clubhouse .auth-form input { min-height: 44px; width: 100%; padding: 10px 12px; color: var(--sv-text); background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; font: inherit; }
     #sv-facebook-clubhouse .auth-form input:focus { outline: 2px solid var(--sv-orange); outline-offset: 1px; }
     #sv-facebook-clubhouse .auth-form button { margin-top: 4px; }
-    #sv-facebook-clubhouse .social-auth { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+    #sv-facebook-clubhouse .social-auth { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 16px; }
     #sv-facebook-clubhouse .social-auth-button { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 10px 12px; color: var(--sv-text); background: var(--sv-surface); border: 1px solid var(--sv-line); border-radius: 6px; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
     #sv-facebook-clubhouse .social-auth-button:hover { border-color: var(--sv-muted); }
     #sv-facebook-clubhouse .social-auth-button:disabled { opacity: .6; cursor: wait; }
     #sv-facebook-clubhouse .social-auth-button span { width: 20px; height: 20px; display: inline-grid; place-items: center; flex: 0 0 auto; border-radius: 50%; font-weight: 800; }
     #sv-facebook-clubhouse .social-auth-button.google span { color: #174ea6; background: #fff; border: 1px solid #dadce0; }
-    #sv-facebook-clubhouse .social-auth-button.facebook span { color: #fff; background: #1877f2; font-family: Arial, sans-serif; }
     #sv-facebook-clubhouse .auth-divider { display: flex; align-items: center; gap: 10px; margin: 16px 0 12px; color: var(--sv-muted); font-size: 10px; text-transform: uppercase; }
     #sv-facebook-clubhouse .auth-divider::before, #sv-facebook-clubhouse .auth-divider::after { height: 1px; flex: 1; content: ''; background: var(--sv-line); }
     #sv-facebook-clubhouse .auth-status { min-height: 18px; margin: 14px 0 0 !important; color: var(--sv-orange) !important; }
@@ -578,7 +577,6 @@ html { scroll-behavior: smooth; background: #f0f2f5; }
     #sv-facebook-clubhouse .connected-account-row button:disabled { color: #247653; background: #e8f5ed; border-color: #cfe8d9; opacity: 1; cursor: default; }
     #sv-facebook-clubhouse .provider-mark { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; font-size: 13px; font-weight: 800; }
     #sv-facebook-clubhouse .provider-mark.google { color: #174ea6; background: #fff; border: 1px solid #dadce0; }
-    #sv-facebook-clubhouse .provider-mark.facebook { color: #fff; background: #1877f2; font-family: Arial, sans-serif; }
     #sv-facebook-clubhouse .connected-accounts-note { margin: 2px 0 0 !important; color: var(--sv-muted); font-size: 10px !important; line-height: 1.45 !important; }
     #sv-facebook-clubhouse .my-submissions { display: grid; gap: 8px; }
     #sv-facebook-clubhouse .submission-list-message { padding: 28px 18px; color: var(--sv-muted); text-align: center; background: var(--sv-bg); border: 1px solid var(--sv-line); border-radius: 6px; font-size: 11px; line-height: 1.5; }
