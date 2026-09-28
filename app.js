@@ -48,7 +48,7 @@
         'Wilsons Promontory': { latitude: -39.13, longitude: 146.34, point: 'Off Tidal River' }
       };
       const photoPreviewUrls = new Map();
-      const trackedSpecies = {
+      const trackedSpecies = globalThis.SV_SPECIES || {
         snapper: {
           name: 'Snapper',
           scientific: 'Chrysophrys auratus',
@@ -313,6 +313,7 @@
       function renderActiveChallenge() {
         if (!activeChallenge) return;
         const species = activeChallenge.species;
+        const details = trackedSpecies[species.slug];
         const start = new Date(`${activeChallenge.starts_on}T12:00:00`);
         const month = start.toLocaleString('en-AU', { month: 'long' });
         const days = daysLeftInMelbourneMonth();
@@ -321,6 +322,77 @@
         root.querySelector('[data-challenge-description]').textContent = activeChallenge.description || 'Enter your best verified catch. Only your largest approved fish counts.';
         root.querySelector('[data-challenge-action]').textContent = `Enter ${month}`;
         root.querySelector('[data-leaderboard-eyebrow]').textContent = `${month} ${species.common_name} challenge`;
+        if (details) {
+          const mastPhoto = root.querySelector('[data-mast-photo]');
+          mastPhoto.src = speciesAsset(details.image);
+          mastPhoto.alt = `${details.name} featured as ${month}'s species of the month`;
+          root.querySelector('[data-mast-credit]').hidden = true;
+          renderSpeciesHub(species.slug, month);
+        }
+      }
+
+      function speciesAsset(path) {
+        return path?.startsWith('assets/') ? path : `assets/${path}`;
+      }
+
+      function renderSpeciesHub(slug, month) {
+        const species = trackedSpecies[slug];
+        if (!species) return;
+        const hub = root.querySelector('#cookbook');
+        const recipe = species.recipe;
+        hub.querySelector('.species-head .eyebrow').textContent = `Species hub · ${month}`;
+        hub.querySelector('.species-head h2').textContent = `${species.name}, from water to table`;
+        const rulesLink = hub.querySelector('.species-head a');
+        rulesLink.href = species.rulesUrl;
+
+        const profile = hub.querySelector('.species-profile');
+        const profileImage = profile.querySelector('img');
+        profileImage.src = speciesAsset(species.image);
+        profileImage.alt = species.imageAlt;
+        profile.querySelector('.scientific-name').textContent = species.scientific;
+        profile.querySelector('h3').textContent = species.name;
+        profile.querySelector('.species-copy > p').textContent = species.summary;
+        const factLabels = profile.querySelectorAll('.species-facts dt');
+        factLabels[0].textContent = 'Minimum size';
+        factLabels[1].textContent = 'Bag limit';
+        factLabels[2].textContent = 'Important';
+        const facts = profile.querySelectorAll('.species-facts dd');
+        facts[0].textContent = species.size;
+        facts[1].textContent = species.bag;
+        facts[2].textContent = species.note;
+
+        const feature = hub.querySelector('.recipe-feature');
+        const recipeImage = feature.querySelector('img');
+        recipeImage.src = speciesAsset(recipe.image || species.image);
+        recipeImage.alt = recipe.title;
+        feature.querySelector('h3').textContent = recipe.title;
+        feature.querySelector('.recipe-copy > p').textContent = recipe.description || `A practical community recipe for ${species.name}.`;
+        const meta = feature.querySelectorAll('.recipe-meta span');
+        meta[0].innerHTML = `<i data-lucide="clock-3" aria-hidden="true"></i> ${escapeHtml(recipe.time)}`;
+        meta[1].innerHTML = `<i data-lucide="users" aria-hidden="true"></i> ${escapeHtml(recipe.serves)}`;
+
+        const dialog = root.querySelector('#snapper-recipe');
+        dialog.querySelector('h2').textContent = recipe.title;
+        const dialogImage = dialog.querySelector('.dialog-image');
+        dialogImage.src = speciesAsset(recipe.image || species.image);
+        dialogImage.alt = recipe.title;
+        const summary = dialog.querySelectorAll('.dialog-summary span');
+        summary[0].innerHTML = `<i data-lucide="clock-3" aria-hidden="true"></i> ${escapeHtml(recipe.time)}`;
+        summary[1].innerHTML = `<i data-lucide="users" aria-hidden="true"></i> ${escapeHtml(recipe.serves)}`;
+        dialog.querySelector('[aria-labelledby="ingredients-title"]').replaceChildren(
+          Object.assign(document.createElement('h3'), { id: 'ingredients-title', textContent: 'Ingredients' }),
+          ...recipe.ingredients.map(item => {
+            const label = document.createElement('label');
+            label.innerHTML = `<input type="checkbox"> ${escapeHtml(item)}`;
+            return label;
+          })
+        );
+        dialog.querySelector('[aria-labelledby="method-title"] ol').replaceChildren(...recipe.method.map(item => {
+          const step = document.createElement('li');
+          step.textContent = item;
+          return step;
+        }));
+        if (globalThis.lucide) globalThis.lucide.createIcons({ attrs: { width: 16, height: 16 } });
       }
 
       function ensureLeaderboardTabs() {
@@ -425,7 +497,8 @@
       }
 
       function configureMastheadSlideshow(rows) {
-        mastheadSlides = rows.filter(row => row.homepage_featured);
+        const activeSlug = activeChallenge?.species?.slug;
+        mastheadSlides = rows.filter(row => row.homepage_featured && (!activeSlug || row.species_slug === activeSlug));
         const mastImage = root.querySelector('[data-mast-image]');
         const controls = root.querySelector('[data-mast-controls]');
         const dots = root.querySelector('[data-mast-dots]');
@@ -935,7 +1008,8 @@
         communityDataStatus = 'loading';
         renderVote();
         try {
-          await Promise.all([loadVoteData(), loadActiveChallenge(), loadSpeciesDirectory(), loadHomepageShowcase()]);
+          await Promise.all([loadVoteData(), loadActiveChallenge(), loadSpeciesDirectory()]);
+          await loadHomepageShowcase();
           await loadLeaderboard();
           communityDataStatus = 'live';
         } catch (error) {
