@@ -1361,6 +1361,10 @@
           history.replaceState({}, '', `${location.pathname}#challenge`);
           openSubmissionDialog();
         }
+        if (new URLSearchParams(location.search).get('account') === 'open') {
+          history.replaceState({}, '', `${location.pathname}#home`);
+          openAuthDialog();
+        }
         supabaseClient.auth.onAuthStateChange((_event, session) => {
           currentSession = session;
           setTimeout(async () => {

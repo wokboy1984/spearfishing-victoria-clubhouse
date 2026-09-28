@@ -3,6 +3,16 @@
   publish = "."
 
 [[redirects]]
+  from = "/directory/:slug"
+  to = "/directory/listing.html"
+  status = 200
+
+[[redirects]]
+  from = "/directory/:slug/"
+  to = "/directory/listing.html"
+  status = 200
+
+[[redirects]]
   from = "/:username"
   to = "/members/index.html"
   status = 200

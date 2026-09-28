@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Directory moderation | Spearfishing Victoria</title>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="admin.css?v=3">
+  <link rel="stylesheet" href="directory-admin.css?v=2">
+</head>
+<body>
+  <div class="admin-shell">
+    <header class="admin-topbar"><a class="brand" href="../"><span class="brand-mark"><i data-lucide="waves"></i></span><span>Spearfishing Victoria</span></a><nav><a href="./">Catch & recipe moderation</a><a href="../directory/">Public directory</a></nav></header>
+    <main class="directory-admin">
+      <section class="access-panel" data-access><span class="access-icon"><i data-lucide="shield-check"></i></span><div><div class="eyebrow">Staff workspace</div><h1>Directory moderation</h1><p data-access-copy>Checking staff access...</p></div></section>
+      <section data-app hidden><div class="page-heading"><div><div class="eyebrow">Staff workspace</div><h1>Directory moderation</h1><p>Review submissions and claims, manage published listings, and respond to reports.</p></div></div><div class="directory-tabs"><button data-kind="listings" aria-pressed="true">New listings</button><button data-kind="published" aria-pressed="false">Published listings</button><button data-kind="claims" aria-pressed="false">Ownership claims</button><button data-kind="reports" aria-pressed="false">Reports</button></div><div class="directory-queue" data-queue></div><p class="form-status" data-status></p></section>
+    </main>
+  </div>
+  <dialog class="listing-editor" data-listing-editor>
+    <form data-edit-form>
+      <header><div><div class="eyebrow">Directory administration</div><h2>Edit listing</h2></div><button type="button" class="editor-close" data-close-editor aria-label="Close editor"><i data-lucide="x"></i></button></header>
+      <div class="editor-body">
+        <input type="hidden" name="id">
+        <div class="editor-grid"><label>Name<input name="name" required maxlength="100"></label><label>URL slug<input name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*"></label><label>Primary category<select name="category" required></select></label><label>Status<select name="status"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="archived">Archived</option></select></label><label>Region<input name="region" required></label><label>Location<input name="location"></label><label class="editor-wide">Service area<input name="service_area"></label></div>
+        <fieldset><legend>Directory categories</legend><div class="category-checks" data-category-checks></div></fieldset>
+        <label>Description<textarea name="description" required maxlength="900"></textarea></label>
+        <label>Services or topics<input name="services" placeholder="Separate with commas"></label>
+        <div class="editor-grid"><label>Website<input name="website" type="url"></label><label>Instagram<input name="instagram_url" type="url"></label><label>YouTube<input name="youtube_url" type="url"></label><label>Contact email<input name="contact_email" type="email"></label><label>Phone<input name="phone"></label><label>Logo or image URL<input name="logo_path"></label></div>
+        <p class="form-status" data-edit-status></p>
+      </div>
+      <footer><button type="button" class="button" data-close-editor>Cancel</button><button type="submit" class="button approve"><i data-lucide="save"></i> Save listing</button></footer>
+    </form>
+  </dialog>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js?v=2"></script>
+  <script src="directory-admin.js?v=3"></script>
+</body>
+</html>
