@@ -179,8 +179,11 @@
     const last = new Date(year, month, 0);
     const next = new Date(year, month, 1);
     const iso = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-    const now = new Date();
-    const stateLabel = now < first ? 'upcoming' : now > new Date(year, month, 0, 23, 59, 59) ? 'finished' : 'live';
+    const melbourneParts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Australia/Melbourne', year: 'numeric', month: '2-digit'
+    }).formatToParts(new Date());
+    const currentMonth = `${melbourneParts.find(part => part.type === 'year').value}-${melbourneParts.find(part => part.type === 'month').value}`;
+    const stateLabel = value > currentMonth ? 'upcoming' : value < currentMonth ? 'finished' : 'live';
     return {
       first, last, next, startsOn: iso(first), endsOn: iso(last),
       opensAt: new Date(year, month - 1, 1, 0, 0), closesAt: new Date(year, month, 1, 0, 0),
@@ -429,6 +432,7 @@
       <figure class="photo-frame ${photo.kind === 'extra' ? 'extra' : ''}" data-photo-path="${escapeHtml(photo.storage_path)}">
         <div class="photo-error"><i data-lucide="loader-circle" aria-hidden="true"></i><span>Loading private photo...</span></div>
         <span>${escapeHtml(photo.kind)} photo</span>
+        ${!isRecipe && photo.kind !== 'measurement' ? `<div class="photo-publish-controls"><label><input type="checkbox" data-public-photo value="${escapeHtml(photo.storage_path)}" checked> Publish</label><label><input type="radio" name="public_hero_photo" value="${escapeHtml(photo.storage_path)}" ${photo.kind === 'hero' ? 'checked' : ''}> Use as hero</label></div>` : ''}
       </figure>`).join('');
     icons();
 
@@ -510,6 +514,32 @@
     status.textContent = featured ? `Featured at position ${order}.` : 'Removed from the masthead rotation.';
   }
 
+  async function refreshPublicCatchPhotos() {
+    const submission = state.submissions.find(item => item.submission_id === state.selectedId);
+    if (!submission || submission.submission_kind !== 'catch' || submission.submission_status !== 'approved') return;
+    const button = $('[data-refresh-public-photos]');
+    const status = $('[data-feature-status]');
+    button.disabled = true;
+    status.textContent = 'Refreshing the public catch photos...';
+    try {
+      const publication = await publishPhotos(submission);
+      const { error } = await client.rpc('republish_catch_photos', {
+        target_submission_id: submission.submission_id,
+        target_public_photo_path: publication.heroPath,
+        target_public_photo_paths: publication.publicPaths
+      });
+      if (error) throw error;
+      status.textContent = publication.publicPaths.length > 1
+        ? `${publication.publicPaths.length} public photos refreshed. Measurement evidence remains private.`
+        : 'Hero photo refreshed. Measurement evidence remains private.';
+      await loadSubmissions();
+    } catch (error) {
+      status.textContent = error.message || 'The public photos could not be refreshed.';
+    } finally {
+      button.disabled = false;
+    }
+  }
+
   function requestDecision(decision) {
     const submission = state.submissions.find(item => item.submission_id === state.selectedId);
     if (!submission) return;
@@ -544,14 +574,22 @@
 
   async function publishPhotos(submission) {
     const photos = [...(submission.photos || [])].sort((a, b) => a.display_order - b.display_order);
-    const selected = submission.submission_kind === 'recipe' ? photos : photos.filter(photo => photo.kind === 'hero').slice(0, 1);
+    let selected = photos;
+    if (submission.submission_kind === 'catch') {
+      const includedPaths = new Set($$('[data-public-photo]:checked').map(input => input.value));
+      const heroPath = $('[name="public_hero_photo"]:checked')?.value;
+      selected = photos.filter(photo => includedPaths.has(photo.storage_path));
+      const selectedHero = selected.find(photo => photo.storage_path === heroPath) || selected[0];
+      selected = selectedHero ? [selectedHero, ...selected.filter(photo => photo !== selectedHero)] : [];
+    }
     if (!selected.length) throw new Error('This entry has no publishable photo.');
     const publicPaths = [];
+    const publicationVersion = Date.now();
     for (const [index, photo] of selected.entries()) {
       const { data: blob, error: downloadError } = await client.storage.from('submission-photos').download(photo.storage_path);
       if (downloadError) throw downloadError;
       const extension = photo.storage_path.split('.').pop()?.toLowerCase() || 'jpg';
-      const fileName = index === 0 ? `hero.${extension}` : `photo-${index + 1}.${extension}`;
+      const fileName = index === 0 ? `hero-${publicationVersion}.${extension}` : `photo-${publicationVersion}-${index + 1}.${extension}`;
       const publicPath = `${submission.submission_kind === 'recipe' ? 'recipes' : 'catches'}/${submission.submission_id}/${fileName}`;
       const { error: uploadError } = await client.storage.from('community-images').upload(publicPath, blob, {
         contentType: blob.type || 'image/jpeg', cacheControl: '3600', upsert: true
@@ -575,7 +613,7 @@
       const rpc = submission.submission_kind === 'recipe' ? 'moderate_recipe_submission' : 'moderate_catch_submission';
       const params = submission.submission_kind === 'recipe'
         ? { target_submission_id: submission.submission_id, target_decision: state.pendingDecision.decision, target_note: state.pendingDecision.note || null, target_public_photo_path: publication?.heroPath || null, target_public_photo_paths: publication?.publicPaths || null }
-        : { target_submission_id: submission.submission_id, target_decision: state.pendingDecision.decision, target_note: state.pendingDecision.note || null, target_length_verified: state.pendingDecision.decision === 'approved', target_public_photo_path: publication?.heroPath || null };
+        : { target_submission_id: submission.submission_id, target_decision: state.pendingDecision.decision, target_note: state.pendingDecision.note || null, target_length_verified: state.pendingDecision.decision === 'approved', target_public_photo_path: publication?.heroPath || null, target_public_photo_paths: publication?.publicPaths || null };
       const { error } = await client.rpc(rpc, params);
       if (error) throw error;
       decisionDialog.close();
@@ -647,6 +685,7 @@
   $('[data-program-form]').addEventListener('submit', saveProgram);
   $('[data-feature-toggle]').addEventListener('change', event => { $('[data-feature-order]').disabled = !event.target.checked; });
   $('[data-save-feature]').addEventListener('click', saveFeatureSetting);
+  $('[data-refresh-public-photos]').addEventListener('click', refreshPublicCatchPhotos);
   decisionDialog.addEventListener('click', event => { if (event.target === decisionDialog) { state.pendingDecision = null; decisionDialog.close(); } });
   const photoLightbox = $('[data-photo-lightbox]');
   const lightboxStage = $('[data-lightbox-stage]');

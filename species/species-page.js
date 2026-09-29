@@ -10,6 +10,8 @@
     : null;
   let period = 'month';
   let currentCatches = [];
+  let catchDialogPhotos = [];
+  let catchDialogPhotoIndex = 0;
 
   function setText(selector, value) {
     const element = document.querySelector(selector);
@@ -112,17 +114,50 @@
     const dialog = document.createElement('dialog');
     dialog.className = 'catch-dialog';
     dialog.dataset.catchDialog = '';
-    dialog.innerHTML = '<button class="catch-dialog-close" type="button" aria-label="Close catch story"><i data-lucide="x" aria-hidden="true"></i></button><img data-catch-dialog-image alt=""><div class="catch-dialog-copy"><div class="eyebrow">Community catch</div><div class="catch-dialog-meta"><span data-catch-dialog-rank></span><span data-catch-dialog-length></span><span data-catch-dialog-date></span></div><h3 data-catch-dialog-title></h3><p data-catch-dialog-member></p><p data-catch-dialog-story></p><a data-catch-dialog-instagram target="_blank" rel="noopener noreferrer" hidden><i data-lucide="instagram" aria-hidden="true"></i><span></span></a></div>';
+    dialog.innerHTML = '<button class="catch-dialog-close" type="button" aria-label="Close catch story"><i data-lucide="x" aria-hidden="true"></i></button><div class="catch-dialog-media"><button class="catch-dialog-nav previous" type="button" aria-label="Previous catch photo"><i data-lucide="chevron-left"></i></button><img data-catch-dialog-image alt=""><button class="catch-dialog-nav next" type="button" aria-label="Next catch photo"><i data-lucide="chevron-right"></i></button><span class="catch-dialog-count" data-catch-dialog-count></span></div><div class="catch-dialog-thumbs" data-catch-dialog-thumbs></div><div class="catch-dialog-copy"><div class="eyebrow">Community catch</div><div class="catch-dialog-meta"><span data-catch-dialog-rank></span><span data-catch-dialog-length></span><span data-catch-dialog-date></span></div><h3 data-catch-dialog-title></h3><p data-catch-dialog-member></p><p data-catch-dialog-story></p><a data-catch-dialog-instagram target="_blank" rel="noopener noreferrer" hidden><i data-lucide="instagram" aria-hidden="true"></i><span></span></a></div>';
     document.body.append(dialog);
     dialog.querySelector('.catch-dialog-close').addEventListener('click', () => dialog.close());
+    dialog.querySelector('.catch-dialog-nav.previous').addEventListener('click', () => showCatchDialogPhoto(catchDialogPhotoIndex - 1));
+    dialog.querySelector('.catch-dialog-nav.next').addEventListener('click', () => showCatchDialogPhoto(catchDialogPhotoIndex + 1));
+    dialog.addEventListener('keydown', event => {
+      if (event.key === 'ArrowLeft') showCatchDialogPhoto(catchDialogPhotoIndex - 1);
+      if (event.key === 'ArrowRight') showCatchDialogPhoto(catchDialogPhotoIndex + 1);
+    });
     dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
     if (globalThis.lucide) globalThis.lucide.createIcons({ attrs: { width: 16, height: 16 } });
+  }
+
+  function showCatchDialogPhoto(index) {
+    if (!catchDialogPhotos.length) return;
+    catchDialogPhotoIndex = (index + catchDialogPhotos.length) % catchDialogPhotos.length;
+    const dialog = document.querySelector('[data-catch-dialog]');
+    const image = dialog.querySelector('[data-catch-dialog-image]');
+    image.src = publicCatchImage(catchDialogPhotos[catchDialogPhotoIndex]);
+    dialog.querySelector('[data-catch-dialog-count]').textContent = `${catchDialogPhotoIndex + 1} / ${catchDialogPhotos.length}`;
+    dialog.querySelectorAll('[data-catch-thumb]').forEach((thumb, thumbIndex) => thumb.setAttribute('aria-current', String(thumbIndex === catchDialogPhotoIndex)));
   }
 
   function openCatchStory(record) {
     const dialog = document.querySelector('[data-catch-dialog]');
     const image = dialog.querySelector('[data-catch-dialog-image]');
-    image.src = publicCatchImage(record.public_photo_path);
+    catchDialogPhotos = record.public_photo_paths?.length ? record.public_photo_paths : [record.public_photo_path].filter(Boolean);
+    const thumbs = dialog.querySelector('[data-catch-dialog-thumbs]');
+    thumbs.replaceChildren(...catchDialogPhotos.map((path, index) => {
+      const thumb = document.createElement('button');
+      thumb.type = 'button';
+      thumb.dataset.catchThumb = String(index);
+      thumb.setAttribute('aria-label', `Show catch photo ${index + 1}`);
+      const thumbImage = document.createElement('img');
+      thumbImage.src = publicCatchImage(path);
+      thumbImage.alt = '';
+      thumb.append(thumbImage);
+      thumb.addEventListener('click', () => showCatchDialogPhoto(index));
+      return thumb;
+    }));
+    thumbs.hidden = catchDialogPhotos.length < 2;
+    dialog.querySelectorAll('.catch-dialog-nav').forEach(button => { button.hidden = catchDialogPhotos.length < 2; });
+    dialog.querySelector('[data-catch-dialog-count]').hidden = catchDialogPhotos.length < 2;
+    showCatchDialogPhoto(0);
     image.alt = `${species.name} catch submitted by ${record.display_name || record.username}`;
     dialog.querySelector('[data-catch-dialog-rank]').textContent = `#${record.rank} ${period}`;
     dialog.querySelector('[data-catch-dialog-length]').textContent = `${Number(record.best_length_cm).toFixed(1)} cm`;
@@ -184,7 +219,7 @@
       empty.textContent = 'Live records are unavailable in this preview.';
       return;
     }
-    const { data, error } = await supabaseClient.rpc('get_species_catches', {
+    const { data, error } = await supabaseClient.rpc('get_species_catch_gallery', {
       target_species_slug: slug,
       target_period: period,
       result_limit: 24

@@ -1004,16 +1004,19 @@
         if (!supabaseClient) return;
         communityDataStatus = 'loading';
         renderVote();
-        try {
-          await Promise.all([loadVoteData(), loadActiveChallenge(), loadSpeciesDirectory()]);
-          await loadHomepageShowcase();
-          await loadLeaderboard();
-          communityDataStatus = 'live';
-        } catch (error) {
-          console.warn('Community data connection unavailable', error);
-          communityDataStatus = 'unavailable';
+        const [voteResult, challengeResult, speciesResult, showcaseResult] = await Promise.allSettled([
+          loadVoteData(), loadActiveChallenge(), loadSpeciesDirectory(), loadHomepageShowcase()
+        ]);
+        [voteResult, challengeResult, speciesResult, showcaseResult].forEach(result => {
+          if (result.status === 'rejected') console.warn('Community data request unavailable', result.reason);
+        });
+        communityDataStatus = voteResult.status === 'fulfilled' ? 'live' : 'unavailable';
+        if (voteResult.status === 'rejected') {
           activeBallot = null;
           liveVotes = null;
+        }
+        if (challengeResult.status === 'fulfilled') {
+          try { await loadLeaderboard(); } catch (error) { console.warn('Community leaderboard unavailable', error); }
         }
         renderVote();
       }

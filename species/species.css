@@ -123,7 +123,16 @@ h1, h2, h3 { letter-spacing: 0; font-weight: 600; }
 .catch-gallery-empty { padding: 30px 16px; color: var(--muted); text-align: center; background: var(--bg); border: 1px dashed var(--line); border-radius: 6px; font-size: 11px; }
 .catch-dialog { width: min(840px, calc(100% - 28px)); max-height: calc(100vh - 28px); padding: 0; overflow: auto; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 24px 70px rgba(0, 0, 0, .32); }
 .catch-dialog::backdrop { background: rgba(12, 16, 22, .72); }
-.catch-dialog > img { width: 100%; max-height: 520px; object-fit: contain; background: #11151a; }
+.catch-dialog-media { position: relative; display: grid; place-items: center; min-height: 320px; background: #11151a; }
+.catch-dialog-media > img { width: 100%; max-height: 520px; object-fit: contain; }
+.catch-dialog-nav { position: absolute; top: 50%; z-index: 1; width: 40px; height: 40px; display: grid; place-items: center; color: #fff; background: rgba(17, 21, 26, .78); border: 0; border-radius: 6px; transform: translateY(-50%); cursor: pointer; }
+.catch-dialog-nav.previous { left: 12px; }
+.catch-dialog-nav.next { right: 12px; }
+.catch-dialog-count { position: absolute; right: 12px; bottom: 12px; padding: 5px 8px; color: #fff; background: rgba(17, 21, 26, .78); border-radius: 4px; font-size: 11px; }
+.catch-dialog-thumbs { display: flex; gap: 8px; padding: 10px 12px; overflow-x: auto; background: var(--soft); }
+.catch-dialog-thumbs button { flex: 0 0 72px; height: 54px; padding: 0; overflow: hidden; background: #11151a; border: 2px solid transparent; border-radius: 4px; cursor: pointer; }
+.catch-dialog-thumbs button[aria-current="true"] { border-color: var(--orange); }
+.catch-dialog-thumbs img { width: 100%; height: 100%; object-fit: cover; }
 .catch-dialog-close { position: sticky; top: 12px; z-index: 2; width: 38px; height: 38px; display: grid; place-items: center; float: right; margin: 12px 12px -50px 0; color: #fff; background: rgba(17, 21, 26, .82); border: 0; border-radius: 6px; cursor: pointer; }
 .catch-dialog-copy { clear: both; padding: 22px 24px 26px; }
 .catch-dialog-copy h3 { margin: 7px 0 4px; font-size: 24px; }

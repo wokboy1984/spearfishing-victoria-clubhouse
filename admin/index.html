@@ -7,7 +7,7 @@
   <title>Moderation | Spearfishing Victoria</title>
   <link rel="icon" href="data:,">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
-  <link rel="stylesheet" href="admin.css?v=3">
+  <link rel="stylesheet" href="admin.css?v=4">
 </head>
 <body>
   <div class="admin-shell">
@@ -114,6 +114,7 @@
                   <label class="feature-toggle"><input type="checkbox" data-feature-toggle><span>Feature this catch</span></label>
                   <label class="feature-order"><span>Position</span><input type="number" min="1" max="99" value="1" data-feature-order></label>
                   <button class="button" type="button" data-save-feature><i data-lucide="star" aria-hidden="true"></i> Save homepage setting</button>
+                  <button class="button" type="button" data-refresh-public-photos><i data-lucide="images" aria-hidden="true"></i> Refresh public photos</button>
                   <p class="form-status" data-feature-status aria-live="polite"></p>
                 </section>
               </div>
@@ -156,6 +157,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js"></script>
-  <script src="admin.js?v=20"></script>
+  <script src="admin.js?v=23"></script>
 </body>
 </html>
