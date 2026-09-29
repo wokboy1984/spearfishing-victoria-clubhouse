@@ -32,7 +32,7 @@
   function contributionCard(item, recipe = false) {
     const link = document.createElement('a');
     link.className = 'contribution-card';
-    link.href = `/species/${encodeURIComponent(item.species_slug)}/${recipe ? '#recipes' : '#records'}`;
+    link.href = `/species/${encodeURIComponent(item.species_slug)}/index.html${recipe ? '#recipes' : '#records'}`;
     const image = document.createElement('img');
     image.src = publicImage(item.public_photo_path || item.public_photo_paths?.[0]);
     image.alt = recipe ? item.title : `${item.species_name} catch`;

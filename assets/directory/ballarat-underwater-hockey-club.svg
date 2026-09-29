@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-labelledby="title">
+  <title id="title">Ballarat Underwater Hockey Club</title>
+  <rect width="800" height="420" fill="#132238"/>
+  <circle cx="112" cy="210" r="66" fill="#f5663b"/>
+  <path d="M72 194c28-20 53-20 80 0M72 218c28-20 53-20 80 0M72 242c28-20 53-20 80 0" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+  <text x="210" y="183" fill="#fff" font-family="Arial, sans-serif" font-size="46" font-weight="700">BALLARAT</text>
+  <text x="210" y="239" fill="#dce5ef" font-family="Arial, sans-serif" font-size="34">UNDERWATER HOCKEY CLUB</text>
+  <text x="212" y="286" fill="#f5663b" font-family="Arial, sans-serif" font-size="18" font-weight="700">VICTORIA</text>
+</svg>

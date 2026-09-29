@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-labelledby="title">
+  <title id="title">Southern Spearfishing</title>
+  <rect width="800" height="420" fill="#132238"/>
+  <circle cx="112" cy="210" r="66" fill="#f5663b"/>
+  <path d="M62 220c34-31 69-31 101 0M68 242c29-24 59-24 88 0M92 176l57 57" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round"/>
+  <text x="210" y="203" fill="#fff" font-family="Arial, sans-serif" font-size="49" font-weight="700">SOUTHERN</text>
+  <text x="210" y="263" fill="#dce5ef" font-family="Arial, sans-serif" font-size="44">SPEARFISHING</text>
+</svg>

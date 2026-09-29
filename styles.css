@@ -480,6 +480,15 @@ html { scroll-behavior: smooth; background: #f0f2f5; }
     #sv-facebook-clubhouse .photo-input em { grid-column: 1 / -1; align-self: end; margin-top: 8px; overflow: hidden; color: var(--sv-orange); font-size: 10px; font-style: normal; text-overflow: ellipsis; white-space: nowrap; }
     #sv-facebook-clubhouse .photo-input input { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
     #sv-facebook-clubhouse .photo-input.optional { border-style: solid; }
+    #sv-facebook-clubhouse [data-submission-form] .photo-input { min-height: 270px; padding-bottom: 175px; background-color: var(--sv-bg); }
+    #sv-facebook-clubhouse [data-submission-form] .photo-input::after { content: ''; position: absolute; inset: 78px 14px 10px; z-index: 0; pointer-events: none; background-repeat: no-repeat; background-position: center; background-size: contain; opacity: .24; }
+    #sv-facebook-clubhouse [data-submission-form] .photo-input:nth-child(1)::after { background-image: url('assets/catch-guide-measurement.png'); }
+    #sv-facebook-clubhouse [data-submission-form] .photo-input:nth-child(2)::after { background-image: url('assets/catch-guide-hero.png'); }
+    #sv-facebook-clubhouse [data-submission-form] .photo-input:nth-child(3)::after { background-image: url('assets/catch-guide-group.png'); }
+    #sv-facebook-clubhouse [data-submission-form] .photo-input > :not(input) { position: relative; z-index: 1; }
+    #sv-facebook-clubhouse [data-submission-form] .photo-input:has(.photo-previews) { min-height: 118px; padding-bottom: 13px; }
+    #sv-facebook-clubhouse [data-submission-form] .photo-input:has(.photo-previews)::after { display: none; }
+    #sv-facebook-clubhouse .monthly-species-hint { display: block; min-height: 15px; margin-top: 4px; color: var(--sv-orange); font-size: 10px; font-weight: 750; }
     #sv-facebook-clubhouse .photo-previews { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; margin-top: 4px; }
     #sv-facebook-clubhouse .photo-preview { position: relative; min-width: 0; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 5px; background: #111; }
     #sv-facebook-clubhouse .photo-preview img { width: 100%; height: 100%; display: block; object-fit: cover; }
@@ -697,3 +706,283 @@ html { scroll-behavior: smooth; background: #f0f2f5; }
       #sv-facebook-clubhouse .submission-foot { display: grid; }
       #sv-facebook-clubhouse .submission-foot .button-primary { width: 100%; }
     }
+
+/* 2026 homepage refresh — cinematic, community-first */
+#sv-facebook-clubhouse .site {
+  --sv-bg: #071820;
+  --sv-surface: #0c222b;
+  --sv-soft: #132f39;
+  --sv-text: #f5f1e8;
+  --sv-muted: #a9bac0;
+  --sv-line: rgba(163, 204, 207, .18);
+  --sv-ink: #f5f1e8;
+  --sv-primary: #e95f2a;
+  --sv-accent-soft: rgba(43, 146, 139, .15);
+  --sv-gold: #f4bd54;
+  --sv-danger: #ff8c6a;
+  --sv-shadow: 0 18px 50px rgba(0, 8, 12, .18);
+  background: var(--sv-bg);
+}
+#sv-facebook-clubhouse .topbar {
+  position: relative;
+  z-index: 20;
+  min-height: 74px;
+  padding: 0 clamp(20px, 4vw, 64px);
+  background: rgba(5, 20, 28, .98);
+  border-bottom-color: rgba(255, 255, 255, .1);
+}
+
+/* Latest approved catches carousel */
+#sv-facebook-clubhouse .recent-catch-carousel {
+  margin-top: 16px;
+  padding-top: 15px;
+  border-top: 1px solid var(--sv-line);
+}
+#sv-facebook-clubhouse .recent-carousel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+#sv-facebook-clubhouse .recent-carousel-head h3 { margin: 2px 0 0; font: 700 20px/1.1 Georgia, "Times New Roman", serif; }
+#sv-facebook-clubhouse .recent-carousel-head > span { color: var(--sv-muted); font-size: 10px; }
+#sv-facebook-clubhouse .recent-carousel-window { overflow: hidden; border-radius: 7px; }
+#sv-facebook-clubhouse .recent-carousel-track {
+  display: flex;
+  width: max-content;
+  gap: 9px;
+  animation: recent-catches-scroll 28s linear infinite;
+}
+#sv-facebook-clubhouse .recent-carousel-track.is-static {
+  width: 100%;
+  animation: none;
+}
+#sv-facebook-clubhouse .recent-carousel-track.is-static .recent-catch-slide { flex: 1 1 0; }
+#sv-facebook-clubhouse .recent-carousel-window:hover .recent-carousel-track,
+#sv-facebook-clubhouse .recent-carousel-window:focus-within .recent-carousel-track { animation-play-state: paused; }
+#sv-facebook-clubhouse .recent-catch-slide {
+  position: relative;
+  width: 184px;
+  height: 122px;
+  flex: 0 0 auto;
+  padding: 0;
+  overflow: hidden;
+  color: #fff;
+  background: #102a33;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 7px;
+  cursor: pointer;
+}
+#sv-facebook-clubhouse .recent-catch-slide img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
+#sv-facebook-clubhouse .recent-catch-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: start;
+  padding: 12px;
+  text-align: left;
+  background: linear-gradient(180deg, transparent 15%, rgba(2, 13, 18, .9) 100%);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+#sv-facebook-clubhouse .recent-catch-overlay strong { font-size: 13px; }
+#sv-facebook-clubhouse .recent-catch-overlay span { color: #d9e7e8; font-size: 11px; }
+#sv-facebook-clubhouse .recent-catch-overlay b { margin-top: 3px; color: #75ddd5; font-size: 12px; }
+#sv-facebook-clubhouse .recent-catch-slide:hover img,
+#sv-facebook-clubhouse .recent-catch-slide:focus-visible img { transform: scale(1.05); }
+#sv-facebook-clubhouse .recent-catch-slide:hover .recent-catch-overlay,
+#sv-facebook-clubhouse .recent-catch-slide:focus-visible .recent-catch-overlay { opacity: 1; transform: none; }
+#sv-facebook-clubhouse .recent-carousel-empty { width: min(560px, 80vw); padding: 22px; color: var(--sv-muted); border: 1px dashed var(--sv-line); border-radius: 7px; text-align: center; }
+@keyframes recent-catches-scroll { to { transform: translateX(calc(-50% - 4.5px)); } }
+
+#sv-facebook-clubhouse .recent-catch-dialog {
+  width: min(520px, calc(100vw - 28px));
+  padding: 0;
+  overflow: hidden;
+  color: var(--sv-text);
+  background: var(--sv-surface);
+  border: 1px solid var(--sv-line);
+  border-radius: 12px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .55);
+}
+#sv-facebook-clubhouse .recent-catch-dialog::backdrop { background: rgba(0, 11, 16, .78); backdrop-filter: blur(5px); }
+#sv-facebook-clubhouse .recent-catch-dialog > img { width: 100%; height: 330px; object-fit: cover; }
+#sv-facebook-clubhouse .recent-catch-close { position: absolute; top: 12px; right: 12px; z-index: 2; width: 38px; height: 38px; display: grid; place-items: center; color: #fff; background: rgba(3, 18, 24, .8); border: 1px solid rgba(255, 255, 255, .2); border-radius: 50%; cursor: pointer; }
+#sv-facebook-clubhouse .recent-catch-dialog-copy { padding: 20px; }
+#sv-facebook-clubhouse .recent-catch-dialog-copy h2 { margin: 4px 0 8px; }
+#sv-facebook-clubhouse .recent-catch-dialog-copy p { display: flex; justify-content: space-between; gap: 15px; margin: 0 0 16px; color: var(--sv-muted); }
+#sv-facebook-clubhouse .recent-catch-dialog-copy p strong { color: var(--sv-text); }
+
+@media (max-width: 580px) {
+  #sv-facebook-clubhouse .recent-carousel-head > span { display: none; }
+  #sv-facebook-clubhouse .recent-catch-slide { width: 158px; height: 112px; }
+  #sv-facebook-clubhouse .recent-catch-overlay { opacity: 1; transform: none; }
+  #sv-facebook-clubhouse .recent-catch-dialog > img { height: 260px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #sv-facebook-clubhouse .recent-carousel-window { overflow-x: auto; }
+  #sv-facebook-clubhouse .recent-carousel-track { animation: none; }
+  #sv-facebook-clubhouse .recent-catch-slide[aria-hidden="true"] { display: none; }
+}
+#sv-facebook-clubhouse .brand { color: #f7f2e9; font-family: Georgia, "Times New Roman", serif; font-size: 21px; font-weight: 700; }
+#sv-facebook-clubhouse .brand-mark { color: #63d1ca; background: transparent; border: 1px solid rgba(99, 209, 202, .35); }
+#sv-facebook-clubhouse .nav { gap: clamp(12px, 2vw, 28px); color: #d6e0e2; }
+#sv-facebook-clubhouse .nav a:not(.button-primary) { color: #d6e0e2; }
+#sv-facebook-clubhouse .button-primary,
+#sv-facebook-clubhouse .button-secondary,
+#sv-facebook-clubhouse .icon-button { min-height: 44px; border-radius: 9px; font-weight: 700; cursor: pointer; }
+#sv-facebook-clubhouse .button-primary { background: #e95f2a; box-shadow: 0 8px 24px rgba(233, 95, 42, .2); }
+#sv-facebook-clubhouse .button-primary.orange { background: #e95f2a; }
+#sv-facebook-clubhouse .button-secondary,
+#sv-facebook-clubhouse .icon-button { border: 1px solid var(--sv-line); background: rgba(255,255,255,.055); }
+#sv-facebook-clubhouse .cinematic-hero {
+  position: relative;
+  display: block;
+  min-height: clamp(500px, 59vw, 720px);
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background-image: linear-gradient(90deg, rgba(2, 13, 19, .94) 0%, rgba(2, 13, 19, .78) 34%, rgba(2, 13, 19, .28) 66%, rgba(2, 13, 19, .08) 100%), linear-gradient(0deg, #071820 0%, transparent 30%), url('assets/sv-victorian-coast-hero.png');
+  background-position: center;
+  background-size: cover;
+  box-shadow: none;
+}
+#sv-facebook-clubhouse .cinematic-hero .mast-copy { width: min(760px, 58vw); min-height: inherit; padding: clamp(58px, 8vw, 112px) clamp(28px, 6vw, 92px); }
+#sv-facebook-clubhouse .cinematic-hero .mast-copy .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; color: #70d5ce; font-weight: 800; letter-spacing: .13em; }
+#sv-facebook-clubhouse .cinematic-hero h1 { max-width: 720px; margin-bottom: 20px; color: #fffaf1; font-family: Georgia, "Times New Roman", serif; font-size: clamp(42px, 5.3vw, 76px); font-weight: 700; line-height: .98; letter-spacing: -.035em; text-wrap: balance; text-shadow: 0 3px 24px rgba(0,0,0,.4); }
+#sv-facebook-clubhouse .cinematic-hero .mast-copy p { max-width: 610px; margin-bottom: 28px; color: #e3ecec; font-size: clamp(16px, 1.45vw, 21px); line-height: 1.5; }
+#sv-facebook-clubhouse .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+#sv-facebook-clubhouse .hero-actions .button-primary { min-height: 54px; padding: 13px 20px; font-size: 15px; }
+#sv-facebook-clubhouse .hero-secondary { color: #fff; border-bottom: 1px solid rgba(255,255,255,.55); font-size: 13px; font-weight: 700; }
+#sv-facebook-clubhouse .hero-secondary.group-button { min-height: 54px; display: inline-flex; align-items: center; gap: 9px; padding: 12px 18px; border: 1px solid rgba(255,255,255,.55); border-radius: 9px; background: rgba(5,20,28,.5); backdrop-filter: blur(8px); }
+#sv-facebook-clubhouse .hero-secondary.group-button .facebook-mark { width: 25px; height: 25px; display: grid; place-items: center; color: #fff; background: #1877f2; border-radius: 50%; font: 800 17px/1 Arial, sans-serif; }
+#sv-facebook-clubhouse .hero-community-note { display: flex; align-items: center; gap: 11px; margin-top: 34px; color: #fff; }
+#sv-facebook-clubhouse .hero-community-note .facebook-mark { width: 32px; height: 32px; display: grid; place-items: center; color: #fff; background: #1877f2; border-radius: 50%; font: 800 22px/1 Arial, sans-serif; }
+#sv-facebook-clubhouse .hero-community-note strong,
+#sv-facebook-clubhouse .hero-community-note small { display: block; }
+#sv-facebook-clubhouse .hero-community-note strong { font-size: 12px; }
+#sv-facebook-clubhouse .hero-community-note small { margin-top: 2px; color: #bfcfd2; font-size: 10px; }
+#sv-facebook-clubhouse .cinematic-hero .hero-data-carousel {
+  position: absolute;
+  right: clamp(24px, 5vw, 76px);
+  top: clamp(138px, 13vw, 172px);
+  bottom: auto;
+  z-index: 3;
+  width: clamp(330px, 36vw, 540px);
+  height: clamp(215px, 24vw, 330px);
+  display: block;
+  overflow: hidden;
+  background: #0c222b;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 14px;
+  box-shadow: 0 22px 55px rgba(0,0,0,.38);
+}
+#sv-facebook-clubhouse .cinematic-hero .hero-data-carousel::before { position: absolute; inset: 0; z-index: 1; content: ''; background: linear-gradient(0deg, rgba(2,15,21,.72), transparent 55%); pointer-events: none; }
+#sv-facebook-clubhouse .cinematic-hero .hero-data-carousel .mast-credit,
+#sv-facebook-clubhouse .cinematic-hero .hero-data-carousel .mast-controls,
+#sv-facebook-clubhouse .cinematic-hero .hero-data-carousel .species-badge { z-index: 2; }
+#sv-facebook-clubhouse .cinematic-hero .hero-data-carousel .species-badge { width: 66px; height: 66px; background: #287d72; font-size: 9px; }
+#sv-facebook-clubhouse .leaderboard-panel .leader-row { padding: 13px 0; }
+#sv-facebook-clubhouse .leaderboard-panel [data-leaderboard-rows] { min-height: 78px; }
+#sv-facebook-clubhouse .utility-band,
+#sv-facebook-clubhouse .lower-band,
+#sv-facebook-clubhouse .entries-band,
+#sv-facebook-clubhouse .species-hub { padding-right: clamp(18px, 4vw, 64px); padding-left: clamp(18px, 4vw, 64px); }
+#sv-facebook-clubhouse .utility-band { padding-top: 26px; padding-bottom: 18px; }
+#sv-facebook-clubhouse .utility-grid { grid-template-columns: minmax(0, 1.65fr) minmax(320px, .85fr); gap: 18px; max-width: 1540px; margin: auto; }
+#sv-facebook-clubhouse .utility-grid > *,
+#sv-facebook-clubhouse .lower-grid > * { min-width: 0; }
+#sv-facebook-clubhouse .panel { border-color: var(--sv-line); border-radius: 14px; background: rgba(12, 34, 43, .94); box-shadow: var(--sv-shadow); }
+#sv-facebook-clubhouse .panel-head h2,
+#sv-facebook-clubhouse .entries-head h2,
+#sv-facebook-clubhouse .species-head h2 { color: #fffaf1; font-family: Georgia, "Times New Roman", serif; font-size: clamp(22px, 2vw, 30px); font-weight: 700; }
+#sv-facebook-clubhouse .eyebrow { color: #63d1ca; font-weight: 800; }
+#sv-facebook-clubhouse .region-select { color: #f5f1e8; background: #102c36; border-radius: 9px; }
+#sv-facebook-clubhouse .forecast-days { gap: 8px; padding: 9px 0; border: 0; }
+#sv-facebook-clubhouse .forecast-day { min-height: 160px; padding: 15px 11px; background: rgba(255,255,255,.045); border: 1px solid rgba(163,204,207,.1) !important; border-radius: 9px; }
+#sv-facebook-clubhouse .forecast-day strong { margin: 11px 0; font-size: 16px; font-weight: 800; }
+#sv-facebook-clubhouse .forecast-day.best { background: rgba(47, 155, 137, .14); border-color: rgba(99,209,202,.32) !important; }
+#sv-facebook-clubhouse .forecast-day.best strong { color: #73ddd3; }
+#sv-facebook-clubhouse .forecast-metrics { margin-top: 9px; padding: 13px 0 4px; border-top: 1px solid var(--sv-line); }
+#sv-facebook-clubhouse .metric strong { color: #f8f3e9; }
+#sv-facebook-clubhouse .messenger-panel { position: relative; overflow: hidden; background: linear-gradient(145deg, rgba(14, 48, 59, .98), rgba(7, 26, 34, .98)); }
+#sv-facebook-clubhouse .messenger-panel::after { position: absolute; right: -60px; bottom: -80px; width: 250px; height: 250px; content: ''; opacity: .15; background: url('assets/sv-community.webp') center/cover; border-radius: 50%; filter: saturate(.7); pointer-events: none; }
+#sv-facebook-clubhouse .messenger-panel > * { position: relative; z-index: 1; }
+#sv-facebook-clubhouse .messenger-badge { width: 42px; height: 42px; display: grid; place-items: center; flex: 0 0 auto; color: white; background: #1877f2; border-radius: 12px; }
+#sv-facebook-clubhouse .chat-row { grid-template-columns: 31px 1fr auto; min-height: 57px; padding: 9px 0; }
+#sv-facebook-clubhouse .chat-row::after { content: '›'; color: #d7e6e8; font-size: 24px; }
+#sv-facebook-clubhouse .chat-row svg { color: #77c8ec; }
+#sv-facebook-clubhouse .chat-actions .messenger { width: 100%; background: #1877f2; }
+#sv-facebook-clubhouse .lower-band { padding-top: 18px; padding-bottom: 18px; border: 0; }
+#sv-facebook-clubhouse .lower-grid { grid-template-columns: 1.15fr .85fr; gap: 18px; max-width: 1540px; margin: auto; }
+#sv-facebook-clubhouse .directory-feature { position: relative; min-height: 330px; display: flex; align-items: flex-end; overflow: hidden; padding: 0; background: linear-gradient(0deg, rgba(4,20,27,.98), rgba(4,20,27,.18)), url('assets/sv-hero.webp') center/cover; }
+#sv-facebook-clubhouse .directory-feature::after { position: absolute; inset: 0; content: ''; border: 1px solid rgba(255,255,255,.08); border-radius: inherit; }
+#sv-facebook-clubhouse .directory-feature-copy { position: relative; z-index: 1; max-width: 560px; padding: 28px; }
+#sv-facebook-clubhouse .directory-icon { width: 44px; height: 44px; display: grid; place-items: center; margin: 12px 0; color: #071820; background: #63d1ca; border-radius: 12px; }
+#sv-facebook-clubhouse .directory-feature h2 { margin-bottom: 8px; color: #fffaf1; font: 700 clamp(25px, 2.4vw, 36px)/1.1 Georgia, serif; }
+#sv-facebook-clubhouse .directory-feature p { max-width: 480px; color: #d9e4e5; font-size: 14px; line-height: 1.55; }
+#sv-facebook-clubhouse .directory-action { display: inline-flex; align-items: center; gap: 7px; padding: 11px 15px; color: #fff; border: 1px solid rgba(255,255,255,.5); border-radius: 9px; font-size: 12px; font-weight: 800; }
+#sv-facebook-clubhouse .entries-band { max-width: none; padding-top: 34px; padding-bottom: 42px; background: #ecede7; border: 0; color: #10242b; }
+#sv-facebook-clubhouse .entries-band > * { max-width: 1540px; margin-right: auto; margin-left: auto; }
+#sv-facebook-clubhouse .entries-band .entries-head { margin-bottom: 18px; }
+#sv-facebook-clubhouse .entries-band .entries-head h2 { color: #10242b; }
+#sv-facebook-clubhouse .entries-band .eyebrow { color: #267e76; }
+#sv-facebook-clubhouse .entry-photo { height: 210px; border-radius: 12px; box-shadow: 0 12px 32px rgba(18,35,40,.12); }
+#sv-facebook-clubhouse .species-hub { padding-top: 42px; padding-bottom: 46px; background: #f6f1e7; border: 0; color: #17292f; }
+#sv-facebook-clubhouse .species-hub > * { max-width: 1540px; margin-right: auto; margin-left: auto; }
+#sv-facebook-clubhouse .species-hub .species-head h2 { color: #17292f; }
+#sv-facebook-clubhouse .species-hub .species-head p,
+#sv-facebook-clubhouse .species-hub .rules-note,
+#sv-facebook-clubhouse .species-hub .authority-note { color: #5c6b6d; }
+#sv-facebook-clubhouse .species-hub .button-secondary { color: #173039; background: #fffaf1; border-color: #c9d0cc; }
+#sv-facebook-clubhouse .species-profile,
+#sv-facebook-clubhouse .recipe-feature { color: #17292f; background: #fffdf7; border-color: #d8d8cf; border-radius: 13px; box-shadow: 0 15px 38px rgba(19,37,42,.1); }
+#sv-facebook-clubhouse .species-profile h3,
+#sv-facebook-clubhouse .recipe-feature h3 { color: #17292f; }
+#sv-facebook-clubhouse .species-hub .recipe-copy p,
+#sv-facebook-clubhouse .species-hub .species-copy p { color: #5c6b6d; }
+#sv-facebook-clubhouse .species-hub .button-primary { color: #fff; }
+
+@media (max-width: 950px) {
+  #sv-facebook-clubhouse .cinematic-hero { min-height: 600px; background-position: 62% center; }
+  #sv-facebook-clubhouse .cinematic-hero .mast-copy { width: 72vw; }
+  #sv-facebook-clubhouse .utility-grid,
+  #sv-facebook-clubhouse .lower-grid { grid-template-columns: 1fr; }
+  #sv-facebook-clubhouse .forecast-days { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+  #sv-facebook-clubhouse .forecast-day { min-width: 145px; flex: 0 0 145px; scroll-snap-align: start; }
+  #sv-facebook-clubhouse .cinematic-hero .hero-data-carousel { right: 24px; width: 320px; height: 205px; }
+}
+@media (max-width: 650px) {
+  #sv-facebook-clubhouse .topbar { min-height: 66px; padding: 0 12px; }
+  #sv-facebook-clubhouse .brand > span:last-child { display: none; }
+  #sv-facebook-clubhouse .nav { gap: 6px; }
+  #sv-facebook-clubhouse .nav .button-primary { min-width: 42px; padding: 9px; font-size: 0; }
+  #sv-facebook-clubhouse .theme-toggle { display: none; }
+  #sv-facebook-clubhouse .cinematic-hero { min-height: 620px; background-image: linear-gradient(90deg, rgba(2,13,19,.9), rgba(2,13,19,.32)), linear-gradient(0deg, #071820 1%, transparent 56%), url('assets/sv-victorian-coast-hero.png'); background-position: 68% center; }
+  #sv-facebook-clubhouse .cinematic-hero .mast-copy { width: 100%; min-height: 620px; justify-content: flex-end; padding: 42px 20px 48px; }
+  #sv-facebook-clubhouse .cinematic-hero .hero-data-carousel { position: relative; top: auto; right: auto; bottom: auto; width: calc(100% - 40px); height: 220px; margin: -18px 20px 34px; }
+  #sv-facebook-clubhouse .cinematic-hero h1 { font-size: clamp(39px, 12vw, 54px); }
+  #sv-facebook-clubhouse .cinematic-hero .mast-copy p { font-size: 16px; }
+  #sv-facebook-clubhouse .hero-actions { display: grid; gap: 15px; }
+  #sv-facebook-clubhouse .hero-actions .button-primary { width: 100%; }
+  #sv-facebook-clubhouse .hero-secondary { justify-self: start; }
+  #sv-facebook-clubhouse .hero-community-note { margin-top: 26px; }
+  #sv-facebook-clubhouse .utility-band,
+  #sv-facebook-clubhouse .lower-band,
+  #sv-facebook-clubhouse .entries-band,
+  #sv-facebook-clubhouse .species-hub { padding-right: 12px; padding-left: 12px; }
+  #sv-facebook-clubhouse .panel { padding: 15px; border-radius: 12px; }
+  #sv-facebook-clubhouse .panel-head { display: grid; }
+  #sv-facebook-clubhouse .region-select { width: 100%; max-width: none; }
+  #sv-facebook-clubhouse .forecast-metrics { grid-template-columns: 1fr 1fr; }
+  #sv-facebook-clubhouse .forecast-foot { display: grid; }
+  #sv-facebook-clubhouse .directory-feature { min-height: 360px; padding: 0; }
+  #sv-facebook-clubhouse .directory-feature-copy { padding: 22px; }
+  #sv-facebook-clubhouse .entries-head { align-items: flex-start; flex-direction: column; }
+  #sv-facebook-clubhouse .entry-grid { grid-template-columns: 1fr 1fr; }
+  #sv-facebook-clubhouse .entry-photo { height: 170px; }
+}

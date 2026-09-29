@@ -6,7 +6,7 @@
   const $ = selector => document.querySelector(selector);
   const icons = () => globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
   const publicImage = path => client.storage.from('community-images').getPublicUrl(path).data.publicUrl;
-  const profileUrl = username => `../${encodeURIComponent(username.toLowerCase())}/`;
+  const profileUrl = username => username ? `../${encodeURIComponent(username.toLowerCase())}/` : '../members/';
 
   function daysLeftInMelbourneMonth(date = new Date()) {
     const parts = Object.fromEntries(new Intl.DateTimeFormat('en-AU', {
@@ -19,50 +19,64 @@
 
   function appearance() { try { return JSON.parse(localStorage.getItem(appearanceKey) || '{}'); } catch { return {}; } }
   function setAppearance(dark) { document.documentElement.classList.toggle('dark-mode', dark); $('[data-theme-toggle]').innerHTML = `<i data-lucide="${dark ? 'sun' : 'moon'}"></i>`; icons(); }
-  function showError() { $('[data-loading]').hidden = true; $('[data-page]').hidden = true; $('[data-error]').hidden = false; icons(); }
+  function showError() { $('[data-loading]').hidden = true; $('[data-page]').hidden = false; $('[data-error]').hidden = true; $('[data-species-image]').src = '../assets/sv-victorian-coast-hero.png'; $('[data-species-image]').alt = 'A Victorian spearo entering cold coastal water'; icons(); }
 
   async function load() {
     if (!client) { showError(); return; }
     const today = new Date().toISOString().slice(0, 10);
     const { data: challenge, error } = await client.from('challenges').select('id,title,description,starts_on,ends_on,species:species_id(slug,common_name)').lte('starts_on', today).gte('ends_on', today).order('starts_on', { ascending: false }).limit(1).maybeSingle();
-    if (error || !challenge) { showError(); return; }
-    const species = challenge.species;
-    const details = speciesData[species.slug];
-    const start = new Date(`${challenge.starts_on}T12:00:00`);
-    const end = new Date(`${challenge.ends_on}T23:59:59`);
-    const days = daysLeftInMelbourneMonth();
-    $('[data-title]').textContent = `${start.toLocaleString('en-AU', { month: 'long' })} ${species.common_name}`;
-    $('[data-description]').textContent = challenge.description || 'Enter your best verified catch. Only your largest approved fish counts.';
-    $('[data-dates]').textContent = `${start.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })} – ${end.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}`;
-    $('[data-days]').textContent = `${days} day${days === 1 ? '' : 's'} left`;
-    $('[data-pulse-days]').textContent = days;
-    $('[data-species-link]').href = `../species/${encodeURIComponent(species.slug)}/`;
-    $('[data-species-image]').src = `../assets/${details?.image || 'sv-snapper.webp'}`;
-    $('[data-species-image]').alt = details?.imageAlt || species.common_name;
-
-    const [{ data: leaders }, { data: catches }, { data: ballots }] = await Promise.all([
-      client.rpc('get_challenge_catch_leaderboard', { target_challenge_id: challenge.id }),
-      client.rpc('get_species_catches', { target_species_slug: species.slug, target_period: 'month', result_limit: 12 }),
-      client.from('ballots').select('id,title,closes_at').lte('opens_at', new Date().toISOString()).gte('closes_at', new Date().toISOString()).limit(1)
-    ]);
-    const ranked = (leaders || []).slice(0, 10);
+    if (error) throw error;
+    let leaders = [];
+    let catches = [];
+    let species = challenge?.species || null;
+    if (challenge && species) {
+      const details = speciesData[species.slug];
+      const start = new Date(`${challenge.starts_on}T12:00:00`);
+      const end = new Date(`${challenge.ends_on}T23:59:59`);
+      const days = daysLeftInMelbourneMonth();
+      $('[data-title]').textContent = `${start.toLocaleString('en-AU', { month: 'long' })} ${species.common_name} Challenge`;
+      $('[data-description]').textContent = challenge.description || 'Enter your best verified catch. Only your largest approved fish counts.';
+      $('[data-dates]').textContent = `${start.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })} – ${end.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}`;
+      $('[data-days]').textContent = `${days} day${days === 1 ? '' : 's'} left`;
+      $('[data-pulse-days]').textContent = days;
+      $('[data-species-image]').src = `../assets/${details?.image || 'sv-snapper.webp'}`;
+      $('[data-species-image]').alt = details?.imageAlt || species.common_name;
+      const [leaderResult, catchResult] = await Promise.all([
+        client.rpc('get_challenge_catch_leaderboard', { target_challenge_id: challenge.id }),
+        client.rpc('get_species_catches', { target_species_slug: species.slug, target_period: 'month', result_limit: 12 })
+      ]);
+      leaders = leaderResult.data || [];
+      catches = catchResult.data || [];
+    } else {
+      $('[data-title]').textContent = 'The Monthly Challenge';
+      $('[data-description]').textContent = 'A new featured species each month, with verified catches, friendly scoring and a community leaderboard.';
+      $('[data-pulse-days]').textContent = '—';
+      $('[data-species-image]').src = '../assets/sv-victorian-coast-hero.png';
+      $('[data-species-image]').alt = 'A Victorian spearo in cold coastal water at sunrise';
+      const [{ data: allLeaders }, { data: showcase }] = await Promise.all([
+        client.rpc('get_challenge_catch_leaderboard', { target_challenge_id: null }),
+        client.rpc('get_homepage_showcase', { target_limit: 12 })
+      ]);
+      leaders = allLeaders || [];
+      catches = showcase || [];
+      if (!leaders.length && catches.length) {
+        const bestByMember = new Map();
+        catches.forEach(row => {
+          const key = row.display_name || row.submission_id;
+          const existing = bestByMember.get(key);
+          if (!existing || Number(row.length_cm) > Number(existing.length_cm)) bestByMember.set(key, row);
+        });
+        leaders = [...bestByMember.values()].sort((a, b) => Number(b.length_cm) - Number(a.length_cm)).map((row, index) => ({ rank: index + 1, username: null, display_name: row.display_name, best_length_cm: row.length_cm, placement_bonus: Math.max(0, 10 - index), points: 15 + Math.max(0, 10 - index) }));
+      }
+    }
+    const ranked = leaders.slice(0, 10);
     $('[data-member-count]').textContent = ranked.length;
     $('[data-leading-length]').textContent = ranked.length ? `${Number(ranked[0].best_length_cm).toFixed(1)} cm` : '—';
     $('[data-catch-count]').textContent = catches?.length || 0;
     $('[data-podium]').innerHTML = ranked.slice(0, 3).map((row, index) => `<a class="podium-place ${['first', 'second', 'third'][index]}" href="${profileUrl(row.username)}"><span class="podium-rank">${row.rank}</span><strong>${row.display_name || 'Community member'}</strong><span>${Number(row.best_length_cm).toFixed(1)} cm</span><b>${row.points} pts</b></a>`).join('');
     $('[data-leaders]').innerHTML = ranked.map(row => `<div class="leader-row"><span class="rank">${row.rank}</span><span><strong><a href="${profileUrl(row.username)}">${row.display_name || 'Community member'}</a></strong><span>${Number(row.best_length_cm).toFixed(1)} cm · 15 entry + ${row.placement_bonus} bonus</span></span><strong>${row.points} pts</strong></div>`).join('') || '<div class="empty">Standings begin with the first approved catch.</div>';
-    $('[data-catches]').innerHTML = (catches || []).map(row => `<a class="catch-card" href="../species/${encodeURIComponent(species.slug)}/#records"><img src="${publicImage(row.public_photo_path)}" alt="${species.common_name} catch by ${row.display_name || 'a community member'}"><span class="catch-copy"><strong>${row.display_name || 'Community member'}</strong><span>${Number(row.best_length_cm).toFixed(1)} cm · #${row.rank}</span></span></a>`).join('');
+    $('[data-catches]').innerHTML = catches.map(row => { const slug = row.species_slug || species?.slug || 'snapper'; const speciesName = row.species_name || species?.common_name || 'Featured catch'; const length = Number(row.best_length_cm ?? row.length_cm); return `<a class="catch-card" href="../species/${encodeURIComponent(slug)}/index.html#records"><img src="${publicImage(row.public_photo_path)}" alt="${speciesName} catch by ${row.display_name || 'a community member'}"><span class="catch-copy"><strong>${row.display_name || 'Community member'}</strong><span>${Number.isFinite(length) ? `${length.toFixed(1)} cm` : speciesName}${row.rank ? ` · #${row.rank}` : ''}</span></span></a>`; }).join('');
     $('[data-catches-empty]').hidden = Boolean(catches?.length);
-
-    const ballot = ballots?.[0];
-    if (ballot) {
-      $('[data-vote-title]').textContent = ballot.title;
-      const { data: totals } = await client.rpc('get_species_vote_totals', { target_ballot_id: ballot.id });
-      const total = (totals || []).reduce((sum, item) => sum + item.votes, 0);
-      $('[data-vote-options]').innerHTML = (totals || []).map(item => { const percent = total ? Math.round(item.votes / total * 100) : 0; return `<div class="vote-option"><span class="vote-top"><span>${item.common_name}</span><strong>${percent}%</strong></span><span class="vote-track"><span class="vote-fill" style="width:${percent}%"></span></span></div>`; }).join('') || '<div class="empty">No votes yet.</div>';
-    } else {
-      $('[data-vote-options]').innerHTML = '<div class="empty">The next vote has not opened yet.</div>';
-    }
     $('[data-loading]').hidden = true;
     $('[data-page]').hidden = false;
     icons();

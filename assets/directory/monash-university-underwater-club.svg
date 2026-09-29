@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-labelledby="title">
+  <title id="title">Monash University Underwater Club</title>
+  <rect width="800" height="420" fill="#132238"/>
+  <rect x="48" y="132" width="128" height="156" fill="#fff"/>
+  <path d="M72 166h80v22H72zm0 34h80v22H72zm0 34h80v22H72z" fill="#2477c7"/>
+  <text x="210" y="180" fill="#fff" font-family="Arial, sans-serif" font-size="43" font-weight="700">MONASH UNIVERSITY</text>
+  <text x="210" y="237" fill="#dce5ef" font-family="Arial, sans-serif" font-size="34">UNDERWATER CLUB</text>
+  <text x="212" y="284" fill="#f5663b" font-family="Arial, sans-serif" font-size="18" font-weight="700">UNDERWATER HOCKEY + SNORKELLING</text>
+</svg>

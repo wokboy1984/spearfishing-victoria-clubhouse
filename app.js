@@ -32,6 +32,7 @@
       let memberPhotoUrls = new Map();
       let activeMemberTab = 'submissions';
       let mastheadSlides = [];
+      let homepageShowcaseRows = [];
       let mastheadSlideIndex = 0;
       let mastheadTimer = null;
       let toastTimer = null;
@@ -39,6 +40,7 @@
       let avatarRemovalRequested = false;
       let leaderboardMode = 'monthly';
       let leaderboardData = { monthly: [], species: [], yearly: [] };
+      let leaderboardUsesShowcaseFallback = false;
       let communityDataStatus = supabaseClient ? 'loading' : 'preview';
       const regions = {
         'Port Phillip Bay': { latitude: -38.13, longitude: 144.82, point: 'Central Port Phillip Bay' },
@@ -278,6 +280,7 @@
         }
       }
       function renderVote() {
+        if (!root.querySelector('[data-vote-list]')) return;
         const votes = liveVotes ? { ...liveVotes } : {};
         const total = Object.values(votes).reduce((sum, value) => sum + value, 0);
         const labels = Object.keys(votes).reduce((result, slug) => {
@@ -317,11 +320,16 @@
         const start = new Date(`${activeChallenge.starts_on}T12:00:00`);
         const month = start.toLocaleString('en-AU', { month: 'long' });
         const days = daysLeftInMelbourneMonth();
-        root.querySelector('[data-challenge-eyebrow]').textContent = `Species of the month · ${days} day${days === 1 ? '' : 's'} left`;
-        root.querySelector('[data-challenge-title]').innerHTML = `${escapeHtml(month)} <span>${escapeHtml(species.common_name)} Challenge</span>`;
-        root.querySelector('[data-challenge-description]').textContent = activeChallenge.description || 'Enter your best verified catch. Only your largest approved fish counts.';
-        root.querySelector('[data-challenge-action]').textContent = `Enter ${month}`;
+        const challengeEyebrow = root.querySelector('[data-challenge-eyebrow]');
+        const challengeTitle = root.querySelector('[data-challenge-title]');
+        const challengeDescription = root.querySelector('[data-challenge-description]');
+        const challengeAction = root.querySelector('[data-challenge-action]');
+        if (challengeEyebrow) challengeEyebrow.textContent = `Species of the month · ${days} day${days === 1 ? '' : 's'} left`;
+        if (challengeTitle) challengeTitle.innerHTML = `${escapeHtml(month)} <span>${escapeHtml(species.common_name)} Challenge</span>`;
+        if (challengeDescription) challengeDescription.textContent = activeChallenge.description || 'Enter your best verified catch. Only your largest approved fish counts.';
+        if (challengeAction) challengeAction.textContent = `Enter ${month}`;
         root.querySelector('[data-leaderboard-eyebrow]').textContent = `${month} ${species.common_name} challenge`;
+        syncMonthlyCatchSpecies();
         if (details) {
           const mastPhoto = root.querySelector('[data-mast-photo]');
           mastPhoto.src = speciesAsset(details.image);
@@ -329,6 +337,22 @@
           root.querySelector('[data-mast-credit]').hidden = true;
           renderSpeciesHub(species.slug, month);
         }
+      }
+
+      function syncMonthlyCatchSpecies() {
+        const monthlySlug = activeChallenge?.species?.slug || 'snapper';
+        const monthlyName = activeChallenge?.species?.common_name || speciesNames[monthlySlug] || trackedSpecies[monthlySlug]?.name;
+        const form = root.querySelector('[data-submission-form]');
+        const select = form.elements.species;
+        if (![...select.options].some(option => option.value === monthlySlug)) return;
+        select.value = monthlySlug;
+        [...select.options].forEach(option => {
+          const baseName = speciesNames[option.value] || option.textContent.replace(/\s+— Species of the Month$/, '');
+          option.textContent = option.value === monthlySlug ? `${baseName} — Species of the Month` : baseName;
+        });
+        const hint = form.querySelector('[data-monthly-species-hint]');
+        hint.textContent = `${monthlyName} is this month's featured catch.`;
+        validateCatchMinimum();
       }
 
       function speciesAsset(path) {
@@ -429,20 +453,18 @@
         const rows = leaderboardData[leaderboardMode] || [];
         const title = panel.querySelector('h2');
         const description = panel.querySelector('.panel-head p');
-        const scoreStrip = panel.querySelector('.score-strip');
         root.querySelectorAll('[data-leaderboard-mode]').forEach(button => button.setAttribute('aria-selected', String(button.dataset.leaderboardMode === leaderboardMode)));
         if (leaderboardMode === 'monthly') {
           title.textContent = 'Monthly catch leaderboard';
-          description.textContent = 'Your single best verified catch counts. Placement bonuses remain provisional until the month closes.';
-          scoreStrip.hidden = false;
+          description.textContent = leaderboardUsesShowcaseFallback
+            ? 'Ranked from the latest approved, length-verified catches while no Monthly Catch is open.'
+            : 'Your single best verified catch counts. Placement bonuses remain provisional until the month closes.';
         } else if (leaderboardMode === 'species') {
           title.textContent = `${new Date().getFullYear()} All Species Cup`;
           description.textContent = 'Your best verified catch for each tracked species counts once across the year.';
-          scoreStrip.hidden = true;
         } else {
           title.textContent = `${new Date().getFullYear()} community standings`;
           description.textContent = 'Catch points plus published recipes and other recognised community contributions.';
-          scoreStrip.hidden = true;
         }
         if (!rows?.length) {
           const empty = leaderboardMode === 'monthly' ? 'Standings begin with the first approved, length-verified entry.' : 'Standings will appear after the first qualifying contribution.';
@@ -481,7 +503,7 @@
           photo.alt = `${slide.display_name} with a featured ${slide.species_name} catch`;
           photo.style.opacity = '1';
         }, 160);
-        credit.href = `species/${encodeURIComponent(slide.species_slug)}/#records`;
+        credit.href = `species/${encodeURIComponent(slide.species_slug)}/index.html#records`;
         credit.textContent = `${slide.display_name} · ${slide.species_name} · ${Number(slide.length_cm).toFixed(1)} cm`;
         credit.hidden = false;
         credit.setAttribute('aria-live', announce ? 'polite' : 'off');
@@ -517,7 +539,12 @@
       }
 
       function renderHomepageShowcase(rows) {
+        renderRecentCatchCarousel(rows || []);
         const grid = root.querySelector('#community-entries');
+        if (!grid) {
+          configureMastheadSlideshow(rows || []);
+          return;
+        }
         if (!rows?.length) {
           grid.innerHTML = '<div class="entries-empty">No approved catches yet - be the first.</div>';
           configureMastheadSlideshow([]);
@@ -525,7 +552,7 @@
         }
         grid.innerHTML = rows.slice(0, 8).map(row => {
           const member = row.instagram_handle ? `@${row.instagram_handle}` : row.display_name;
-          return `<a class="entry-photo ${row.homepage_featured ? 'featured' : ''}" href="species/${encodeURIComponent(row.species_slug)}/#records" aria-label="View ${escapeHtml(row.display_name)}’s ${escapeHtml(row.species_name)} catch">
+          return `<a class="entry-photo ${row.homepage_featured ? 'featured' : ''}" href="species/${encodeURIComponent(row.species_slug)}/index.html#records" aria-label="View ${escapeHtml(row.display_name)}’s ${escapeHtml(row.species_name)} catch">
             <img src="${escapeHtml(publicCommunityPhoto(row.public_photo_path))}" alt="${escapeHtml(row.display_name)} with an approved ${escapeHtml(row.species_name)} catch" loading="lazy">
             <span class="entry-label">${escapeHtml(row.species_name)} · ${Number(row.length_cm).toFixed(1)} cm · ${escapeHtml(member)}</span>
           </a>`;
@@ -534,10 +561,34 @@
         configureMastheadSlideshow(rows);
       }
 
+      function renderRecentCatchCarousel(rows) {
+        const track = root.querySelector('[data-recent-carousel-track]');
+        if (!track) return;
+        const catches = [...rows]
+          .sort((a, b) => String(b.submitted_on || '').localeCompare(String(a.submitted_on || '')))
+          .slice(0, 5);
+        if (!catches.length) {
+          track.innerHTML = '<div class="recent-carousel-empty">Approved catches will appear here.</div>';
+          return;
+        }
+        track.classList.toggle('is-static', catches.length < 3);
+        const card = (row, duplicate = false) => {
+          const person = memberName(row);
+          const label = `${person} · ${row.species_name} · ${Number(row.length_cm).toFixed(1)} cm`;
+          const catchData = escapeHtml(JSON.stringify({ person, fish: row.species_name, size: Number(row.length_cm).toFixed(1), photo: publicCommunityPhoto(row.public_photo_path), slug: row.species_slug }));
+          return `<button class="recent-catch-slide" type="button" data-recent-catch='${catchData}' aria-label="Open catch tile for ${escapeHtml(label)}" ${duplicate ? 'tabindex="-1" aria-hidden="true"' : ''}>
+            <img src="${escapeHtml(publicCommunityPhoto(row.public_photo_path))}" alt="${escapeHtml(person)} with an approved ${escapeHtml(row.species_name)} catch" loading="lazy">
+            <span class="recent-catch-overlay"><strong>${escapeHtml(person)}</strong><span>${escapeHtml(row.species_name)}</span><b>${Number(row.length_cm).toFixed(1)} cm</b></span>
+          </button>`;
+        };
+        track.innerHTML = catches.map(row => card(row)).join('') + (catches.length >= 3 ? catches.map(row => card(row, true)).join('') : '');
+      }
+
       async function loadHomepageShowcase() {
         const { data, error } = await supabaseClient.rpc('get_homepage_showcase', { target_limit: 8 });
         if (error) throw error;
-        renderHomepageShowcase(data || []);
+        homepageShowcaseRows = data || [];
+        renderHomepageShowcase(homepageShowcaseRows);
       }
       function renderAppearance() {
         site.classList.toggle('dark-preview', state.dark);
@@ -603,7 +654,7 @@
               ? submission.moderation_note || 'This entry did not meet the competition requirements.'
               : (isRecipe ? 'Waiting for a moderator to review the recipe and finished-dish photo.' : 'Waiting for a moderator to review the photos and measurement.');
           const recordLink = status === 'approved' && submission.species_slug
-            ? `<a class="member-submission-link" href="species/${encodeURIComponent(submission.species_slug)}/${isRecipe ? '#recipes' : '#records'}"><i data-lucide="${isRecipe ? 'utensils' : 'trophy'}" aria-hidden="true"></i> View ${isRecipe ? 'published recipe' : 'species records'}</a>`
+            ? `<a class="member-submission-link" href="species/${encodeURIComponent(submission.species_slug)}/index.html${isRecipe ? '#recipes' : '#records'}"><i data-lucide="${isRecipe ? 'utensils' : 'trophy'}" aria-hidden="true"></i> View ${isRecipe ? 'published recipe' : 'species records'}</a>`
             : '';
           const recoveryActions = `<div class="member-submission-actions">${status === 'rejected' ? `<button class="button-secondary" type="button" data-resubmit-submission="${submission.submission_id}" data-submission-type="${isRecipe ? 'recipe' : 'catch'}"><i data-lucide="refresh-cw" aria-hidden="true"></i> Correct and resubmit</button>` : ''}<button class="submission-delete" type="button" data-delete-submission="${submission.submission_id}" data-submission-status="${escapeHtml(status)}"><i data-lucide="trash-2" aria-hidden="true"></i> Delete</button></div>`;
           return `<article class="member-submission ${submission.notification_unread ? 'unread' : ''}">
@@ -927,10 +978,12 @@
           }));
           if (selected && trackedSpeciesIds[selected]) select.value = selected;
         });
+        syncMonthlyCatchSpecies();
         validateCatchMinimum();
       }
 
       async function loadVoteData() {
+        if (!root.querySelector('[data-vote-list]')) return;
         const now = new Date().toISOString();
         const { data: ballots, error: ballotError } = await supabaseClient
           .from('ballots')
@@ -983,20 +1036,66 @@
 
       async function loadLeaderboard() {
         const year = new Date().getFullYear();
+        let leaderboardChallenge = activeChallenge;
+        if (!leaderboardChallenge) {
+          const today = new Date().toISOString().slice(0, 10);
+          const { data: latestChallenge, error: latestChallengeError } = await supabaseClient
+            .from('challenges')
+            .select('id,starts_on,ends_on,species:species_id(slug,common_name)')
+            .lte('starts_on', today)
+            .order('ends_on', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          if (latestChallengeError) throw latestChallengeError;
+          leaderboardChallenge = latestChallenge;
+        }
         const [monthly, species, yearly] = await Promise.all([
-          activeChallenge
-            ? supabaseClient.rpc('get_challenge_catch_leaderboard', { target_challenge_id: activeChallenge.id })
-            : Promise.resolve({ data: [], error: null }),
+          supabaseClient.rpc('get_challenge_catch_leaderboard', { target_challenge_id: leaderboardChallenge?.id || null }),
           supabaseClient.rpc('get_all_species_cup', { target_year: year }),
           supabaseClient.rpc('get_yearly_community_leaderboard', { target_year: year })
         ]);
         const error = monthly.error || species.error || yearly.error;
         if (error) throw error;
+        let monthlyRows = (monthly.data || []).sort((a, b) => a.rank - b.rank);
+        leaderboardUsesShowcaseFallback = false;
+        if (!monthlyRows.length && homepageShowcaseRows.length) {
+          const currentMonth = new Date().toISOString().slice(0, 7);
+          const currentMonthCatches = homepageShowcaseRows.filter(row => String(row.submitted_on || '').startsWith(currentMonth));
+          const sourceRows = currentMonthCatches.length ? currentMonthCatches : homepageShowcaseRows;
+          const bestByMember = new Map();
+          sourceRows.forEach(row => {
+            const key = row.display_name || row.instagram_handle || row.submission_id;
+            const existing = bestByMember.get(key);
+            if (!existing || Number(row.length_cm) > Number(existing.length_cm)) bestByMember.set(key, row);
+          });
+          monthlyRows = [...bestByMember.values()]
+            .sort((a, b) => Number(b.length_cm) - Number(a.length_cm))
+            .slice(0, 10)
+            .map((row, index) => ({
+              rank: index + 1,
+              display_name: row.display_name,
+              username: null,
+              best_length_cm: Number(row.length_cm),
+              placement_bonus: 10 - index,
+              points: 25 - index
+            }));
+          leaderboardUsesShowcaseFallback = monthlyRows.length > 0;
+        }
         leaderboardData = {
-          monthly: (monthly.data || []).sort((a, b) => a.rank - b.rank),
+          monthly: monthlyRows,
           species: species.data || [],
           yearly: yearly.data || []
         };
+        if (leaderboardChallenge) {
+          const start = new Date(`${leaderboardChallenge.starts_on}T12:00:00`);
+          const month = start.toLocaleString('en-AU', { month: 'long' });
+          const speciesName = leaderboardChallenge.species?.common_name || 'community';
+          const eyebrow = root.querySelector('[data-leaderboard-eyebrow]');
+          if (eyebrow) eyebrow.textContent = `${month} ${speciesName} challenge`;
+        } else if (leaderboardUsesShowcaseFallback) {
+          const eyebrow = root.querySelector('[data-leaderboard-eyebrow]');
+          if (eyebrow) eyebrow.textContent = 'Latest approved catches · monthly scoring';
+        }
         renderLeaderboard();
       }
 
@@ -1168,6 +1267,7 @@
       }
 
       function openSubmissionDialog() {
+        syncMonthlyCatchSpecies();
         setSubmissionStatus(currentSession ? '' : 'You can prepare the entry now. Sign in is required when you send it.');
         const dialog = root.querySelector('#catch-submission');
         if (!dialog.open) dialog.showModal();
@@ -1459,9 +1559,25 @@
       });
       acknowledgementDialog.addEventListener('click', event => { if (event.target === acknowledgementDialog) acknowledgementDialog.close(); });
       const scoringDialog = root.querySelector('#scoring-rules');
-      root.querySelector('[data-open-scoring]').addEventListener('click', () => scoringDialog.showModal());
+      root.querySelector('[data-open-scoring]')?.addEventListener('click', () => scoringDialog.showModal());
       root.querySelector('[data-close-scoring]').addEventListener('click', () => scoringDialog.close());
       scoringDialog.addEventListener('click', event => { if (event.target === scoringDialog) scoringDialog.close(); });
+      const recentCatchDialog = root.querySelector('#recent-catch-dialog');
+      root.querySelector('[data-recent-carousel-track]').addEventListener('click', event => {
+        const tile = event.target.closest('[data-recent-catch]');
+        if (!tile || tile.getAttribute('aria-hidden') === 'true') return;
+        const catchData = JSON.parse(tile.dataset.recentCatch);
+        const image = recentCatchDialog.querySelector('[data-recent-dialog-image]');
+        image.src = catchData.photo;
+        image.alt = `${catchData.person} with an approved ${catchData.fish} catch`;
+        recentCatchDialog.querySelector('[data-recent-dialog-person]').textContent = catchData.person;
+        recentCatchDialog.querySelector('[data-recent-dialog-fish]').textContent = catchData.fish;
+        recentCatchDialog.querySelector('[data-recent-dialog-size]').textContent = `${catchData.size} cm`;
+        recentCatchDialog.querySelector('[data-recent-dialog-link]').href = `species/${encodeURIComponent(catchData.slug)}/index.html#records`;
+        recentCatchDialog.showModal();
+      });
+      root.querySelector('[data-close-recent-catch]').addEventListener('click', () => recentCatchDialog.close());
+      recentCatchDialog.addEventListener('click', event => { if (event.target === recentCatchDialog) recentCatchDialog.close(); });
       const submissionDialog = root.querySelector('#catch-submission');
       root.querySelectorAll('[data-open-submission]').forEach(button => button.addEventListener('click', openSubmissionDialog));
       root.querySelector('[data-close-submission]').addEventListener('click', () => submissionDialog.close());

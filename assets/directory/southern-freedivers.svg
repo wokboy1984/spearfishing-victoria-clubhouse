@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" role="img" aria-labelledby="title desc">
+  <title id="title">Southern Freedivers fallback wordmark</title>
+  <desc id="desc">Neutral fallback logo created for website listing use where an official logo file was not verified.</desc>
+  <rect width="800" height="400" fill="#102A43"/>
+  <path d="M109 213c64-39 131-53 201-42 51 8 101 29 151 63 50 34 99 52 148 53 32 1 63-6 94-20-38 47-90 74-156 80-66 6-132-16-198-67-71-55-151-77-240-67z" fill="#2DD4BF"/>
+  <path d="M113 255c79-14 150 6 213 60 43 36 91 56 143 59-85 17-162 0-232-51-43-31-84-54-124-68z" fill="#F8FAFC" opacity=".9"/>
+  <text x="409" y="151" text-anchor="middle" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="700">SOUTHERN</text>
+  <text x="409" y="213" text-anchor="middle" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="700">FREEDIVERS</text>
+</svg>

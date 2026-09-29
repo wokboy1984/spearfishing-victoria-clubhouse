@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-labelledby="title">
+  <title id="title">Victorian Underwater Hockey Commission</title>
+  <rect width="800" height="420" fill="#132238"/>
+  <path d="M58 174h108v74H58z" fill="#2477c7"/>
+  <path d="M71 196c28-19 53-19 81 0M71 220c28-19 53-19 81 0" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+  <text x="210" y="171" fill="#f5663b" font-family="Arial, sans-serif" font-size="22" font-weight="700">VICTORIA</text>
+  <text x="210" y="222" fill="#fff" font-family="Arial, sans-serif" font-size="39" font-weight="700">UNDERWATER HOCKEY</text>
+  <text x="210" y="272" fill="#dce5ef" font-family="Arial, sans-serif" font-size="34">COMMISSION</text>
+</svg>

@@ -1,0 +1,176 @@
+:root {
+  --sv-ocean: #071820;
+  --sv-ocean-2: #0c222b;
+  --sv-ocean-3: #13323c;
+  --sv-foam: #f5f1e8;
+  --sv-paper: #f3f0e8;
+  --sv-kelp: #287d72;
+  --sv-glass: #63d1ca;
+  --sv-safety: #e95f2a;
+  --sv-coastal-line: rgba(163, 204, 207, .2);
+  --sv-coastal-shadow: 0 18px 48px rgba(3, 18, 24, .14);
+}
+
+html { background: var(--sv-ocean); }
+body { background: var(--sv-ocean); }
+body > .shell {
+  color: #172a31;
+  background: var(--sv-paper);
+}
+
+body > .shell > .topbar {
+  position: relative;
+  z-index: 20;
+  min-height: 74px;
+  padding-right: clamp(18px, 4vw, 64px);
+  padding-left: clamp(18px, 4vw, 64px);
+  color: #f7f2e9;
+  background: #05141c;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+body > .shell > .topbar .brand {
+  color: #f7f2e9;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  font-weight: 700;
+}
+body > .shell > .topbar .brand-mark {
+  width: 39px;
+  height: 39px;
+  color: var(--sv-glass);
+  background: transparent;
+  border: 1px solid rgba(99,209,202,.35);
+}
+body > .shell > .topbar nav,
+body > .shell > .topbar .topnav { color: #d6e0e2; }
+body > .shell > .topbar nav a,
+body > .shell > .topbar .topnav a { color: #d6e0e2; }
+body > .shell > .topbar nav a:hover,
+body > .shell > .topbar nav a:focus-visible,
+body > .shell > .topbar nav a[aria-current="page"] { color: #fff; }
+body > .shell > .topbar .button,
+body > .shell > .topbar .icon-button {
+  min-height: 42px;
+  color: #fff;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(163,204,207,.2);
+  border-radius: 9px;
+}
+body > .shell > .topbar .button.primary,
+body > .shell > .topbar .button.orange { background: var(--sv-safety); border-color: var(--sv-safety); }
+
+body > .shell .eyebrow {
+  color: var(--sv-kelp);
+  font-weight: 850;
+  letter-spacing: .11em;
+}
+body > .shell h1,
+body > .shell h2 { font-family: Georgia, "Times New Roman", serif; letter-spacing: -.02em; }
+body > .shell .button {
+  border-radius: 9px;
+  font-weight: 750;
+}
+body > .shell .button.primary,
+body > .shell .button.orange { color: #fff; background: var(--sv-safety); }
+
+/* Monthly Catch */
+body > .shell .challenge-hero {
+  min-height: 500px;
+  color: var(--sv-foam);
+  background: var(--sv-ocean);
+}
+body > .shell .challenge-copy {
+  position: relative;
+  padding: clamp(38px, 6vw, 82px);
+  background: linear-gradient(135deg, #071820, #0e2c35);
+}
+body > .shell .challenge-copy::after {
+  display: none;
+}
+body > .shell .challenge-copy > * { position: relative; z-index: 1; }
+body > .shell .challenge-copy h1 { color: #fffaf1; font-size: clamp(43px, 5vw, 68px); }
+body > .shell .challenge-copy > p { color: #bdcdd0; }
+body > .shell .challenge-meta span { color: #d7e4e5; background: rgba(255,255,255,.06); border-color: var(--sv-coastal-line); }
+body > .shell .challenge-hero > img { min-height: 500px; object-position: center 42%; }
+body > .shell .score-band { background: #102c35; }
+body > .shell .community-pulse { background: #e7ebe6; }
+body > .shell .standings,
+body > .shell .gallery { background: var(--sv-paper); }
+body > .shell .vote { background: #e7ebe6; }
+body > .shell .catch-card,
+body > .shell .podium-place { border-radius: 11px; box-shadow: var(--sv-coastal-shadow); }
+
+/* Recipes and species */
+body > .shell .index-hero {
+  position: relative;
+  min-height: 370px;
+  align-items: end;
+  padding: clamp(40px, 7vw, 90px);
+  color: var(--sv-foam);
+  background: linear-gradient(90deg, rgba(4,19,26,.96), rgba(4,19,26,.46)), url('assets/species-snapper.png') center 40%/cover;
+}
+body > .shell .index-hero h1 { color: #fffaf1; font-size: clamp(45px, 6vw, 72px); }
+body > .shell .index-hero p { color: #d2dfe0; }
+body > .shell .index-hero .eyebrow { color: var(--sv-glass); }
+body > .shell .index-hero .search { color: #fff; background: rgba(4,19,26,.68); border-color: rgba(255,255,255,.25); backdrop-filter: blur(10px); }
+body > .shell .index-hero .search input { color: #fff; }
+body > .shell .library { background: var(--sv-paper); }
+body > .shell .species-card,
+body > .shell .monthly-banner { border-radius: 13px; box-shadow: var(--sv-coastal-shadow); }
+body > .shell .species-hero { background: var(--sv-ocean); }
+body > .shell .species-hero h1 { color: #fffaf1; }
+body > .shell .species-hero p { color: #c1d0d2; }
+
+/* Directory */
+body > .shell .directory-hero {
+  min-height: 470px;
+  align-items: end;
+  background: linear-gradient(90deg, rgba(5,22,29,.96), rgba(5,22,29,.45)), url('assets/sv-hero.webp') center/cover;
+}
+body > .shell .directory-hero h1 { color: #fffaf1; font-family: Georgia, "Times New Roman", serif; }
+body > .shell .directory-hero .eyebrow { color: var(--sv-glass); }
+body > .shell .hero-summary { background: rgba(4,20,27,.58); border-color: rgba(255,255,255,.2); backdrop-filter: blur(10px); }
+body > .shell .directory-content { background: var(--sv-paper); }
+body > .shell .listing-card,
+body > .shell .content-panel,
+body > .shell .side-panel { border-radius: 12px; box-shadow: var(--sv-coastal-shadow); }
+body > .shell .tools { background: rgba(245,241,232,.96); }
+
+/* Safety */
+body > .shell .safety-hero {
+  min-height: 500px;
+  color: var(--sv-foam);
+  background: var(--sv-ocean);
+}
+body > .shell .safety-hero .hero-copy { padding: clamp(38px, 6vw, 82px); background: linear-gradient(135deg, #071820, #10313a); }
+body > .shell .safety-hero h1 { color: #fffaf1; font-size: clamp(42px, 5vw, 67px); }
+body > .shell .safety-hero .hero-copy p { color: #c1d0d2; }
+body > .shell .safety-hero .eyebrow { color: var(--sv-glass); }
+body > .shell .safety-hero > img { min-height: 500px; filter: saturate(.75) contrast(1.08); }
+body > .shell .priority-band { background: #102c35; }
+body > .shell .priority-band > div { color: #fff; background: transparent; }
+body > .shell .priority-band span { color: #b9cbce; }
+body > .shell .checklist,
+body > .shell .resource-grid a { border-radius: 11px; box-shadow: var(--sv-coastal-shadow); }
+body > .shell .emergency-call { background: #8d311f; }
+
+/* Members, moderation and utility/legal pages */
+body > .shell .profile-head { color: #fff; background: linear-gradient(135deg, #071820, #10313a); }
+body > .shell .profile-head h1 { color: #fffaf1; }
+body > .shell .profile-head p { color: #bdcdd0; }
+body > .shell .contribution-card { border-radius: 11px; box-shadow: var(--sv-coastal-shadow); }
+body > .shell > footer,
+body > .shell > .site-footer { color: #aebfc2; background: #071820; border-color: rgba(255,255,255,.1); }
+
+@media (max-width: 760px) {
+  body > .shell > .topbar { min-height: 66px; padding-right: 12px; padding-left: 12px; }
+  body > .shell > .topbar .brand > span:last-child { display: none; }
+  body > .shell .challenge-hero,
+  body > .shell .safety-hero { grid-template-columns: 1fr; }
+  body > .shell .challenge-copy,
+  body > .shell .safety-hero .hero-copy { padding: 38px 20px; }
+  body > .shell .challenge-hero > img,
+  body > .shell .safety-hero > img { min-height: 280px; max-height: 350px; }
+  body > .shell .index-hero { min-height: 410px; padding: 45px 20px; }
+  body > .shell .directory-hero { min-height: 520px; padding: 44px 20px; }
+}
