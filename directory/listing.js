@@ -1,3 +1,9 @@
+if (!document.querySelector('script[src*="shared-navigation.js"]')) {
+  const sharedNavigation = document.createElement('script');
+  sharedNavigation.src = '/shared-navigation.js?v=1';
+  document.body.append(sharedNavigation);
+}
+
 (() => {
   const $=selector=>document.querySelector(selector);
   const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));

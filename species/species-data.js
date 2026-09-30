@@ -1,3 +1,9 @@
+if (document.querySelector('body > .shell > .topbar') && !document.querySelector('script[src*="shared-navigation.js"]')) {
+  const sharedNavigation = document.createElement('script');
+  sharedNavigation.src = '/shared-navigation.js?v=1';
+  document.body.append(sharedNavigation);
+}
+
 globalThis.SV_SPECIES = {
   snapper: {
     name: 'Snapper',
