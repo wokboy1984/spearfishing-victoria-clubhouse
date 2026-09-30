@@ -971,9 +971,10 @@ html { scroll-behavior: smooth; background: #f0f2f5; }
 }
 @media (max-width: 650px) {
   #sv-facebook-clubhouse .topbar { min-height: 66px; padding: 0 12px; }
-  #sv-facebook-clubhouse .topbar .brand::before { width: 210px; height: 34px; }
+  #sv-facebook-clubhouse .topbar .brand { min-width: 0; flex: 1 1 auto; }
+  #sv-facebook-clubhouse .topbar .brand::before { width: min(42vw, 210px); min-width: 132px; height: 34px; }
   #sv-facebook-clubhouse .brand > span:last-child { display: none; }
-  #sv-facebook-clubhouse .nav { gap: 6px; }
+  #sv-facebook-clubhouse .nav { flex: 0 0 auto; gap: 6px; }
   #sv-facebook-clubhouse .nav .button-primary { min-width: 42px; padding: 9px; font-size: 0; }
   #sv-facebook-clubhouse .theme-toggle { display: none; }
   #sv-facebook-clubhouse .cinematic-hero { min-height: 620px; background-image: linear-gradient(90deg, rgba(2,13,19,.9), rgba(2,13,19,.32)), linear-gradient(0deg, #071820 1%, transparent 56%), url('assets/sv-victorian-coast-hero.png'); background-position: 68% center; }
