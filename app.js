@@ -1,5 +1,7 @@
 (() => {
       const root = document.getElementById('sv-facebook-clubhouse');
+      const embeddedSubmission = new URLSearchParams(location.search).has('embedded');
+      if (embeddedSubmission) document.documentElement.classList.add('embedded-submission');
       const site = root.querySelector('.site');
       const storageKey = 'spearfishing-victoria-clubhouse-v1';
       let saved = {};
@@ -11,7 +13,7 @@
       const state = {
         region: saved.region || 'Port Phillip Bay',
         vote: saved.vote || null,
-        dark: saved.appearance === 'dark'
+        dark: embeddedSubmission ? false : saved.appearance === 'dark'
       };
       const supabaseConfig = globalThis.SV_SUPABASE_CONFIG;
       const supabaseClient = globalThis.supabase && supabaseConfig?.url && supabaseConfig?.publishableKey
@@ -786,12 +788,44 @@
           renderMemberAvatar();
           renderConnectedAccounts();
         }
-        root.querySelector('[data-staff-link]').hidden = !['moderator', 'admin'].includes(memberProfile?.role);
+        const isStaff = ['moderator', 'admin'].includes(memberProfile?.role);
+        root.querySelector('[data-staff-link]').hidden = !isStaff;
+        if (isStaff) loadModerationAttention();
         renderMemberNotifications();
         renderMySubmissions();
         setMemberTab(activeMemberTab, false);
         if (globalThis.lucide) globalThis.lucide.createIcons({ attrs: { width: 16, height: 16 } });
       }
+
+      let moderationAttentionLoading = false;
+      async function loadModerationAttention() {
+        if (!supabaseClient || !currentSession || !['moderator', 'admin'].includes(memberProfile?.role) || moderationAttentionLoading) return;
+        moderationAttentionLoading = true;
+        const badge = root.querySelector('[data-moderation-badge]');
+        const link = root.querySelector('[data-staff-link]');
+        try {
+          const [catchResult, recipeResult, directoryResult] = await Promise.all([
+            supabaseClient.rpc('get_moderation_submissions', { target_status: 'pending' }),
+            supabaseClient.rpc('get_recipe_moderation_submissions', { target_status: 'pending' }),
+            supabaseClient.rpc('get_directory_moderation_queue')
+          ]);
+          const directory = directoryResult.data || {};
+          const total = (catchResult.data?.length || 0) + (recipeResult.data?.length || 0) +
+            (directory.listings?.length || 0) + (directory.claims?.length || 0) + (directory.reports?.length || 0);
+          badge.textContent = total > 99 ? '99+' : String(total);
+          badge.hidden = total === 0;
+          link.classList.toggle('has-moderation', total > 0);
+          link.setAttribute('aria-label', total ? `Moderate — ${total} item${total === 1 ? '' : 's'} awaiting review` : 'Moderate — nothing awaiting review');
+          link.title = total ? `${total} item${total === 1 ? '' : 's'} awaiting review` : 'Nothing awaiting review';
+        } finally {
+          moderationAttentionLoading = false;
+        }
+      }
+
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) loadModerationAttention();
+      });
+      setInterval(loadModerationAttention, 60000);
 
       function openAuthDialog(message = '') {
         setAuthStatus(message);
@@ -1267,8 +1301,12 @@
       }
 
       function openSubmissionDialog() {
+        if (!currentSession) {
+          openAuthDialog('Sign in or create your free member account to submit a catch.');
+          return;
+        }
         syncMonthlyCatchSpecies();
-        setSubmissionStatus(currentSession ? '' : 'You can prepare the entry now. Sign in is required when you send it.');
+        setSubmissionStatus('');
         const dialog = root.querySelector('#catch-submission');
         if (!dialog.open) dialog.showModal();
       }

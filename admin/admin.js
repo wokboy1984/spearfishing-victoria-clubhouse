@@ -15,6 +15,8 @@
     featureSettings: new Map(),
     programs: { species: [], challenges: [], ballots: [] },
     selectedProgramId: null,
+    members: [],
+    memberSearch: '',
     pendingDecision: null,
     dark: localStorage.getItem('spearfishing-victoria-theme') === 'dark',
     lightboxPhotos: [],
@@ -122,6 +124,71 @@
     $('[data-staff-name]').textContent = name;
     $('[data-staff-role]').textContent = state.profile.role;
     $('[data-staff-initials]').textContent = name.split(/\s+/).map(part => part[0]).join('').slice(0, 2).toUpperCase();
+    $$('[data-admin-only]').forEach(element => { element.hidden = state.profile.role !== 'admin'; });
+  }
+
+  async function loadMembers() {
+    if (state.profile?.role !== 'admin') return;
+    const { data, error } = await client.rpc('get_admin_members');
+    if (error) throw error;
+    state.members = Array.isArray(data) ? data : [];
+    renderMembers();
+  }
+
+  function renderMembers() {
+    const needle = state.memberSearch.toLowerCase();
+    const rows = state.members.filter(member => !needle || [member.display_name, member.username, member.email].some(value => String(value || '').toLowerCase().includes(needle)));
+    $('[data-member-total]').textContent = state.members.length;
+    $('[data-moderator-total]').textContent = state.members.filter(member => member.role === 'moderator').length;
+    $('[data-limited-total]').textContent = state.members.filter(member => member.account_limited).length;
+    $('[data-member-list]').innerHTML = rows.map(member => {
+      const self = member.id === state.session.user.id;
+      return `<article class="member-row ${member.account_limited ? 'is-limited' : ''}" data-member-id="${member.id}"><div class="member-avatar">${escapeHtml((member.display_name || member.username || '?').slice(0,1).toUpperCase())}</div><div class="member-identity"><strong>${escapeHtml(member.display_name || member.username)}</strong><span>@${escapeHtml(member.username)} · ${escapeHtml(member.email || 'No email')}</span><small>Joined ${escapeHtml(formatDate(member.created_at))} · ${Number(member.submission_count || 0)} entries${member.pending_count ? ` · ${member.pending_count} pending` : ''}</small>${member.account_limited ? `<em>Limited: ${escapeHtml(member.account_limit_reason || 'No reason recorded')}</em>` : ''}</div><label class="member-role"><span>Access</span><select data-member-role ${self ? 'disabled' : ''}><option value="member" ${member.role === 'member' ? 'selected' : ''}>Member</option><option value="moderator" ${member.role === 'moderator' ? 'selected' : ''}>Community Moderator</option><option value="admin" ${member.role === 'admin' ? 'selected' : ''}>Admin</option></select></label><div class="member-actions"><button class="button" type="button" data-toggle-limit ${self ? 'disabled' : ''}>${member.account_limited ? 'Restore account' : 'Limit account'}</button><button class="button danger" type="button" data-delete-member ${self ? 'disabled' : ''}>Delete user</button></div></article>`;
+    }).join('') || '<div class="queue-empty">No members match this search.</div>';
+    $$('[data-member-role]').forEach(select => select.addEventListener('change', changeMemberRole));
+    $$('[data-toggle-limit]').forEach(button => button.addEventListener('click', toggleMemberLimit));
+    $$('[data-delete-member]').forEach(button => button.addEventListener('click', deleteMember));
+  }
+
+  async function changeMemberRole(event) {
+    const row = event.target.closest('[data-member-id]');
+    const member = state.members.find(item => item.id === row.dataset.memberId);
+    const role = event.target.value;
+    if (!confirm(`Change ${member.display_name || member.username} to ${role === 'moderator' ? 'Community Moderator' : role}?`)) { event.target.value = member.role; return; }
+    const { error } = await client.rpc('admin_set_member_role', { target_user_id: member.id, target_role: role });
+    if (error) { $('[data-member-status]').textContent = error.message; event.target.value = member.role; return; }
+    $('[data-member-status]').textContent = 'Member access updated.';
+    await loadMembers();
+  }
+
+  async function toggleMemberLimit(event) {
+    const member = state.members.find(item => item.id === event.target.closest('[data-member-id]').dataset.memberId);
+    const limiting = !member.account_limited;
+    const reason = limiting ? prompt(`Why are you limiting ${member.display_name || member.username}'s account?`) : 'Account access restored by administrator';
+    if (reason === null) return;
+    const { error } = await client.rpc('admin_set_account_limit', { target_user_id: member.id, limited: limiting, reason });
+    $('[data-member-status]').textContent = error ? error.message : (limiting ? 'Account limited.' : 'Account restored.');
+    if (!error) await loadMembers();
+  }
+
+  async function deleteMember(event) {
+    const member = state.members.find(item => item.id === event.target.closest('[data-member-id]').dataset.memberId);
+    const reason = prompt(`Permanently delete ${member.display_name || member.username}? Enter a reason to continue.`);
+    if (reason === null || !confirm('This permanently deletes the user and their entries. Continue?')) return;
+    const { error } = await client.rpc('admin_delete_member', { target_user_id: member.id, delete_reason: reason });
+    $('[data-member-status]').textContent = error ? error.message : 'Member deleted.';
+    if (!error) await loadMembers();
+  }
+
+  async function deleteSelectedEntry() {
+    const submission = state.submissions.find(item => item.submission_id === state.selectedId);
+    if (!submission) return;
+    const reason = prompt(`Why are you deleting this ${submission.submission_kind || 'entry'}?`);
+    if (reason === null || !confirm('This permanently deletes the entry. Continue?')) return;
+    const { error } = await client.rpc('admin_delete_submission', { target_submission_id: submission.submission_id, delete_reason: reason });
+    if (error) { $('[data-decision-status]').textContent = error.message; return; }
+    state.selectedId = null;
+    await loadSubmissions();
   }
 
   async function loadSubmissions() {
@@ -283,11 +350,15 @@
 
   function setWorkspace(workspace) {
     const program = workspace === 'program';
-    $('[data-moderation-workspace]').hidden = program;
+    const members = workspace === 'members';
+    if ((program || members) && state.profile?.role !== 'admin') workspace = 'moderation';
+    $('[data-moderation-workspace]').hidden = program || members;
     $('[data-program-workspace]').hidden = !program;
+    $('[data-member-workspace]').hidden = !members;
     $$('[data-workspace]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.workspace === workspace)));
-    $('[data-workspace-title]').textContent = program ? 'Competition manager' : 'Community moderation';
-    $('[data-workspace-copy]').textContent = program ? 'Run the Species of the Month challenge and community vote without editing the website.' : 'Review catches and recipes, protect private evidence and publish only submissions that meet the community rules.';
+    $('[data-workspace-title]').textContent = members ? 'Member management' : (program ? 'Competition manager' : 'Community moderation');
+    $('[data-workspace-copy]').textContent = members ? 'Manage roles and account access for the Spearfishing Victoria community.' : (program ? 'Run the Species of the Month challenge and community vote without editing the website.' : 'Review catches and recipes, protect private evidence and publish only submissions that meet the community rules.');
+    if (members && !state.members.length) loadMembers().catch(error => { $('[data-member-status]').textContent = error.message; });
   }
 
   function renderStats() {
@@ -656,7 +727,7 @@
       }
       showGate('app');
       renderStaff();
-      await Promise.all([loadSubmissions(), loadPrograms()]);
+      await Promise.all([loadSubmissions(), state.profile.role === 'admin' ? loadPrograms() : Promise.resolve()]);
     } catch (error) {
       showGate('no-access');
       noAccess.querySelector('p').textContent = 'The moderation workspace could not be loaded. Check that the latest database migration has been applied.';
@@ -675,6 +746,7 @@
     renderQueue();
   }));
   $('[data-search]').addEventListener('input', event => { state.search = event.target.value.trim(); state.selectedId = null; renderQueue(); });
+  $('[data-member-search]').addEventListener('input', event => { state.memberSearch = event.target.value.trim(); renderMembers(); });
   $$('[data-decide]').forEach(button => button.addEventListener('click', () => requestDecision(button.dataset.decide)));
   $('[data-confirm-cancel]').addEventListener('click', () => { state.pendingDecision = null; decisionDialog.close(); });
   $('[data-confirm-action]').addEventListener('click', confirmDecision);
@@ -686,6 +758,7 @@
   $('[data-feature-toggle]').addEventListener('change', event => { $('[data-feature-order]').disabled = !event.target.checked; });
   $('[data-save-feature]').addEventListener('click', saveFeatureSetting);
   $('[data-refresh-public-photos]').addEventListener('click', refreshPublicCatchPhotos);
+  $('[data-delete-entry]').addEventListener('click', deleteSelectedEntry);
   decisionDialog.addEventListener('click', event => { if (event.target === decisionDialog) { state.pendingDecision = null; decisionDialog.close(); } });
   const photoLightbox = $('[data-photo-lightbox]');
   const lightboxStage = $('[data-lightbox-stage]');

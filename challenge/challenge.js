@@ -21,6 +21,49 @@
   function setAppearance(dark) { document.documentElement.classList.toggle('dark-mode', dark); $('[data-theme-toggle]').innerHTML = `<i data-lucide="${dark ? 'sun' : 'moon'}"></i>`; icons(); }
   function showError() { $('[data-loading]').hidden = true; $('[data-page]').hidden = false; $('[data-error]').hidden = true; $('[data-species-image]').src = '../assets/sv-victorian-coast-hero.png'; $('[data-species-image]').alt = 'A Victorian spearo entering cold coastal water'; icons(); }
 
+  const submissionOverlay = $('[data-challenge-submission]');
+  const submissionFrame = $('[data-submission-frame]');
+  document.querySelectorAll('[data-open-challenge-submission]').forEach(button => button.addEventListener('click', () => {
+    const frameDocument = submissionFrame.contentDocument;
+    const formDialog = frameDocument?.querySelector('#catch-submission');
+    const memberDialog = frameDocument?.querySelector('#member-dialog');
+    if (!formDialog?.open && !memberDialog?.open) {
+      const signedOut = frameDocument?.querySelector('[data-auth-label]')?.textContent.trim() === 'Member sign in';
+      frameDocument?.querySelector(signedOut ? '[data-auth-trigger]' : '[data-open-submission]')?.click();
+      submissionOverlay.classList.toggle('is-auth', signedOut);
+    }
+    if (!submissionOverlay.open) submissionOverlay.showModal();
+  }));
+  $('[data-close-challenge-submission]').addEventListener('click', () => submissionOverlay.close());
+  submissionOverlay.addEventListener('click', event => { if (event.target === submissionOverlay) submissionOverlay.close(); });
+  submissionFrame.addEventListener('load', () => {
+    const frameDocument = submissionFrame.contentDocument;
+    const style = frameDocument?.createElement('style');
+    if (!style) return;
+    style.textContent = '#sv-facebook-clubhouse .site > :not(dialog):not(.action-toast){display:none!important} #sv-facebook-clubhouse .site{min-height:0!important;background:transparent!important} body{background:transparent!important} #catch-submission,#member-dialog{width:100%!important;max-width:none!important;height:100%!important;max-height:none!important;margin:0!important;border-radius:16px!important;color-scheme:light!important} #catch-submission::backdrop,#member-dialog::backdrop{background:transparent!important}';
+    frameDocument.head.append(style);
+    const closeOuter = () => { if (submissionOverlay.open) submissionOverlay.close(); };
+    frameDocument.querySelectorAll('#catch-submission,#member-dialog').forEach(dialog => dialog.addEventListener('close', closeOuter));
+    frameDocument.querySelectorAll('[data-close-submission],[data-close-auth]').forEach(button => button.addEventListener('click', closeOuter));
+    let attempts = 0;
+    const revealForm = setInterval(() => {
+      const formDialog = frameDocument.querySelector('#catch-submission');
+      const memberDialog = frameDocument.querySelector('#member-dialog');
+      if (memberDialog?.open) { submissionOverlay.classList.add('is-auth'); clearInterval(revealForm); return; }
+      if (formDialog?.open) { submissionOverlay.classList.remove('is-auth'); clearInterval(revealForm); return; }
+      if (attempts > 15) {
+        const signedOut = frameDocument.querySelector('[data-auth-label]')?.textContent.trim() === 'Member sign in';
+        frameDocument.querySelector(signedOut ? '[data-auth-trigger]' : '[data-open-submission]')?.click();
+      }
+      if (formDialog?.open || attempts++ > 45) clearInterval(revealForm);
+    }, 100);
+  });
+  submissionOverlay.addEventListener('close', () => {
+    const frameDocument = submissionFrame.contentDocument;
+    frameDocument?.querySelectorAll('#catch-submission[open],#member-dialog[open]').forEach(dialog => dialog.close());
+  });
+  submissionFrame.src = '../index.html?submit=catch&embedded=challenge&overlay=light-2';
+
   async function load() {
     if (!client) { showError(); return; }
     const today = new Date().toISOString().slice(0, 10);

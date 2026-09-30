@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
 :root {
   --sv-ocean: #071820;
   --sv-ocean-2: #0c222b;
@@ -34,6 +36,10 @@ body > .shell > .topbar .brand {
   font-size: 21px;
   font-weight: 700;
 }
+body > .shell > .topbar .brand-name{display:inline-flex;align-items:baseline;gap:5px;text-transform:uppercase;white-space:nowrap}.brand-name>span{font-family:"Bebas Neue","Arial Narrow",sans-serif;font-size:24px;font-weight:400;letter-spacing:.035em}.brand-name>strong{font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:18px;font-weight:850;letter-spacing:-.02em}
+.topbar .brand .brand-mark,.topbar .brand .brand-name,.admin-topbar .brand .brand-mark,.admin-topbar .brand .brand-name{display:none!important}
+.topbar .brand::before,.admin-topbar .brand::before{width:clamp(225px,19vw,285px);height:42px;display:block;flex:0 0 auto;content:"";background:url('/assets/spearfishing-victoria-logo.png') left center/contain no-repeat}
+body > .shell h1,body > .shell h2,body > .shell h3{font-family:"Bebas Neue","Arial Narrow",sans-serif!important;font-weight:400!important;letter-spacing:.015em!important}
 body > .shell > .topbar .brand-mark {
   width: 39px;
   height: 39px;
@@ -43,6 +49,8 @@ body > .shell > .topbar .brand-mark {
 }
 body > .shell > .topbar nav,
 body > .shell > .topbar .topnav { color: #d6e0e2; }
+body > .shell > .topbar [data-theme-toggle],
+body > .shell > .topbar .theme-toggle { display: none !important; }
 body > .shell > .topbar nav a,
 body > .shell > .topbar .topnav a { color: #d6e0e2; }
 body > .shell > .topbar nav a:hover,
@@ -163,6 +171,7 @@ body > .shell > footer,
 body > .shell > .site-footer { color: #aebfc2; background: #071820; border-color: rgba(255,255,255,.1); }
 
 @media (max-width: 760px) {
+  .topbar .brand::before,.admin-topbar .brand::before{width:210px;height:34px}
   body > .shell > .topbar { min-height: 66px; padding-right: 12px; padding-left: 12px; }
   body > .shell > .topbar .brand > span:last-child { display: none; }
   body > .shell .challenge-hero,
