@@ -113,15 +113,15 @@ create or replace function public.moderate_directory_claim(
   claim_id uuid,
   claim_decision text,
   moderator_note text default null,
-  confirm_business_email boolean default false,
-  confirm_public_source boolean default false,
-  confirm_no_conflict boolean default false
+  contact_checked boolean default false,
+  authority_confirmed boolean default false,
+  scope_checked boolean default false
 ) returns void language plpgsql security definer set search_path='' as $$
 declare v_listing_id uuid; v_member_id uuid;
 begin
   if not public.is_admin() then raise exception 'Administrator access required'; end if;
   if claim_decision not in ('approved','rejected') then raise exception 'Invalid decision'; end if;
-  if claim_decision='approved' and not (confirm_business_email and confirm_public_source and confirm_no_conflict) then raise exception 'Complete all ownership checks before approval'; end if;
+  if claim_decision='approved' and not (contact_checked and authority_confirmed and scope_checked) then raise exception 'Complete all ownership checks before approval'; end if;
   if claim_decision='rejected' and char_length(trim(coalesce(moderator_note,'')))<5 then raise exception 'A rejection reason is required'; end if;
   select c.listing_id,c.member_id into v_listing_id,v_member_id from public.directory_claims c where c.id=claim_id and c.status='pending' for update;
   if v_listing_id is null then raise exception 'Pending claim not found'; end if;
